@@ -5,11 +5,6 @@ pub fn main() -> iced::Result {
     WidgetView::run(Settings::default())
 }
 
-#[derive(Debug, Clone)]
-enum Message {
-    WidgetMessage(WidgetMessage),
-}
-
 struct WidgetView {
     widgets: Widgets,
 }
@@ -53,6 +48,11 @@ impl Sandbox for WidgetView {
     }
 }
 
+#[derive(Debug, Clone)]
+enum Message {
+    WidgetMessage(WidgetMessage),
+}
+
 struct Widgets {
     widgets: Vec<Widget>,
 }
@@ -79,15 +79,15 @@ impl Widgets {
     }
 }
 
-#[derive(Debug, Clone)]
-enum WidgetMessage {
-    NumberBaseConverterChanged(NumberBase),
-}
-
 enum Widget {
     NumberBaseConverter{
         value: i64,
     }
+}
+
+#[derive(Debug, Clone)]
+enum WidgetMessage {
+    NumberBaseConverterChanged(NumberBase),
 }
 
 impl<'a> Widget {
