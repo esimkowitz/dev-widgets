@@ -1,7 +1,5 @@
-use iced::alignment;
-use iced::theme;
 use iced::widget::{Column, container, column, row, text, text_input};
-use iced::{Color, Element, Font, Length, Renderer, Sandbox, Settings};
+use iced::{Element, Length, Sandbox, Settings};
 
 pub fn main() -> iced::Result {
     WidgetView::run(Settings::default())
@@ -102,18 +100,25 @@ impl<'a> Widget {
             WidgetMessage::NumberBaseConverterChanged(number_base) => {
                 let Widget::NumberBaseConverter { value } = self;
 
+                fn parse_value(value: String, base: u32) -> i64 {
+                    match i64::from_str_radix(&value, base) {
+                        Ok(value) => value,
+                        Err(_) => 0,
+                    }
+                }
+
                 match number_base {
-                    NumberBase::Binary(base_value) => {
-                        *value = i64::from_str_radix(&base_value, 2).unwrap();
+                    NumberBase::Binary(input_value) => {
+                        *value = parse_value(input_value, 2);
                     },
-                    NumberBase::Decimal(base_value) => {
-                        *value = i64::from_str_radix(&base_value, 10).unwrap();
+                    NumberBase::Decimal(input_value) => {
+                        *value = parse_value(input_value, 10);
                     },
-                    NumberBase::Hexadecimal(base_value) => {
-                        *value = i64::from_str_radix(&base_value, 16).unwrap();
+                    NumberBase::Hexadecimal(input_value) => {
+                        *value = parse_value(input_value, 16);
                     },
-                    NumberBase::Octal(base_value) => {
-                        *value = i64::from_str_radix(&base_value, 8).unwrap();
+                    NumberBase::Octal(input_value) => {
+                        *value = parse_value(input_value, 8);
                     },
                 }
             }
