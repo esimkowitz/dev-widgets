@@ -1,6 +1,8 @@
 use iced::widget::{Column, container, column, row, text, text_input};
 use iced::{Element, Length, Sandbox, Settings};
 
+use base64::{Engine as _, engine::{general_purpose}};
+
 pub fn main() -> iced::Result {
     WidgetView::run(Settings::default())
 }
@@ -60,7 +62,10 @@ struct Widgets {
 impl Widgets {
     fn new() -> Self {
         Self {
-            widgets: vec![Widget::NumberBaseConverter { value: 0 }],
+            widgets: vec![
+                Widget::NumberBaseConverter { value: 0 },
+                Widget::Base64Converter { encoded_value: String::new(), decoded_value: String::new() },
+            ],
         }
     }
 
@@ -82,12 +87,17 @@ impl Widgets {
 enum Widget {
     NumberBaseConverter{
         value: i64,
+    },
+    Base64Converter {
+        encoded_value: String,
+        decoded_value: String,
     }
 }
 
 #[derive(Debug, Clone)]
 enum WidgetMessage {
     NumberBaseConverterChanged(NumberBase),
+    Base64ConverterChanged(Base64ConverterDirection),
 }
 
 impl<'a> Widget {
@@ -98,28 +108,43 @@ impl<'a> Widget {
     fn update(&mut self, message: WidgetMessage) {
         match message {
             WidgetMessage::NumberBaseConverterChanged(number_base) => {
-                let Widget::NumberBaseConverter { value } = self;
+                if let Widget::NumberBaseConverter { value } = self {
+                    fn parse_value(value: String, radix: u32) -> i64 {
+                        match i64::from_str_radix(&value, radix) {
+                            Ok(value) => value,
+                            Err(_) => 0,
+                        }
+                    }
 
-                fn parse_value(value: String, base: u32) -> i64 {
-                    match i64::from_str_radix(&value, base) {
-                        Ok(value) => value,
-                        Err(_) => 0,
+                    match number_base {
+                        NumberBase::Binary(input_value) => {
+                            *value = parse_value(input_value, 2);
+                        },
+                        NumberBase::Decimal(input_value) => {
+                            *value = parse_value(input_value, 10);
+                        },
+                        NumberBase::Hexadecimal(input_value) => {
+                            *value = parse_value(input_value, 16);
+                        },
+                        NumberBase::Octal(input_value) => {
+                            *value = parse_value(input_value, 8);
+                        },
                     }
                 }
-
-                match number_base {
-                    NumberBase::Binary(input_value) => {
-                        *value = parse_value(input_value, 2);
-                    },
-                    NumberBase::Decimal(input_value) => {
-                        *value = parse_value(input_value, 10);
-                    },
-                    NumberBase::Hexadecimal(input_value) => {
-                        *value = parse_value(input_value, 16);
-                    },
-                    NumberBase::Octal(input_value) => {
-                        *value = parse_value(input_value, 8);
-                    },
+            },
+            WidgetMessage::Base64ConverterChanged(input_value) => {
+                if let Widget::Base64Converter { encoded_value, decoded_value } = self {
+                    match input_value {
+                        Base64ConverterDirection::Encode(input_value) => {
+                            *decoded_value = input_value;
+                            *encoded_value = general_purpose::STANDARD.encode(decoded_value);
+                        },
+                        Base64ConverterDirection::Decode(input_value) => {
+                            *encoded_value = input_value;
+                            let decode_val = general_purpose::STANDARD.decode(encoded_value).unwrap_or_default();
+                            *decoded_value = String::from_utf8(decode_val).unwrap_or_default();
+                        },
+                    }
                 }
             }
         }
@@ -128,6 +153,7 @@ impl<'a> Widget {
     fn view(&self) -> Element<WidgetMessage> {
         match self {
             Widget::NumberBaseConverter { value } => Self::number_base_converter(*value),
+            Widget::Base64Converter { encoded_value, decoded_value } => Self::base64_converter(encoded_value, decoded_value),
         }
         .into()
     }
@@ -158,6 +184,34 @@ impl<'a> Widget {
         Self::container("Number base converter")
             .push(layout_section)
     }
+
+    fn base64_converter(
+        encoded_value: &String,
+        decoded_value: &String
+    ) -> Column<'a, WidgetMessage> {
+        let base64_encode_input = 
+            text_input("Encode", &decoded_value.as_str())
+            .on_input(|value| WidgetMessage::Base64ConverterChanged(Base64ConverterDirection::Encode(value)));
+
+        let base64_decode_input = 
+            text_input("Decode", &encoded_value.as_str())
+            .on_input(|value| WidgetMessage::Base64ConverterChanged(Base64ConverterDirection::Decode(value)));
+
+        let base64_encode_row = row![text("Encode"), base64_encode_input];
+        let base64_decode_row = row![text("Decode"), base64_decode_input];
+
+        let layout_section: Element<_> = 
+            column![base64_encode_row, base64_decode_row].into();
+        
+        Self::container("Base64 converter")
+            .push(layout_section)
+    }
+}
+
+#[derive(Debug, Clone)]
+enum Base64ConverterDirection {
+    Encode(String),
+    Decode(String),
 }
 
 #[derive(Debug, Clone)]
