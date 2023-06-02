@@ -1,6 +1,6 @@
 use iced::alignment;
 use iced::theme;
-use iced::widget::{Column, container, column, text, text_input};
+use iced::widget::{Column, container, column, row, text, text_input};
 use iced::{Color, Element, Font, Length, Renderer, Sandbox, Settings};
 
 pub fn main() -> iced::Result {
@@ -131,20 +131,24 @@ impl<'a> Widget {
         value: i64,
     ) -> Column<'a, WidgetMessage> {
         let decimal_text_input = 
-            text_input("Decimal", format!("{}", value).as_str())
+            text_input("0", format!("{}", value).as_str())
             .on_input(|value| WidgetMessage::NumberBaseConverterChanged(NumberBase::Decimal(value)));
         let binary_text_input = 
-            text_input("Binary", format!("{:b}", value).as_str())
+            text_input("0", format!("{:b}", value).as_str())
             .on_input(|value| WidgetMessage::NumberBaseConverterChanged(NumberBase::Binary(value)));
         let hexadecimal_text_input = 
-            text_input("Hexadecimal", format!("{:x}", value).as_str())
+            text_input("0", format!("{:x}", value).as_str())
             .on_input(|value| WidgetMessage::NumberBaseConverterChanged(NumberBase::Hexadecimal(value)));
         let octal_text_input = 
-            text_input("Octal", format!("{:o}", value).as_str())
+            text_input("0", format!("{:o}", value).as_str())
             .on_input(|value| WidgetMessage::NumberBaseConverterChanged(NumberBase::Octal(value)));
 
+        let decimal_row = row![text("Decimal"), decimal_text_input];
+        let binary_row = row![text("Binary"), binary_text_input];
+        let hexadecimal_row = row![text("Hexadecimal"), hexadecimal_text_input];
+        let octal_row = row![text("Octal"), octal_text_input];
         let layout_section: Element<_> = 
-            column![decimal_text_input, hexadecimal_text_input, binary_text_input, octal_text_input].into();
+            column![decimal_row, hexadecimal_row, binary_row, octal_row].into();
 
         Self::container("Number base converter")
             .push(layout_section)
