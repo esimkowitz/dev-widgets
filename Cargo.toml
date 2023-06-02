@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 iced = "0.9"
 iced_web = "0.4"
-wasm_bindgen = "0.2.86"
+wasm-bindgen = "0.2.86"
