@@ -1,7 +1,7 @@
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 
-pub fn Base64Converter(cx: Scope) -> Element {
+pub fn base64_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
@@ -12,10 +12,10 @@ pub fn Base64Converter(cx: Scope) -> Element {
                 "Base64 converter"
             }
             div {
-                ConverterInput {
+                converter_input {
                     direction: Direction::Encode
                 }
-                ConverterInput {
+                converter_input {
                     direction: Direction::Decode
                 }
             }
@@ -24,7 +24,7 @@ pub fn Base64Converter(cx: Scope) -> Element {
 }
 
 #[inline_props]
-fn ConverterInput(cx: Scope, direction: Direction) -> Element {
+fn converter_input(cx: Scope, direction: Direction) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
     let display_value = match direction {
         Direction::Encode => value_context.read().decoded_value.clone(),

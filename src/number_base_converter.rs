@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-pub fn NumberBaseConverter(cx: Scope) -> Element {
+pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     cx.render(rsx! {
         div {
@@ -8,16 +8,16 @@ pub fn NumberBaseConverter(cx: Scope) -> Element {
                 "Number base converter"
             }
             div {
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Decimal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Hexadecimal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Octal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Binary
                 }
             }
@@ -26,7 +26,7 @@ pub fn NumberBaseConverter(cx: Scope) -> Element {
 }
 
 #[inline_props]
-fn ConverterInput(cx: Scope, base: NumberBase) -> Element {
+fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
 
     let current_value = value_context.read().0;
