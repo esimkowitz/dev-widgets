@@ -13,10 +13,6 @@ fn main() {
 fn App(cx: Scope) -> Element {
     let current_widget = use_state(cx, || CurrentWidget::NumberBaseConverter);
 
-    fn set_display(current_widget: &UseState<CurrentWidget>, desired_widget: CurrentWidget) -> &str {
-        if *current_widget.get() == desired_widget { "block" } else { "none" }
-    }
-
     cx.render(rsx! {
         div {
             div {
@@ -30,18 +26,36 @@ fn App(cx: Scope) -> Element {
                 }
             }
             div {
-                display: set_display(current_widget, CurrentWidget::Base64Converter),
-                base64_converter::Base64Converter {}
-            }
-            div {
-                display: set_display(current_widget, CurrentWidget::NumberBaseConverter),
-                number_base_converter::NumberBaseConverter {}
+                WidgetView {
+                    current_widget: *current_widget.get()
+                }
             }
         }
     })
 }
 
-#[derive(PartialEq)]
+fn WidgetView(cx: Scope<WidgetViewProps>) -> Element {
+    fn set_display(current_widget: CurrentWidget, desired_widget: CurrentWidget) -> &'static str {
+        if current_widget == desired_widget { "block" } else { "none" }
+    }
+    cx.render(rsx! {
+        div {
+            display: set_display(cx.props.current_widget, CurrentWidget::Base64Converter),
+            base64_converter::Base64Converter {}
+        }
+        div {
+            display: set_display(cx.props.current_widget, CurrentWidget::NumberBaseConverter),
+            number_base_converter::NumberBaseConverter {}
+        }
+    })
+}
+
+#[derive(PartialEq, Props)]
+struct WidgetViewProps {
+    current_widget: CurrentWidget,
+}
+
+#[derive(PartialEq, Copy, Clone)]
 enum CurrentWidget {
     NumberBaseConverter,
     Base64Converter,
