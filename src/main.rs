@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
 
-pub mod number_base_converter;
 pub mod base64_converter;
+pub mod number_base_converter;
 
 fn main() {
     // launch the dioxus app in a webview
@@ -34,25 +34,25 @@ fn App(cx: Scope) -> Element {
     })
 }
 
-fn WidgetView(cx: Scope<WidgetViewProps>) -> Element {
+#[inline_props]
+fn WidgetView(cx: Scope, current_widget: CurrentWidget) -> Element {
     fn set_display(current_widget: CurrentWidget, desired_widget: CurrentWidget) -> &'static str {
-        if current_widget == desired_widget { "block" } else { "none" }
+        if current_widget == desired_widget {
+            "block"
+        } else {
+            "none"
+        }
     }
     cx.render(rsx! {
         div {
-            display: set_display(cx.props.current_widget, CurrentWidget::Base64Converter),
+            display: set_display(*current_widget, CurrentWidget::Base64Converter),
             base64_converter::Base64Converter {}
         }
         div {
-            display: set_display(cx.props.current_widget, CurrentWidget::NumberBaseConverter),
+            display: set_display(*current_widget, CurrentWidget::NumberBaseConverter),
             number_base_converter::NumberBaseConverter {}
         }
     })
-}
-
-#[derive(PartialEq, Props)]
-struct WidgetViewProps {
-    current_widget: CurrentWidget,
 }
 
 #[derive(PartialEq, Copy, Clone)]
