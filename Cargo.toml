@@ -7,5 +7,4 @@ description = "Dev Widgets"
 [dependencies]
 base64 = "0.21.2"
 dioxus = "0.3.2"
-dioxus-core = "0.3.3"
 dioxus-desktop = "0.3.0"
