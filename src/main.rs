@@ -1,5 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
+use dioxus_desktop::{Config, WindowBuilder};
+
 use phf::phf_map;
 
 pub mod base64_encoder;
@@ -7,7 +9,26 @@ pub mod number_base_converter;
 
 fn main() {
     // launch the dioxus app in a webview
-    dioxus_desktop::launch(app);
+    dioxus_desktop::launch_cfg(
+        app,
+        Config::default()
+            .with_custom_head(
+                r#"
+                <link rel="stylesheet" href="../src/style.css">
+                <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                "#
+                .to_string(),
+            )
+            .with_window(
+                WindowBuilder::new()
+                    .with_title("Dev Widgets")
+                    .with_resizable(true)
+                    .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
+                        800.0, 800.0,
+                    )),
+            ),
+    );
 }
 
 static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
@@ -36,18 +57,6 @@ fn app(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
     cx.render(rsx! {
-        head {
-            title { "Dev Widgets" }
-            meta {
-                name: "viewport",
-                content: "width=device-width, initial-scale=1"
-            }
-        }
-        link { rel: "stylesheet", href: "../src/style.css" },
-        link { 
-            rel: "stylesheet", 
-            href: "../bootstrap/bootstrap.min.css"
-        }
         div {
             class: "container-fluid align-items-start",
             div {
