@@ -16,6 +16,7 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
             title: base64_encoder::TITLE,
             widget_type: WidgetType::Encoder,
             widget: Widget::Base64Encoder,
+            function: base64_encoder::base64_encoder,
         }
     ],
     "Converter" => &[
@@ -23,12 +24,13 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
             title: number_base_converter::TITLE,
             widget_type: WidgetType::Converter,
             widget: Widget::NumberBaseConverter,
+            function: number_base_converter::number_base_converter,
         }
     ],
 };
 
 fn app(cx: Scope) -> Element {
-    let current_widget = use_state(cx, || Widget::NumberBaseConverter);
+    let current_widget = use_state(cx, || Widget::Home);
 
     cx.render(rsx! {
         link { rel: "stylesheet", href: "../src/style.css" },
@@ -78,6 +80,30 @@ fn widget_view(cx: Scope, current_widget: Widget) -> Element {
             display: set_display(*current_widget, Widget::NumberBaseConverter),
             number_base_converter::number_base_converter {}
         }
+        div {
+            display: set_display(*current_widget, Widget::Home),
+            home_page {}
+        }
+    })
+}
+
+fn home_page(cx: Scope) -> Element {
+    cx.render(rsx! {
+        div {
+            h2 {
+                "Home"
+            }
+
+            for widget_type in WIDGETS.keys() {
+                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                    div {
+                        a {
+                            widget_entry.title
+                        }
+                    }
+                }
+            }
+        }
     })
 }
 
@@ -86,6 +112,7 @@ struct WidgetEntry {
     title: &'static str,
     widget_type: WidgetType,
     widget: Widget,
+    function: fn(Scope) -> Element,
 }
 
 #[derive(PartialEq, Eq, Hash)]
@@ -98,4 +125,5 @@ enum WidgetType {
 enum Widget {
     NumberBaseConverter,
     Base64Encoder,
+    Home,
 }
