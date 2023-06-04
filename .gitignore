@@ -16,3 +16,6 @@ Cargo.lock
 
 # Bootstrap intermediate dir
 bootstrap/
+
+# macOS files
+.DS_Store

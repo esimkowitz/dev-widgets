@@ -8,14 +8,13 @@ description = "Dev Widgets"
 base64 = "0.21.2"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus" }
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus"}
-lazy_static = "1.4.0"
 phf = { version = "0.11.1", features = ["macros"] }
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
 version = "0.1.0"
-resources = ["bootstrap/bootstrap.min.css"]
+resources = ["bootstrap/bootstrap.min.css", "src/style.css"]
 copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
