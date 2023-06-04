@@ -1,24 +1,25 @@
+use dioxus::prelude::*;
 
-use dioxus::{prelude::*};
+pub const TITLE: &str = "Number Base Converter";
 
-pub fn NumberBaseConverter(cx: Scope) -> Element {
+pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     cx.render(rsx! {
         div {
             h2 {
-                "Number base converter"
+                TITLE
             }
             div {
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Decimal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Hexadecimal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Octal
                 }
-                ConverterInput {
+                converter_input {
                     base: NumberBase::Binary
                 }
             }
@@ -26,11 +27,12 @@ pub fn NumberBaseConverter(cx: Scope) -> Element {
     })
 }
 
-fn ConverterInput(cx: Scope<ConverterInputProps>) -> Element {
+#[inline_props]
+fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
-    
+
     let current_value = value_context.read().0;
-    let formatted_value = match cx.props.base {
+    let formatted_value = match base {
         NumberBase::Binary => format!("{:b}", current_value),
         NumberBase::Octal => format!("{:o}", current_value),
         NumberBase::Decimal => format!("{}", current_value),
@@ -39,7 +41,7 @@ fn ConverterInput(cx: Scope<ConverterInputProps>) -> Element {
     cx.render(rsx! {
         div {
             span {
-                match cx.props.base {
+                match base {
                     NumberBase::Binary => "Binary",
                     NumberBase::Octal => "Octal",
                     NumberBase::Decimal => "Decimal",
@@ -50,21 +52,16 @@ fn ConverterInput(cx: Scope<ConverterInputProps>) -> Element {
                 value: "{formatted_value}",
                 oninput: move |event| {
                     let event_value = event.value.clone();
-                    value_context.write().0 = match cx.props.base {
+                    value_context.write().0 = match base {
                         NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                         NumberBase::Octal => i64::from_str_radix(&event_value, 8),
-                        NumberBase::Decimal => i64::from_str_radix(&event_value, 10),
+                        NumberBase::Decimal => event_value.parse::<i64>(),
                         NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
                     }.unwrap_or(0);
                 }
             }
         }
     })
-}
-
-#[derive(PartialEq, Props)]
-struct ConverterInputProps {
-    base: NumberBase
 }
 
 struct ConverterValue(i64);
@@ -74,5 +71,5 @@ enum NumberBase {
     Binary,
     Octal,
     Decimal,
-    Hexadecimal
+    Hexadecimal,
 }
