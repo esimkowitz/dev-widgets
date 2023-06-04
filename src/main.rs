@@ -14,8 +14,8 @@ fn main() {
         Config::default()
             .with_custom_head(
                 r#"
-                <link rel="stylesheet" href="../style/style.css">
                 <link rel="stylesheet" href="../style/bootstrap.min.css">
+                <link rel="stylesheet" href="../style/style.css">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 "#
                 .to_string(),
@@ -60,10 +60,9 @@ fn app(cx: Scope) -> Element {
         div {
             class: "container-fluid align-items-start",
             div {
-                class: "row",
+                class: "row p-0 m-0",
                 div {
-                    class: "col-3 list-group",
-                    style: "width: 14em;",
+                    class: "col-3 list-group sidebar-list",
                     a {
                         class: "list-group-item list-group-item-action",
                         onclick: move |_| state.write().current_widget = Widget::Home,
@@ -92,7 +91,7 @@ fn app(cx: Scope) -> Element {
                     }
                 }
                 div {
-                    class: "col-7",
+                    class: "col-7 p-0 m-0",
                     widget_view {}
                 }
             }
@@ -130,16 +129,17 @@ fn home_page(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
+            class: "p-0 m-0",
             h2 {
                 "Home"
             }
 
             div {
-                class: "row gap-2",
+                class: "row gap-2 mx-auto p-0 m-0",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
-                            class: "col-4 card mx-auto",
+                            class: "col-4 card p-0 home-card",
                             onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
                                 class: "card-body stretched-link",
