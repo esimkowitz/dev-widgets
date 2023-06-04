@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 
 pub const TITLE: &str = "Number Base Converter";
+pub const DESCRIPTION: &str = "Convert numbers between binary, octal, decimal, and hexadecimal";
 
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
@@ -36,7 +37,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
         NumberBase::Binary => format!("{:b}", current_value),
         NumberBase::Octal => format!("{:o}", current_value),
         NumberBase::Decimal => format!("{}", current_value),
-        NumberBase::Hexadecimal => format!("{:x}", current_value),
+        NumberBase::Hexadecimal => format!("{:X}", current_value),
     };
     cx.render(rsx! {
         div {

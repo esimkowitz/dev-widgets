@@ -14,17 +14,17 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
     "Encoder" => &[
         WidgetEntry {
             title: base64_encoder::TITLE,
+            description: base64_encoder::DESCRIPTION,
             widget_type: WidgetType::Encoder,
             widget: Widget::Base64Encoder,
-            function: base64_encoder::base64_encoder,
         }
     ],
     "Converter" => &[
         WidgetEntry {
             title: number_base_converter::TITLE,
+            description: number_base_converter::DESCRIPTION,
             widget_type: WidgetType::Converter,
             widget: Widget::NumberBaseConverter,
-            function: number_base_converter::number_base_converter,
         }
     ],
 };
@@ -36,32 +36,57 @@ fn app(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
     cx.render(rsx! {
-        link { rel: "stylesheet", href: "../src/style.css" },
-        div {
-            class: "sidenav",
-            a {
-                onclick: move |_| state.write().current_widget = Widget::Home,
-                "Home"
+        head {
+            title { "Dev Widgets" }
+            meta {
+                name: "viewport",
+                content: "width=device-width, initial-scale=1"
             }
-            for widget_type in WIDGETS.keys() {
-                details {
-                    summary {
-                        class: "section-header",
-                        *widget_type
+        }
+        link { rel: "stylesheet", href: "../src/style.css" },
+        link { 
+            rel: "stylesheet", 
+            href: "../bootstrap/bootstrap.min.css"
+        }
+        div {
+            class: "container-fluid align-items-start",
+            div {
+                class: "row",
+                div {
+                    class: "col-3 list-group",
+                    style: "width: 14em;",
+                    a {
+                        class: "list-group-item list-group-item-action",
+                        onclick: move |_| state.write().current_widget = Widget::Home,
+                        "Home"
                     }
-                    for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                        a {
-                            class: "section-item",
-                            onclick: move |_| state.write().current_widget = widget_entry.widget,
-                            widget_entry.title
+                    ul {
+                        class: "list-group",
+                        for widget_type in WIDGETS.keys() {
+                            details {
+                                class: "list-group-item list-group",
+                                summary {
+                                    class: "section-header",
+                                    *widget_type
+                                }
+                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                    div {
+                                        class: "list-group-item-action",                                            onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                        onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                        a {
+                                            widget_entry.title
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+                div {
+                    class: "col-7",
+                    widget_view {}
+                }
             }
-        }
-        div {
-            class: "main",
-            widget_view {}
         }
     })
 }
@@ -71,12 +96,16 @@ fn widget_view(cx: Scope) -> Element {
 
     fn set_display(current_widget: Widget, desired_widget: Widget) -> &'static str {
         if current_widget == desired_widget {
-            "block"
+            "flex"
         } else {
             "none"
         }
     }
     cx.render(rsx! {
+        div {
+            display: set_display(state.read().current_widget, Widget::Home),
+            home_page {}
+        }
         div {
             display: set_display(state.read().current_widget, Widget::Base64Encoder),
             base64_encoder::base64_encoder {}
@@ -84,10 +113,6 @@ fn widget_view(cx: Scope) -> Element {
         div {
             display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
             number_base_converter::number_base_converter {}
-        }
-        div {
-            display: set_display(state.read().current_widget, Widget::Home),
-            home_page {}
         }
     })
 }
@@ -100,13 +125,23 @@ fn home_page(cx: Scope) -> Element {
                 "Home"
             }
 
-            ul {
+            div {
+                class: "row gap-2",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                        li {
-                            a {
-                                onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                widget_entry.title
+                        div {
+                            class: "col-4 card mx-auto",
+                            onclick: move |_| state.write().current_widget = widget_entry.widget,
+                            div {
+                                class: "card-body stretched-link",
+                                h5 {
+                                    class: "card-title",
+                                    widget_entry.title
+                                }
+                                p {
+                                    class: "card-text",
+                                    widget_entry.description
+                                }
                             }
                         }
                     }
@@ -123,9 +158,9 @@ struct WidgetViewState {
 #[derive(PartialEq, Eq)]
 struct WidgetEntry {
     title: &'static str,
+    description: &'static str,
     widget_type: WidgetType,
     widget: Widget,
-    function: fn(Scope) -> Element,
 }
 
 #[derive(PartialEq, Eq, Hash)]
