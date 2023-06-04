@@ -14,8 +14,8 @@ fn main() {
         Config::default()
             .with_custom_head(
                 r#"
-                <link rel="stylesheet" href="../src/style.css">
-                <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+                <link rel="stylesheet" href="../style/style.css">
+                <link rel="stylesheet" href="../style/bootstrap.min.css">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 "#
                 .to_string(),
