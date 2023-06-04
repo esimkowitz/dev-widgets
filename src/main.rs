@@ -71,12 +71,16 @@ fn widget_view(cx: Scope) -> Element {
 
     fn set_display(current_widget: Widget, desired_widget: Widget) -> &'static str {
         if current_widget == desired_widget {
-            "block"
+            "flex"
         } else {
             "none"
         }
     }
     cx.render(rsx! {
+        div {
+            display: set_display(state.read().current_widget, Widget::Home),
+            home_page {}
+        }
         div {
             display: set_display(state.read().current_widget, Widget::Base64Encoder),
             base64_encoder::base64_encoder {}
@@ -84,10 +88,6 @@ fn widget_view(cx: Scope) -> Element {
         div {
             display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
             number_base_converter::number_base_converter {}
-        }
-        div {
-            display: set_display(state.read().current_widget, Widget::Home),
-            home_page {}
         }
     })
 }
