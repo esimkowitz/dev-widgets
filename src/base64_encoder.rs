@@ -1,21 +1,23 @@
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 
-pub fn base64_converter(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || ConverterValue {
+pub const TITLE: &str = "Base64 Encoder/Decoder";
+
+pub fn base64_encoder(cx: Scope) -> Element {
+    use_shared_state_provider(cx, || EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
     });
     cx.render(rsx! {
         div {
             h2 {
-                "Base64 converter"
+                TITLE
             }
             div {
-                converter_input {
+                encoder_input {
                     direction: Direction::Encode
                 }
-                converter_input {
+                encoder_input {
                     direction: Direction::Decode
                 }
             }
@@ -24,8 +26,8 @@ pub fn base64_converter(cx: Scope) -> Element {
 }
 
 #[inline_props]
-fn converter_input(cx: Scope, direction: Direction) -> Element {
-    let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
+fn encoder_input(cx: Scope, direction: Direction) -> Element {
+    let value_context = use_shared_state::<EncoderValue>(cx).unwrap();
     let display_value = match direction {
         Direction::Encode => value_context.read().decoded_value.clone(),
         Direction::Decode => value_context.read().encoded_value.clone(),
@@ -61,7 +63,7 @@ fn converter_input(cx: Scope, direction: Direction) -> Element {
     })
 }
 
-struct ConverterValue {
+struct EncoderValue {
     encoded_value: String,
     decoded_value: String,
 }

@@ -1,11 +1,13 @@
 use dioxus::prelude::*;
 
+pub const TITLE: &str = "Number Base Converter";
+
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     cx.render(rsx! {
         div {
             h2 {
-                "Number base converter"
+                TITLE
             }
             div {
                 converter_input {
