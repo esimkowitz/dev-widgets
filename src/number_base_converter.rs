@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 
 pub const TITLE: &str = "Number Base Converter";
+pub const DESCRIPTION: &str = "Convert numbers between binary, octal, decimal, and hexadecimal";
 
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));

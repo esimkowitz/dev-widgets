@@ -2,6 +2,7 @@ use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 
 pub const TITLE: &str = "Base64 Encoder / Decoder";
+pub const DESCRIPTION: &str = "Encode and decode base64 strings";
 
 pub fn base64_encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {
