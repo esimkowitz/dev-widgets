@@ -36,7 +36,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
         NumberBase::Binary => format!("{:b}", current_value),
         NumberBase::Octal => format!("{:o}", current_value),
         NumberBase::Decimal => format!("{}", current_value),
-        NumberBase::Hexadecimal => format!("{:x}", current_value),
+        NumberBase::Hexadecimal => format!("{:X}", current_value),
     };
     cx.render(rsx! {
         div {
