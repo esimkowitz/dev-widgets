@@ -55,7 +55,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                     value_context.write().0 = match base {
                         NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                         NumberBase::Octal => i64::from_str_radix(&event_value, 8),
-                        NumberBase::Decimal => i64::from_str_radix(&event_value, 10),
+                        NumberBase::Decimal => event_value.parse::<i64>(),
                         NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
                     }.unwrap_or(0);
                 }
