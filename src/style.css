@@ -11,6 +11,13 @@
   padding-top: 20px;
 }
 
+.sidenav .section-header {
+  color: #818181;
+  padding: 6px 8px 6px 16px;
+  font-size: 18px;
+  display: block;
+}
+
 /* The navigation menu links */
 .sidenav a {
   padding: 6px 8px 6px 16px;
@@ -20,8 +27,13 @@
   display: block;
 }
 
+.sidenav .section-item {
+  margin-left: 12px;
+  font-size: 16px;
+}
+
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
+.sidenav .section-item:hover {
   color: #f1f1f1;
 }
 

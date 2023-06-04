@@ -30,24 +30,30 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
 };
 
 fn app(cx: Scope) -> Element {
-    let current_widget = use_state(cx, || Widget::Home);
+    use_shared_state_provider(cx, || WidgetViewState {
+        current_widget: Widget::Home,
+    });
+    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
     cx.render(rsx! {
         link { rel: "stylesheet", href: "../src/style.css" },
         div {
             class: "sidenav",
+            a {
+                onclick: move |_| state.write().current_widget = Widget::Home,
+                "Home"
+            }
             for widget_type in WIDGETS.keys() {
-                div {
-                    class: "sidenav-header",
-                    *widget_type
-                }
-                ul {
+                details {
+                    summary {
+                        class: "section-header",
+                        *widget_type
+                    }
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                        li {
-                            a {
-                                onclick: move |_| current_widget.set(widget_entry.widget),
-                                widget_entry.title
-                            }
+                        a {
+                            class: "section-item",
+                            onclick: move |_| state.write().current_widget = widget_entry.widget,
+                            widget_entry.title
                         }
                     }
                 }
@@ -55,15 +61,14 @@ fn app(cx: Scope) -> Element {
         }
         div {
             class: "main",
-            widget_view {
-                current_widget: *current_widget.get()
-            }
+            widget_view {}
         }
     })
 }
 
-#[inline_props]
-fn widget_view(cx: Scope, current_widget: Widget) -> Element {
+fn widget_view(cx: Scope) -> Element {
+    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
+
     fn set_display(current_widget: Widget, desired_widget: Widget) -> &'static str {
         if current_widget == desired_widget {
             "block"
@@ -73,38 +78,46 @@ fn widget_view(cx: Scope, current_widget: Widget) -> Element {
     }
     cx.render(rsx! {
         div {
-            display: set_display(*current_widget, Widget::Base64Encoder),
+            display: set_display(state.read().current_widget, Widget::Base64Encoder),
             base64_encoder::base64_encoder {}
         }
         div {
-            display: set_display(*current_widget, Widget::NumberBaseConverter),
+            display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
             number_base_converter::number_base_converter {}
         }
         div {
-            display: set_display(*current_widget, Widget::Home),
+            display: set_display(state.read().current_widget, Widget::Home),
             home_page {}
         }
     })
 }
 
 fn home_page(cx: Scope) -> Element {
+    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
             h2 {
                 "Home"
             }
 
-            for widget_type in WIDGETS.keys() {
-                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                    div {
-                        a {
-                            widget_entry.title
+            ul {
+                for widget_type in WIDGETS.keys() {
+                    for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                        li {
+                            a {
+                                onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                widget_entry.title
+                            }
                         }
                     }
                 }
             }
         }
     })
+}
+
+struct WidgetViewState {
+    current_widget: Widget,
 }
 
 #[derive(PartialEq, Eq)]
