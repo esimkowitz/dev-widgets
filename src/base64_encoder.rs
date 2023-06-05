@@ -1,5 +1,6 @@
 use base64::{engine::general_purpose, Engine as _};
-use dioxus::prelude::*;
+use dioxus::{prelude::*};
+use std::fmt;
 
 pub const TITLE: &str = "Base64 Encoder / Decoder";
 pub const DESCRIPTION: &str = "Encode and decode base64 strings";
@@ -11,7 +12,8 @@ pub fn base64_encoder(cx: Scope) -> Element {
     });
     cx.render(rsx! {
         div {
-            h2 {
+            div {
+                class: "widget-title",
                 TITLE
             }
             div {
@@ -37,14 +39,12 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     const NOT_STRING: &str = "Not String";
     cx.render(rsx! {
         div {
-            span {
-                match direction {
-                    Direction::Encode => "Encode",
-                    Direction::Decode => "Decode",
-                }
-            }
-            input {
+            class: "form-floating mb-3",
+            style: "height: 14em;",
+            textarea {
+                class: "form-control h-100",
                 value: "{display_value}",
+                id: "{direction}",
                 oninput: move |event| {
                     let input_value = event.value.clone();
                     match direction {
@@ -60,6 +60,13 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                     };
                 }
             }
+            label {
+                "for": "{direction}",
+                match direction {
+                    Direction::Encode => "Encode",
+                    Direction::Decode => "Decode",
+                }
+            }
         }
     })
 }
@@ -69,8 +76,14 @@ struct EncoderValue {
     decoded_value: String,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 enum Direction {
     Encode,
     Decode,
+}
+
+impl fmt::Display for Direction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }

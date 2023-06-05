@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use std::fmt;
 
 pub const TITLE: &str = "Number Base Converter";
 pub const DESCRIPTION: &str = "Convert numbers between binary, octal, decimal, and hexadecimal";
@@ -7,7 +8,8 @@ pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     cx.render(rsx! {
         div {
-            h2 {
+            div {
+                class: "widget-title",
                 TITLE
             }
             div {
@@ -41,16 +43,11 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     };
     cx.render(rsx! {
         div {
-            span {
-                match base {
-                    NumberBase::Binary => "Binary",
-                    NumberBase::Octal => "Octal",
-                    NumberBase::Decimal => "Decimal",
-                    NumberBase::Hexadecimal => "Hexadecimal",
-                }
-            }
+            class: "form-floating mb-3",
             input {
+                class: "form-control",
                 value: "{formatted_value}",
+                id: "{base}",
                 oninput: move |event| {
                     let event_value = event.value.clone();
                     value_context.write().0 = match base {
@@ -61,16 +58,31 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                     }.unwrap_or(0);
                 }
             }
+            label {
+                "for": "{base}",
+                match base {
+                    NumberBase::Binary => "Binary",
+                    NumberBase::Octal => "Octal",
+                    NumberBase::Decimal => "Decimal",
+                    NumberBase::Hexadecimal => "Hexadecimal",
+                }
+            }
         }
     })
 }
 
 struct ConverterValue(i64);
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 enum NumberBase {
     Binary,
     Octal,
     Decimal,
     Hexadecimal,
+}
+
+impl fmt::Display for NumberBase {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }

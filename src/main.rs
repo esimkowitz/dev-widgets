@@ -1,5 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
+use dioxus_desktop::{Config, WindowBuilder};
+
 use phf::phf_map;
 
 pub mod base64_encoder;
@@ -7,7 +9,27 @@ pub mod number_base_converter;
 
 fn main() {
     // launch the dioxus app in a webview
-    dioxus_desktop::launch(app);
+    dioxus_desktop::launch_cfg(
+        app,
+        Config::default()
+            .with_custom_head(
+                r#"
+                <link rel="stylesheet" href="../style/bootstrap.min.css">
+                <link rel="stylesheet" href="../style/style.css">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Dev Widgets</title>
+                "#
+                .to_string(),
+            )
+            .with_window(
+                WindowBuilder::new()
+                    .with_title("Dev Widgets")
+                    .with_resizable(true)
+                    .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
+                        800.0, 800.0,
+                    )),
+            ),
+    );
 }
 
 static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
@@ -36,25 +58,12 @@ fn app(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
     cx.render(rsx! {
-        head {
-            title { "Dev Widgets" }
-            meta {
-                name: "viewport",
-                content: "width=device-width, initial-scale=1"
-            }
-        }
-        link { rel: "stylesheet", href: "../src/style.css" },
-        link { 
-            rel: "stylesheet", 
-            href: "../bootstrap/bootstrap.min.css"
-        }
         div {
             class: "container-fluid align-items-start",
             div {
-                class: "row",
+                class: "row m-2",
                 div {
-                    class: "col-3 list-group",
-                    style: "width: 14em;",
+                    class: "col-3 list-group sidebar-list mb-2",
                     a {
                         class: "list-group-item list-group-item-action",
                         onclick: move |_| state.write().current_widget = Widget::Home,
@@ -83,7 +92,7 @@ fn app(cx: Scope) -> Element {
                     }
                 }
                 div {
-                    class: "col-7",
+                    class: "col-7 p-0 m-0",
                     widget_view {}
                 }
             }
@@ -121,16 +130,17 @@ fn home_page(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
+            class: "p-0 m-0",
             h2 {
                 "Home"
             }
 
             div {
-                class: "row gap-2",
+                class: "d-flex flex-row flex-wrap gap-2 mx-auto p-0 m-0",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
-                            class: "col-4 card mx-auto",
+                            class: "card p-0 home-card",
                             onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
                                 class: "card-body stretched-link",

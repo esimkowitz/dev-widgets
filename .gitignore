@@ -14,8 +14,8 @@ Cargo.lock
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
 
-# Bootstrap intermediate dir
-bootstrap/
+# Bootstrap minified CSS
+style/bootstrap.min.css
 
 # macOS files
 .DS_Store
