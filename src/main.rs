@@ -60,9 +60,9 @@ fn app(cx: Scope) -> Element {
         div {
             class: "container-fluid align-items-start",
             div {
-                class: "row p-0 m-0",
+                class: "row m-2",
                 div {
-                    class: "col-3 list-group sidebar-list",
+                    class: "col-3 list-group sidebar-list mb-2",
                     a {
                         class: "list-group-item list-group-item-action",
                         onclick: move |_| state.write().current_widget = Widget::Home,
@@ -135,11 +135,11 @@ fn home_page(cx: Scope) -> Element {
             }
 
             div {
-                class: "row gap-2 mx-auto p-0 m-0",
+                class: "d-flex flex-row flex-wrap gap-2 mx-auto p-0 m-0",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
-                            class: "col-4 card p-0 home-card",
+                            class: "card p-0 home-card",
                             onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
                                 class: "card-body stretched-link",

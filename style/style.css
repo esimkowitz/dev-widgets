@@ -33,3 +33,7 @@ body {
   width: 14em;
   height: 14em;
 }
+
+.widget-title {
+  font-size: 1.6em;
+}
