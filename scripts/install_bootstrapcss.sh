@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Install Bootstrap CSS
 echo "Installing Bootstrap CSS..."
