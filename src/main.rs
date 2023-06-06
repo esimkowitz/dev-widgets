@@ -27,6 +27,9 @@ fn main() {
                     .with_resizable(true)
                     .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
                         800.0, 800.0,
+                    ))
+                    .with_min_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
+                        600.0, 300.0,
                     )),
             ),
     );
