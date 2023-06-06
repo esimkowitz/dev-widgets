@@ -81,7 +81,7 @@ fn app(cx: Scope) -> Element {
                             }
                             for widget_entry in WIDGETS.get(widget_type).unwrap() {
                                 div {
-                                    class: "list-group-item-action",                                            onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                    class: "list-group-item-action",
                                     onclick: move |_| state.write().current_widget = widget_entry.widget,
                                     a {
                                         widget_entry.title
