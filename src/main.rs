@@ -74,14 +74,14 @@ fn app(cx: Scope) -> Element {
                     }
                     for widget_type in WIDGETS.keys() {
                         details {
-                            class: "list-group-item",
+                            class: "list-group-item pe-0",
                             summary {
                                 class: "section-header",
                                 *widget_type
                             }
                             for widget_entry in WIDGETS.get(widget_type).unwrap() {
                                 div {
-                                    class: "list-group-item-action",
+                                    class: "list-group-item list-group-item-action m-0",
                                     onclick: move |_| state.write().current_widget = widget_entry.widget,
                                     a {
                                         widget_entry.title
