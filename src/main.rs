@@ -144,7 +144,7 @@ fn home_page(cx: Scope) -> Element {
                             class: "card p-0 home-card",
                             onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
-                                class: "card-body stretched-link",
+                                class: "card-body",
                                 h5 {
                                     class: "card-title",
                                     widget_entry.title
