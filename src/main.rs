@@ -137,7 +137,7 @@ fn home_page(cx: Scope) -> Element {
             }
 
             div {
-                class: "d-flex flex-row flex-wrap gap-2 mx-auto p-0 m-0",
+                class: "d-flex flex-row flex-wrap gap-2 p-0 m-0",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
