@@ -62,32 +62,29 @@ fn app(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "container-fluid align-items-start",
+            class: "container-fluid",
             div {
-                class: "row m-2",
+                class: "d-flex flex-row wrapper",
                 div {
-                    class: "col-3 list-group sidebar-list mb-2",
+                    class: "list-group sidebar-list mb-2 pt-2 pe-2",
                     a {
                         class: "list-group-item list-group-item-action",
                         onclick: move |_| state.write().current_widget = Widget::Home,
                         "Home"
                     }
-                    ul {
-                        class: "list-group",
-                        for widget_type in WIDGETS.keys() {
-                            details {
-                                class: "list-group-item list-group",
-                                summary {
-                                    class: "section-header",
-                                    *widget_type
-                                }
-                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                    div {
-                                        class: "list-group-item-action",                                            onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                        onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                        a {
-                                            widget_entry.title
-                                        }
+                    for widget_type in WIDGETS.keys() {
+                        details {
+                            class: "list-group-item",
+                            summary {
+                                class: "section-header",
+                                *widget_type
+                            }
+                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                div {
+                                    class: "list-group-item-action",                                            onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                    onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                    a {
+                                        widget_entry.title
                                     }
                                 }
                             }
@@ -95,7 +92,7 @@ fn app(cx: Scope) -> Element {
                     }
                 }
                 div {
-                    class: "col-7 p-0 m-0",
+                    class: "p-0 m-0",
                     widget_view {}
                 }
             }
@@ -133,7 +130,7 @@ fn home_page(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
-            class: "p-0 m-0",
+            class: "pb-5 m-0",
             h2 {
                 "Home"
             }

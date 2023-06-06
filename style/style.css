@@ -4,6 +4,12 @@ body {
   -webkit-user-select: none;
 }
 
+.wrapper {
+  overflow: unset;
+  height: 100%;
+  width: 100%;
+}
+
 /* Taken from https://ordinarycoders.com/blog/article/codepen-bootstrap-card-hovers */
 .card {
   border-radius: 4px;
@@ -23,6 +29,11 @@ body {
 
 .sidebar-list {
   width: 14em;
+  min-width: 14em;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  overflow: unset;
 }
 
 .card-body {
