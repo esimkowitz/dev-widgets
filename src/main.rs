@@ -131,7 +131,8 @@ fn home_page(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "pb-5 m-0",
-            h2 {
+            div {
+                class: "widget-title",
                 "Home"
             }
 
