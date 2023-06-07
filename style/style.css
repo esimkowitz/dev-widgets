@@ -1,7 +1,17 @@
 body {
+  margin: unset;
+  padding: unset;
   font-family: Arial, Helvetica, sans-serif;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-overflow-scrolling: touch; /* enables “momentum” (smooth) scrolling */
+  overscroll-behavior: contain;
+}
+
+.container-fluid {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 /* Taken from https://ordinarycoders.com/blog/article/codepen-bootstrap-card-hovers */
@@ -17,23 +27,57 @@ body {
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
 .sidebar-list {
   width: 14em;
+  min-width: 14em;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.widget-view {
+  margin-left: 14em;
+  width: 100%;
 }
 
 .card-body {
   width: 100%;
 }
 
-.home-card {
-  width: 14em;
-  height: 14em;
+.home-page .card {
+  width: 10em;
+  height: 10em;
+}
+
+.home-page .card .card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.home-page .card .card-body {
+  font-size: .8em;
 }
 
 .widget-title {
+  position: fixed;
+  top: 0;
   font-size: 1.6em;
+  background-color: #fff;
+  width: 100%;
+  z-index: 100;
+  /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
+  margin-left: -2em;
+  padding-left: 2em;
+}
+
+.widget-body {
+  padding-top: 3em;
+  width: 100%;
+}
+
+textarea {
+  height: 14em;
 }

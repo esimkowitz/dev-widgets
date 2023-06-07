@@ -1,9 +1,8 @@
 use std::process::Command;
 use std::env;
 
-// Example custom build script.
 fn main() {
-    // Tell Cargo that if the given file changes, to rerun this build script.
+    // Tell Cargo to rerun the build script if the build script or scripts/install_bootstrapcss.sh files change.
     println!("cargo:rerun-if-changed=$CARGO_MANIFEST_DIR/scripts/install_bootstrapcss.sh");
     println!("cargo:rerun-if-changed=$CARGO_MANIFEST_DIR/build.rs");
 

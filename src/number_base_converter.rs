@@ -13,6 +13,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
                 TITLE
             }
             div {
+                class: "widget-body",
                 converter_input {
                     base: NumberBase::Decimal
                 }

@@ -5,6 +5,8 @@ use dioxus_desktop::{Config, WindowBuilder};
 use phf::phf_map;
 
 pub mod base64_encoder;
+pub mod date_converter;
+pub mod json_yaml_converter;
 pub mod number_base_converter;
 
 fn main() {
@@ -27,6 +29,9 @@ fn main() {
                     .with_resizable(true)
                     .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
                         800.0, 800.0,
+                    ))
+                    .with_min_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(
+                        600.0, 300.0,
                     )),
             ),
     );
@@ -39,7 +44,7 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
             description: base64_encoder::DESCRIPTION,
             widget_type: WidgetType::Encoder,
             widget: Widget::Base64Encoder,
-        }
+        },
     ],
     "Converter" => &[
         WidgetEntry {
@@ -47,7 +52,19 @@ static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
             description: number_base_converter::DESCRIPTION,
             widget_type: WidgetType::Converter,
             widget: Widget::NumberBaseConverter,
-        }
+        },
+        WidgetEntry {
+            title: date_converter::TITLE,
+            description: date_converter::DESCRIPTION,
+            widget_type: WidgetType::Converter,
+            widget: Widget::DateConverter,
+        },
+        WidgetEntry {
+            title: json_yaml_converter::TITLE,
+            description: json_yaml_converter::DESCRIPTION,
+            widget_type: WidgetType::Converter,
+            widget: Widget::JsonYamlConverter,
+        },
     ],
 };
 
@@ -59,42 +76,36 @@ fn app(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "container-fluid align-items-start",
+            class: "container-fluid",
             div {
-                class: "row m-2",
+                class: "d-flex flex-row wrapper",
                 div {
-                    class: "col-3 list-group sidebar-list mb-2",
+                    class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
                     a {
                         class: "list-group-item list-group-item-action",
                         onclick: move |_| state.write().current_widget = Widget::Home,
                         "Home"
                     }
-                    ul {
-                        class: "list-group",
-                        for widget_type in WIDGETS.keys() {
-                            details {
-                                class: "list-group-item list-group",
-                                summary {
-                                    class: "section-header",
-                                    *widget_type
-                                }
-                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                    div {
-                                        class: "list-group-item-action",                                            onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                        onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                        a {
-                                            widget_entry.title
-                                        }
+                    for widget_type in WIDGETS.keys() {
+                        details {
+                            class: "list-group-item pe-0",
+                            summary {
+                                class: "section-header",
+                                *widget_type
+                            }
+                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                div {
+                                    class: "list-group-item list-group-item-action m-0",
+                                    onclick: move |_| state.write().current_widget = widget_entry.widget,
+                                    a {
+                                        widget_entry.title
                                     }
                                 }
                             }
                         }
                     }
                 }
-                div {
-                    class: "col-7 p-0 m-0",
-                    widget_view {}
-                }
+                widget_view {}
             }
         }
     })
@@ -105,23 +116,34 @@ fn widget_view(cx: Scope) -> Element {
 
     fn set_display(current_widget: Widget, desired_widget: Widget) -> &'static str {
         if current_widget == desired_widget {
-            "flex"
+            "block"
         } else {
             "none"
         }
     }
     cx.render(rsx! {
         div {
-            display: set_display(state.read().current_widget, Widget::Home),
-            home_page {}
-        }
-        div {
-            display: set_display(state.read().current_widget, Widget::Base64Encoder),
-            base64_encoder::base64_encoder {}
-        }
-        div {
-            display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
-            number_base_converter::number_base_converter {}
+            class: "widget-view",
+            div {
+                display: set_display(state.read().current_widget, Widget::Home),
+                home_page {}
+            }
+            div {
+                display: set_display(state.read().current_widget, Widget::Base64Encoder),
+                base64_encoder::base64_encoder {}
+            }
+            div {
+                display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
+                number_base_converter::number_base_converter {}
+            }
+            div {
+                display: set_display(state.read().current_widget, Widget::DateConverter),
+                date_converter::date_converter {}
+            }
+            div {
+                display: set_display(state.read().current_widget, Widget::JsonYamlConverter),
+                json_yaml_converter::json_yaml_converter {}
+            }
         }
     })
 }
@@ -130,25 +152,26 @@ fn home_page(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
-            class: "p-0 m-0",
-            h2 {
+            class: "pb-5 m-0 home-page",
+            div {
+                class: "widget-title",
                 "Home"
             }
 
             div {
-                class: "d-flex flex-row flex-wrap gap-2 mx-auto p-0 m-0",
+                class: "d-flex flex-row flex-wrap gap-2 widget-body",
                 for widget_type in WIDGETS.keys() {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
-                            class: "card p-0 home-card",
+                            class: "card p-0",
                             onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
-                                class: "card-body stretched-link",
-                                h5 {
+                                class: "card-body",
+                                div {
                                     class: "card-title",
                                     widget_entry.title
                                 }
-                                p {
+                                div {
                                     class: "card-text",
                                     widget_entry.description
                                 }
@@ -181,7 +204,9 @@ enum WidgetType {
 
 #[derive(PartialEq, Eq, Copy, Clone)]
 enum Widget {
-    NumberBaseConverter,
     Base64Encoder,
+    DateConverter,
+    NumberBaseConverter,
+    JsonYamlConverter,
     Home,
 }
