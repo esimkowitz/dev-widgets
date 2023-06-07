@@ -12,6 +12,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
     });
     cx.render(rsx! {
         div {
+            class: "base64-encoder",
             div {
                 class: "widget-title",
                 TITLE
@@ -41,8 +42,9 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     cx.render(rsx! {
         div {
             class: "form-floating mb-3",
+            style: "height: 14em;",
             textarea {
-                class: "form-control h-100",
+                class: "form-control",
                 value: "{display_value}",
                 id: "{direction}",
                 oninput: move |event| {
