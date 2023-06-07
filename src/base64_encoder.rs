@@ -44,7 +44,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
             class: "form-floating mb-3",
             style: "height: 14em;",
             textarea {
-                class: "form-control",
+                class: "form-control h-100",
                 value: "{display_value}",
                 id: "{direction}",
                 oninput: move |event| {
