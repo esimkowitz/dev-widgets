@@ -2,7 +2,7 @@
 use dioxus::prelude::*;
 use dioxus_desktop::{Config, WindowBuilder};
 
-use phf::phf_map;
+use phf::phf_ordered_map;
 
 pub mod base64_encoder;
 pub mod color_picker;
@@ -10,6 +10,20 @@ pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
 pub mod widget_entry;
+
+static WIDGETS: phf::OrderedMap<&str, &'static [widget_entry::WidgetEntry]> = phf_ordered_map! {
+    "Encoder" => &[
+        base64_encoder::WIDGET_ENTRY,
+    ],
+    "Converter" => &[
+        number_base_converter::WIDGET_ENTRY,
+        date_converter::WIDGET_ENTRY,
+        json_yaml_converter::WIDGET_ENTRY,
+    ],
+    "Media" => &[
+        color_picker::WIDGET_ENTRY,
+    ],
+};
 
 fn main() {
     // launch the dioxus app in a webview
@@ -38,20 +52,6 @@ fn main() {
             ),
     );
 }
-
-static WIDGETS: phf::Map<&str, &'static [widget_entry::WidgetEntry]> = phf_map! {
-    "Encoder" => &[
-        base64_encoder::WIDGET_ENTRY,
-    ],
-    "Converter" => &[
-        number_base_converter::WIDGET_ENTRY,
-        date_converter::WIDGET_ENTRY,
-        json_yaml_converter::WIDGET_ENTRY,
-    ],
-    "Media" => &[
-        color_picker::WIDGET_ENTRY,
-    ],
-};
 
 fn app(cx: Scope) -> Element {
     use_shared_state_provider(cx, || WidgetViewState {
