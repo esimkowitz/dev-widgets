@@ -1,8 +1,14 @@
 use dioxus::prelude::*;
 use std::fmt;
 
-pub const TITLE: &str = "Number Base Converter";
-pub const DESCRIPTION: &str = "Convert numbers between binary, octal, decimal, and hexadecimal";
+use crate::widget_entry;
+
+pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+    title: "Number Base Converter",
+    description: "Convert numbers between binary, octal, decimal, and hexadecimal",
+    widget: widget_entry::Widget::NumberBaseConverter,
+    function: number_base_converter,
+};
 
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
@@ -10,7 +16,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
         div {
             div {
                 class: "widget-title",
-                TITLE
+                WIDGET_ENTRY.title
             }
             div {
                 class: "widget-body",

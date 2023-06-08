@@ -3,13 +3,13 @@ use dioxus::prelude::*;
 use crate::widget_entry;
 
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
-    title: "Date Converter",
-    description: "Convert dates between formats",
-    widget: widget_entry::Widget::DateConverter,
-    function: date_converter,
+    title: "Color Picker",
+    description: "Pick a color and get its output in different formats",
+    widget: widget_entry::Widget::ColorPicker,
+    function: color_picker,
 };
 
-pub fn date_converter(cx: Scope) -> Element {
+pub fn color_picker(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             div {
