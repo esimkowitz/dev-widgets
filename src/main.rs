@@ -4,10 +4,12 @@ use dioxus_desktop::{Config, WindowBuilder};
 
 use phf::phf_map;
 
+pub mod widget_entry;
 pub mod base64_encoder;
 pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
+pub mod color_picker;
 
 fn main() {
     // launch the dioxus app in a webview
@@ -37,40 +39,23 @@ fn main() {
     );
 }
 
-static WIDGETS: phf::Map<&str, &'static [WidgetEntry]> = phf_map! {
+static WIDGETS: phf::Map<&str, &'static [widget_entry::WidgetEntry]> = phf_map! {
     "Encoder" => &[
-        WidgetEntry {
-            title: base64_encoder::TITLE,
-            description: base64_encoder::DESCRIPTION,
-            widget_type: WidgetType::Encoder,
-            widget: Widget::Base64Encoder,
-        },
+        base64_encoder::WIDGET_ENTRY,
     ],
     "Converter" => &[
-        WidgetEntry {
-            title: number_base_converter::TITLE,
-            description: number_base_converter::DESCRIPTION,
-            widget_type: WidgetType::Converter,
-            widget: Widget::NumberBaseConverter,
-        },
-        WidgetEntry {
-            title: date_converter::TITLE,
-            description: date_converter::DESCRIPTION,
-            widget_type: WidgetType::Converter,
-            widget: Widget::DateConverter,
-        },
-        WidgetEntry {
-            title: json_yaml_converter::TITLE,
-            description: json_yaml_converter::DESCRIPTION,
-            widget_type: WidgetType::Converter,
-            widget: Widget::JsonYamlConverter,
-        },
+        number_base_converter::WIDGET_ENTRY,
+        date_converter::WIDGET_ENTRY,
+        json_yaml_converter::WIDGET_ENTRY,
+    ],
+    "Media" => &[
+        color_picker::WIDGET_ENTRY,
     ],
 };
 
 fn app(cx: Scope) -> Element {
     use_shared_state_provider(cx, || WidgetViewState {
-        current_widget: Widget::Home,
+        current_widget: widget_entry::Widget::Home,
     });
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
@@ -83,7 +68,7 @@ fn app(cx: Scope) -> Element {
                     class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
                     a {
                         class: "list-group-item list-group-item-action",
-                        onclick: move |_| state.write().current_widget = Widget::Home,
+                        onclick: move |_| state.write().current_widget = widget_entry::Widget::Home,
                         "Home"
                     }
                     for widget_type in WIDGETS.keys() {
@@ -114,7 +99,7 @@ fn app(cx: Scope) -> Element {
 fn widget_view(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
-    fn set_display(current_widget: Widget, desired_widget: Widget) -> &'static str {
+    fn set_display(current_widget: widget_entry::Widget, desired_widget: widget_entry::Widget) -> &'static str {
         if current_widget == desired_widget {
             "block"
         } else {
@@ -125,24 +110,16 @@ fn widget_view(cx: Scope) -> Element {
         div {
             class: "widget-view",
             div {
-                display: set_display(state.read().current_widget, Widget::Home),
+                display: set_display(state.read().current_widget, widget_entry::Widget::Home),
                 home_page {}
             }
-            div {
-                display: set_display(state.read().current_widget, Widget::Base64Encoder),
-                base64_encoder::base64_encoder {}
-            }
-            div {
-                display: set_display(state.read().current_widget, Widget::NumberBaseConverter),
-                number_base_converter::number_base_converter {}
-            }
-            div {
-                display: set_display(state.read().current_widget, Widget::DateConverter),
-                date_converter::date_converter {}
-            }
-            div {
-                display: set_display(state.read().current_widget, Widget::JsonYamlConverter),
-                json_yaml_converter::json_yaml_converter {}
+            for widget_type in WIDGETS.keys() {
+                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                    div {
+                        display: set_display(state.read().current_widget, widget_entry.widget),
+                        (widget_entry.function)(cx)
+                    }
+                }
             }
         }
     })
@@ -184,29 +161,8 @@ fn home_page(cx: Scope) -> Element {
     })
 }
 
+
+
 struct WidgetViewState {
-    current_widget: Widget,
-}
-
-#[derive(PartialEq, Eq)]
-struct WidgetEntry {
-    title: &'static str,
-    description: &'static str,
-    widget_type: WidgetType,
-    widget: Widget,
-}
-
-#[derive(PartialEq, Eq, Hash)]
-enum WidgetType {
-    Converter,
-    Encoder,
-}
-
-#[derive(PartialEq, Eq, Copy, Clone)]
-enum Widget {
-    Base64Encoder,
-    DateConverter,
-    NumberBaseConverter,
-    JsonYamlConverter,
-    Home,
+    current_widget: widget_entry::Widget,
 }

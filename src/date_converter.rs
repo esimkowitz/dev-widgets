@@ -1,14 +1,21 @@
 use dioxus::prelude::*;
 
-pub const TITLE: &str = "Date Converter";
-pub const DESCRIPTION: &str = "Convert dates between formats";
+use crate::widget_entry;
+
+pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+    title: "Date Converter",
+    description: "Convert dates between formats",
+    widget_type: widget_entry::WidgetType::Converter,
+    widget: widget_entry::Widget::DateConverter,
+    function: date_converter,
+};
 
 pub fn date_converter(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             div {
                 class: "widget-title",
-                TITLE
+                WIDGET_ENTRY.title
             }
         }
     })

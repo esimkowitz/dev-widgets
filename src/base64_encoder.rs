@@ -2,8 +2,15 @@ use base64::{engine::general_purpose, Engine as _};
 use dioxus::{prelude::*};
 use std::fmt;
 
-pub const TITLE: &str = "Base64 Encoder / Decoder";
-pub const DESCRIPTION: &str = "Encode and decode base64 strings";
+use crate::widget_entry;
+
+pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+    title: "Base64 Encoder / Decoder",
+    description: "Encode and decode base64 strings",
+    widget_type: widget_entry::WidgetType::Encoder,
+    widget: widget_entry::Widget::Base64Encoder,
+    function: base64_encoder,
+};
 
 pub fn base64_encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {
@@ -15,7 +22,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
             class: "base64-encoder",
             div {
                 class: "widget-title",
-                TITLE
+                WIDGET_ENTRY.title
             }
             div {
                 class: "widget-body",
