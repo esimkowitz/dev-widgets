@@ -1,5 +1,5 @@
 use base64::{engine::general_purpose, Engine as _};
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
 use std::fmt;
 
 use crate::widget_entry;

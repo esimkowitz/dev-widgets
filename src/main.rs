@@ -4,12 +4,12 @@ use dioxus_desktop::{Config, WindowBuilder};
 
 use phf::phf_map;
 
-pub mod widget_entry;
 pub mod base64_encoder;
+pub mod color_picker;
 pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
-pub mod color_picker;
+pub mod widget_entry;
 
 fn main() {
     // launch the dioxus app in a webview
@@ -99,7 +99,10 @@ fn app(cx: Scope) -> Element {
 fn widget_view(cx: Scope) -> Element {
     let state = use_shared_state::<WidgetViewState>(cx).unwrap();
 
-    fn set_display(current_widget: widget_entry::Widget, desired_widget: widget_entry::Widget) -> &'static str {
+    fn set_display(
+        current_widget: widget_entry::Widget,
+        desired_widget: widget_entry::Widget,
+    ) -> &'static str {
         if current_widget == desired_widget {
             "block"
         } else {
@@ -160,8 +163,6 @@ fn home_page(cx: Scope) -> Element {
         }
     })
 }
-
-
 
 struct WidgetViewState {
     current_widget: widget_entry::Widget,
