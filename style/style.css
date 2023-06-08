@@ -77,3 +77,55 @@ body {
   padding-top: 3em;
   width: 100%;
 }
+
+.colorwheel-wrapper {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  user-select: none;
+  z-index: 10;
+}
+
+.colorwheel-gradient {
+  height: 100%;
+  width: 100%;
+  background: conic-gradient(
+    from 90deg,
+    rgb(255 0 0),
+    rgb(255 0 255),
+    rgb(0 0 255),
+    rgb(0 255 255),
+    rgb(0 255 0),
+    rgb(255 255 0),
+    rgb(255 0 0)
+  );
+  border-radius: 50%;
+  z-index: 9;
+}
+
+.colorwheel-inner {
+  position: absolute;
+  height: 85%;
+  width: 85%;
+  margin-top: 7.5%;
+  margin-left: 7.5%;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.saturation-brightness-picker {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+      0deg,
+      hsla(0deg, 0%, 50%, 0.5) 0%,
+      hsl(0deg, 100%, 50%, 0.5) 100%
+    ),
+    linear-gradient(
+      90deg,
+      hsl(0deg, 0%, 0%, 0.5) 0%,
+      hsl(0deg, 0%, 50%, 0.5) 100%
+    );
+  /* background-size: 95% 100%, 5% 100%; */
+}

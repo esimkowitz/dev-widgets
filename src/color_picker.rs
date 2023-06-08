@@ -16,6 +16,18 @@ pub fn color_picker(cx: Scope) -> Element {
                 class: "widget-title",
                 WIDGET_ENTRY.title
             }
+            div {
+                class: "widget-body d-flex flex-row",
+                div {
+                    class: "colorwheel-wrapper",
+                    div {
+                        class: "colorwheel-gradient",
+                        div {
+                            class: "colorwheel-inner"
+                        }
+                    }
+                }
+            }
         }
     })
 }
