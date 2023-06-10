@@ -8,6 +8,7 @@ description = "Dev Widgets"
 base64 = "0.21.2"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
+dioxus-router = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
 phf = { version = "0.11.1", features = ["macros"] }
 
 [package.metadata.bundle]

@@ -1,6 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config, WindowBuilder};
+use dioxus_router::{Router, Route, Link, Redirect};
 
 use phf::phf_ordered_map;
 
@@ -54,82 +55,59 @@ fn main() {
 }
 
 fn app(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || WidgetViewState {
-        current_widget: widget_entry::Widget::Home,
-    });
-    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
-
     cx.render(rsx! {
         div {
             class: "container-fluid",
-            div {
-                class: "d-flex flex-row wrapper",
+            Router {
                 div {
-                    class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
-                    a {
-                        class: "list-group-item list-group-item-action",
-                        onclick: move |_| state.write().current_widget = widget_entry::Widget::Home,
-                        "Home"
-                    }
-                    for widget_type in WIDGETS.keys() {
-                        details {
-                            class: "list-group-item pe-0",
-                            summary {
-                                class: "section-header",
-                                *widget_type
+                    class: "d-flex flex-row wrapper",
+                    div {
+                        class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
+                        div {
+                            class: "list-group-item list-group-item-action",
+                            "Home"
+                            Link {
+                                class: "stretched-link",
+                                to: "/home"
                             }
-                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                div {
-                                    class: "list-group-item list-group-item-action m-0",
-                                    onclick: move |_| state.write().current_widget = widget_entry.widget,
-                                    a {
+                        }
+                        for widget_type in WIDGETS.keys() {
+                            details {
+                                class: "list-group-item pe-0",
+                                summary {
+                                    class: "section-header",
+                                    *widget_type
+                                }
+                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                    div {
+                                        class: "list-group-item list-group-item-action m-0",
                                         widget_entry.title
+                                        Link {
+                                            class: "stretched-link",
+                                            to: widget_entry.path
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                widget_view {}
-            }
-        }
-    })
-}
-
-fn widget_view(cx: Scope) -> Element {
-    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
-
-    fn set_display(
-        current_widget: widget_entry::Widget,
-        desired_widget: widget_entry::Widget,
-    ) -> &'static str {
-        if current_widget == desired_widget {
-            "block"
-        } else {
-            "none"
-        }
-    }
-    cx.render(rsx! {
-        div {
-            class: "widget-view",
-            div {
-                display: set_display(state.read().current_widget, widget_entry::Widget::Home),
-                home_page {}
-            }
-            for widget_type in WIDGETS.keys() {
-                for widget_entry in WIDGETS.get(widget_type).unwrap() {
                     div {
-                        display: set_display(state.read().current_widget, widget_entry.widget),
-                        (widget_entry.function)(cx)
+                        class: "widget-view",
+                        Route { to: "/home", home_page {} }
+                        for widget_type in WIDGETS.keys() {
+                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                Route { to: widget_entry.path, (widget_entry.function)(cx) }
+                            }
+                        }
                     }
                 }
+                Redirect { from: "", to: "/home" }
             }
         }
     })
 }
 
 fn home_page(cx: Scope) -> Element {
-    let state = use_shared_state::<WidgetViewState>(cx).unwrap();
     cx.render(rsx! {
         div {
             class: "pb-5 m-0 home-page",
@@ -144,7 +122,6 @@ fn home_page(cx: Scope) -> Element {
                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                         div {
                             class: "card p-0",
-                            onclick: move |_| state.write().current_widget = widget_entry.widget,
                             div {
                                 class: "card-body",
                                 div {
@@ -155,6 +132,10 @@ fn home_page(cx: Scope) -> Element {
                                     class: "card-text",
                                     widget_entry.description
                                 }
+                                Link {
+                                    class: "stretched-link",
+                                    to: widget_entry.path
+                                }
                             }
                         }
                     }
@@ -162,8 +143,4 @@ fn home_page(cx: Scope) -> Element {
             }
         }
     })
-}
-
-struct WidgetViewState {
-    current_widget: widget_entry::Widget,
 }
