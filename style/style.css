@@ -1,17 +1,21 @@
+html {
+  overscroll-behavior: none;
+}
+
 body {
   margin: unset;
   padding: unset;
   font-family: Arial, Helvetica, sans-serif;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-overflow-scrolling: touch; /* enables “momentum” (smooth) scrolling */
-  overscroll-behavior: contain;
+  overflow-y: scroll;
 }
 
 .container-fluid {
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
+  clip-path: inset(0 0 0 0);
 }
 
 /* Taken from https://ordinarycoders.com/blog/article/codepen-bootstrap-card-hovers */
