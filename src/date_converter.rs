@@ -5,7 +5,7 @@ use crate::widget_entry;
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     title: "Date Converter",
     description: "Convert dates between formats",
-    widget: widget_entry::Widget::DateConverter,
+    path: "/date-converter",
     function: date_converter,
 };
 
