@@ -1,7 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config, WindowBuilder};
-use dioxus_router::{Router, Route, Link, Redirect};
+use dioxus_router::{Link, Redirect, Route, Router};
 
 use phf::phf_ordered_map;
 
