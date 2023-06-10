@@ -4,16 +4,6 @@ use dioxus::prelude::*;
 pub struct WidgetEntry {
     pub title: &'static str,
     pub description: &'static str,
-    pub widget: Widget,
+    pub path: &'static str,
     pub function: fn(cx: Scope) -> Element,
-}
-
-#[derive(PartialEq, Eq, Copy, Clone)]
-pub enum Widget {
-    Base64Encoder,
-    DateConverter,
-    NumberBaseConverter,
-    JsonYamlConverter,
-    ColorPicker,
-    Home,
 }

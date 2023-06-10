@@ -5,7 +5,7 @@ use crate::widget_entry;
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     title: "JSON <> YAML Converter",
     description: "Convert between JSON and YAML file formats",
-    widget: widget_entry::Widget::JsonYamlConverter,
+    path: "/json-yaml-converter",
     function: json_yaml_converter,
 };
 

@@ -5,7 +5,7 @@ use crate::widget_entry;
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     title: "Color Picker",
     description: "Pick a color and get its output in different formats",
-    widget: widget_entry::Widget::ColorPicker,
+    path: "/color-picker",
     function: color_picker,
 };
 
