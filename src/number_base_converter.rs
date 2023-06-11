@@ -12,6 +12,8 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
 
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
+    use_shared_state_provider(cx, || FormatString(false));
+
     cx.render(rsx! {
         div {
             div {
@@ -20,6 +22,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
             }
             div {
                 class: "widget-body",
+                format_string_toggle {}
                 converter_input {
                     base: NumberBase::Decimal
                 }
@@ -37,17 +40,37 @@ pub fn number_base_converter(cx: Scope) -> Element {
     })
 }
 
+fn format_string_toggle(cx: Scope) -> Element {
+    let format_string = use_shared_state::<FormatString>(cx).unwrap();
+    cx.render(rsx! {
+        div {
+            class: "form-check form-switch",
+            input {
+                class: "form-check-input",
+                r#type: "checkbox",
+                id: "format-string-toggle",
+                role: "switch",
+                onclick: move |event| {
+                    let is_enabled = event.value == "true";
+                    format_string.write().0 = is_enabled;
+                }
+            }
+            label {
+                class: "form-check-label",
+                "for": "format-string-toggle",
+                "Format string"
+            }
+        }
+    })
+}
+
 #[inline_props]
 fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
+    let format_string = use_shared_state::<FormatString>(cx).unwrap();
 
     let current_value = value_context.read().0;
-    let formatted_value = match base {
-        NumberBase::Binary => format!("{:b}", current_value),
-        NumberBase::Octal => format!("{:o}", current_value),
-        NumberBase::Decimal => format!("{}", current_value),
-        NumberBase::Hexadecimal => format!("{:X}", current_value),
-    };
+    let formatted_value = format_number(current_value, *base, format_string.read().0);
     cx.render(rsx! {
         div {
             class: "form-floating mb-3",
@@ -57,6 +80,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                 id: "{base}",
                 oninput: move |event| {
                     let event_value = event.value.clone();
+                    let event_value = sanitize_string(event_value);
                     value_context.write().0 = match base {
                         NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                         NumberBase::Octal => i64::from_str_radix(&event_value, 8),
@@ -66,7 +90,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                 }
             }
             label {
-                "for": "{base}",
+                r#for: "{base}",
                 match base {
                     NumberBase::Binary => "Binary",
                     NumberBase::Octal => "Octal",
@@ -78,9 +102,81 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     })
 }
 
+fn format_number(number: i64, base: NumberBase, format_string: bool) -> String {
+    match base {
+        NumberBase::Binary => {
+            let number_binary = format!("{:b}", number);
+            match format_string {
+                true => add_number_delimiters(number_binary, ' ', 4),
+                false => number_binary,
+            }
+        },
+        NumberBase::Octal => {
+            let number_octal = format!("{:o}", number);
+            match format_string {
+                true => add_number_delimiters(number_octal, ' ', 3),
+                false => number_octal,
+            }
+        },
+        NumberBase::Decimal => {
+            let number_decimal = format!("{}", number);
+            match format_string {
+                true => add_number_delimiters(number_decimal, ',', 3),
+                false => number_decimal,
+            }
+        },
+        NumberBase::Hexadecimal => {
+            let number_hexadecimal = format!("{:X}", number);
+            match format_string {
+                true => add_number_delimiters(number_hexadecimal, ' ', 2),
+                false => number_hexadecimal,
+            }
+        },
+    }
+}
+
+fn add_number_delimiters(number_str: String, delimiter: char, frequency: usize) -> String {
+    // let number_str_chars_reversed = number_str.chars().rev().collect::<Vec<char>>();
+
+    // let mut number_str_chars_reversed_with_delimiters = Vec::new();
+    // for (index, character) in number_str_chars_reversed.iter().enumerate() {
+    //     if index != 0 && index % frequency == 0 {
+    //         number_str_chars_reversed_with_delimiters.push(delimiter);
+    //     }
+    //     number_str_chars_reversed_with_delimiters.push(*character);
+    // }
+
+    // number_str_chars_reversed_with_delimiters.into_iter().rev().collect::<String>()
+    number_str.chars()
+    .rev()
+    .enumerate()
+    .flat_map(|(i, c)| {
+        if i != 0 && i % frequency == 0 {
+            Some(delimiter)
+        } else {
+            None
+        }
+        .into_iter()
+        .chain(std::iter::once(c))
+    })
+    .collect::<String>()
+    .chars()
+    .rev()
+    .collect::<String>()
+}
+
+fn sanitize_string(string: String) -> String {
+    string
+        .chars()
+        .filter(|character| character.is_ascii_alphanumeric())
+        .collect::<String>()
+}
+
 struct ConverterValue(i64);
 
-#[derive(PartialEq, Debug)]
+struct FormatString(bool);
+
+#[derive(PartialEq, Debug, Clone, Copy)]
 enum NumberBase {
     Binary,
     Octal,
