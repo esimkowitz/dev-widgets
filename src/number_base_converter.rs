@@ -57,7 +57,7 @@ fn format_number_toggle(cx: Scope) -> Element {
             }
             label {
                 class: "form-check-label",
-                "for": "format-string-toggle",
+                r#for: "format-string-toggle",
                 "Format Number"
             }
         }
@@ -128,7 +128,7 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
         NumberBase::Hexadecimal => {
             let number_hexadecimal = format!("{:X}", number);
             match format_number {
-                true => add_number_delimiters(number_hexadecimal, ' ', 2),
+                true => add_number_delimiters(number_hexadecimal, ' ', 4),
                 false => number_hexadecimal,
             }
         },
