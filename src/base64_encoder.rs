@@ -69,7 +69,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                 }
             }
             label {
-                "for": "{direction}",
+                r#for: "{direction}",
                 match direction {
                     Direction::Encode => "Encode",
                     Direction::Decode => "Decode",
