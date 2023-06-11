@@ -50,6 +50,7 @@ fn format_number_toggle(cx: Scope) -> Element {
                 r#type: "checkbox",
                 id: "format-string-toggle",
                 role: "switch",
+                checked: "{format_number_state.read().0}",
                 oninput: move |event| {
                     let is_enabled = event.value == "true";
                     format_number_state.write().0 = is_enabled;
