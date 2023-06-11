@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Props, Clone, Copy, Debug)]
 pub struct WidgetEntry {
     pub title: &'static str,
     pub description: &'static str,
