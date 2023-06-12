@@ -43,6 +43,7 @@ fn main() {
                             <meta name="viewport" content="width=device-width, initial-scale=1">
                         </head>
                         <body>
+                            <div id="main"></div>
                             <script type="text/javascript">
                                 // Set theme to the user's preferred color scheme
                                 function updateTheme() {
