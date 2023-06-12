@@ -113,7 +113,7 @@ body {
   width: 85%;
   margin-top: 7.5%;
   margin-left: 7.5%;
-  background-color: #fff;
+  background-color: var(--bs-body-bg);
   border-radius: 50%;
   z-index: 10;
 }
