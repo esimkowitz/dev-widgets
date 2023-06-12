@@ -1,9 +1,10 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config, WindowBuilder};
-use dioxus_router::{Link, Redirect, Route, Router};
+use dioxus_router::{Router, Route, Link, Redirect, use_route};
 
 use phf::phf_ordered_map;
+use widget_entry::WidgetEntry;
 
 pub mod base64_encoder;
 pub mod color_picker;
@@ -31,14 +32,36 @@ fn main() {
     dioxus_desktop::launch_cfg(
         app,
         Config::default()
-            .with_custom_head(
+            .with_custom_index(
                 r#"
-                <link rel="stylesheet" href="../style/bootstrap.min.css">
-                <link rel="stylesheet" href="../style/style.css">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, height=device-height">
-                <title>Dev Widgets</title>
-                "#
-                .to_string(),
+                    <!DOCTYPE html>
+                    <html data-bs-theme="light">
+                        <head>
+                            <title>Dev Widgets</title>
+                            <link rel="stylesheet" href="../style/bootstrap.min.css">
+                            <link rel="stylesheet" href="../style/style.css">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                        </head>
+                        <body>
+                            <div id="main"></div>
+                            <script type="text/javascript">
+                                // Set theme to the user's preferred color scheme
+                                function updateTheme() {
+                                const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ?
+                                    "dark" :
+                                    "light";
+                                document.querySelector("html").setAttribute("data-bs-theme", colorMode);
+                                }
+
+                                // Set theme on load
+                                updateTheme()
+
+                                // Update theme when the preferred scheme changes
+                                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+                            </script>
+                        </body>
+                    </html>
+                "#.to_string()
             )
             .with_window(
                 WindowBuilder::new()
@@ -63,29 +86,20 @@ fn app(cx: Scope) -> Element {
                     class: "d-flex flex-row wrapper",
                     div {
                         class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
-                        div {
-                            class: "list-group-item list-group-item-action",
-                            "Home"
-                            Link {
-                                class: "stretched-link",
-                                to: "/home"
-                            }
+                        sidebar_list_item {
+                            widget_entry: HOME_PAGE_WIDGET_ENTRY
                         }
                         for widget_type in WIDGETS.keys() {
                             details {
                                 class: "list-group-item pe-0",
+                                open: true,
                                 summary {
                                     class: "section-header",
                                     *widget_type
                                 }
                                 for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                    div {
-                                        class: "list-group-item list-group-item-action m-0",
-                                        widget_entry.title
-                                        Link {
-                                            class: "stretched-link",
-                                            to: widget_entry.path
-                                        }
+                                    sidebar_list_item {
+                                        widget_entry: *widget_entry
                                     }
                                 }
                             }
@@ -93,7 +107,7 @@ fn app(cx: Scope) -> Element {
                     }
                     div {
                         class: "widget-view",
-                        Route { to: "/home", home_page {} }
+                        Route { to: HOME_PAGE_WIDGET_ENTRY.path , (HOME_PAGE_WIDGET_ENTRY.function)(cx) }
                         for widget_type in WIDGETS.keys() {
                             for widget_entry in WIDGETS.get(widget_type).unwrap() {
                                 Route { to: widget_entry.path, (widget_entry.function)(cx) }
@@ -101,11 +115,40 @@ fn app(cx: Scope) -> Element {
                         }
                     }
                 }
-                Redirect { from: "", to: "/home" }
+                Redirect { from: "", to: HOME_PAGE_WIDGET_ENTRY.path }
             }
         }
     })
 }
+
+#[inline_props]
+fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
+    let route = use_route(cx);
+
+    let active_str = if route.url().path() == widget_entry.path {
+        "active"
+    } else {
+        ""
+    };
+
+    cx.render(rsx! {
+        div {
+            class: "list-group-item list-group-item-action {active_str}",
+            widget_entry.title
+            Link {
+                class: "stretched-link",
+                to: widget_entry.path
+            }
+        }
+    })
+}
+
+static HOME_PAGE_WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+    title: "Home",
+    description: "Home page",
+    path: "/home",
+    function: home_page,
+};
 
 fn home_page(cx: Scope) -> Element {
     cx.render(rsx! {
