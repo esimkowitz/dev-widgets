@@ -32,14 +32,35 @@ fn main() {
     dioxus_desktop::launch_cfg(
         app,
         Config::default()
-            .with_custom_head(
+            .with_custom_index(
                 r#"
-                <link rel="stylesheet" href="../style/bootstrap.min.css">
-                <link rel="stylesheet" href="../style/style.css">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>Dev Widgets</title>
-                "#
-                .to_string(),
+                    <!DOCTYPE html>
+                    <html data-bs-theme="light">
+                        <head>
+                            <title>Dev Widgets</title>
+                            <link rel="stylesheet" href="../style/bootstrap.min.css">
+                            <link rel="stylesheet" href="../style/style.css">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                        </head>
+                        <body>
+                            <script type="text/javascript">
+                                // Set theme to the user's preferred color scheme
+                                function updateTheme() {
+                                const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ?
+                                    "dark" :
+                                    "light";
+                                document.querySelector("html").setAttribute("data-bs-theme", colorMode);
+                                }
+
+                                // Set theme on load
+                                updateTheme()
+
+                                // Update theme when the preferred scheme changes
+                                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+                            </script>
+                        </body>
+                    </html>
+                "#.to_string()
             )
             .with_window(
                 WindowBuilder::new()
