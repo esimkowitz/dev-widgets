@@ -9,13 +9,10 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: date_converter,
 };
 
-pub fn date_converter(cx: Scope) -> Element {
+pub fn date_converter<'a>(cx: &'a ScopeState) -> Element<'a> {
     cx.render(rsx! {
         div {
-            div {
-                class: "widget-title",
-                WIDGET_ENTRY.title
-            }
+            class: "date-converter"
         }
     })
 }

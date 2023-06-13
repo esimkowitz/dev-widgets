@@ -5,5 +5,5 @@ pub struct WidgetEntry {
     pub title: &'static str,
     pub description: &'static str,
     pub path: &'static str,
-    pub function: fn(cx: Scope) -> Element,
+    pub function: for<'a> fn(cx: &'a ScopeState) -> Element<'a>,
 }

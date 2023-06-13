@@ -11,7 +11,7 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: base64_encoder,
 };
 
-pub fn base64_encoder(cx: Scope) -> Element {
+pub fn base64_encoder<'a>(cx: &'a ScopeState) -> Element<'a> {
     use_shared_state_provider(cx, || EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
@@ -19,18 +19,11 @@ pub fn base64_encoder(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "base64-encoder",
-            div {
-                class: "widget-title",
-                WIDGET_ENTRY.title
+            encoder_input {
+                direction: Direction::Encode
             }
-            div {
-                class: "widget-body",
-                encoder_input {
-                    direction: Direction::Encode
-                }
-                encoder_input {
-                    direction: Direction::Decode
-                }
+            encoder_input {
+                direction: Direction::Decode
             }
         }
     })
