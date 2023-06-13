@@ -1,6 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
-use dioxus_desktop::{Config, WindowBuilder};
+use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
+use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 use dioxus_router::{Router, Route, Link, Redirect, use_route};
 
 use phf::phf_ordered_map;
@@ -28,10 +29,12 @@ static WIDGETS: phf::OrderedMap<&str, &'static [widget_entry::WidgetEntry]> = ph
 };
 
 fn main() {
+    hot_reload_init!(HotReloadConfig::new().with_paths(&["src", "style", "scripts"]).with_rebuild_command("cargo run"));
+
     // launch the dioxus app in a webview
     dioxus_desktop::launch_cfg(
         app,
-        Config::default()
+        DesktopConfig::default()
             .with_custom_index(
                 r#"
                     <!DOCTYPE html>
@@ -80,43 +83,65 @@ fn main() {
 fn app(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "container-fluid",
+            class: "container-fluid d-flex flex-row wrapper",
             Router {
                 div {
-                    class: "d-flex flex-row wrapper",
-                    div {
-                        class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
-                        sidebar_list_item {
-                            widget_entry: HOME_PAGE_WIDGET_ENTRY
-                        }
-                        for widget_type in WIDGETS.keys() {
-                            details {
-                                class: "list-group-item pe-0",
-                                open: true,
-                                summary {
-                                    class: "section-header",
-                                    *widget_type
-                                }
-                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                    sidebar_list_item {
-                                        widget_entry: *widget_entry
-                                    }
+                    class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
+                    sidebar_list_item {
+                        widget_entry: HOME_PAGE_WIDGET_ENTRY
+                    }
+                    for widget_type in WIDGETS.keys() {
+                        details {
+                            class: "list-group-item pe-0",
+                            open: true,
+                            summary {
+                                class: "section-header",
+                                *widget_type
+                            }
+                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                sidebar_list_item {
+                                    widget_entry: *widget_entry
                                 }
                             }
                         }
                     }
-                    div {
-                        class: "widget-view",
-                        Route { to: HOME_PAGE_WIDGET_ENTRY.path , (HOME_PAGE_WIDGET_ENTRY.function)(cx) }
-                        for widget_type in WIDGETS.keys() {
-                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                Route { to: widget_entry.path, (widget_entry.function)(cx) }
+                }
+                div {
+                    class: "widget-view",
+                    Route {
+                        to: HOME_PAGE_WIDGET_ENTRY.path,
+                        widget_view {
+                            widget_entry: HOME_PAGE_WIDGET_ENTRY
+                        }
+                    }
+                    for widget_type in WIDGETS.keys() {
+                        for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                            Route {
+                                to: widget_entry.path,
+                                widget_view {
+                                    widget_entry: *widget_entry
+                                }
                             }
                         }
                     }
                 }
                 Redirect { from: "", to: HOME_PAGE_WIDGET_ENTRY.path }
             }
+        }
+    })
+}
+
+#[inline_props]
+fn widget_view(cx: Scope, widget_entry: widget_entry::WidgetEntry) -> Element {
+
+    cx.render(rsx! {
+        div {
+            class: "widget-title",
+            widget_entry.title
+        }
+        div {
+            class: "widget-body",
+            (widget_entry.function)(cx.scope)
         }
     })
 }
@@ -150,35 +175,27 @@ static HOME_PAGE_WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetE
     function: home_page,
 };
 
-fn home_page(cx: Scope) -> Element {
+fn home_page<'a>(cx: &'a ScopeState) -> Element<'a> {
     cx.render(rsx! {
         div {
-            class: "pb-5 m-0 home-page",
-            div {
-                class: "widget-title",
-                "Home"
-            }
-
-            div {
-                class: "d-flex flex-row flex-wrap gap-2 widget-body",
-                for widget_type in WIDGETS.keys() {
-                    for widget_entry in WIDGETS.get(widget_type).unwrap() {
+            class: "home-page d-flex flex-row flex-wrap gap-2",
+            for widget_type in WIDGETS.keys() {
+                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                    div {
+                        class: "card p-0",
                         div {
-                            class: "card p-0",
+                            class: "card-body",
                             div {
-                                class: "card-body",
-                                div {
-                                    class: "card-title",
-                                    widget_entry.title
-                                }
-                                div {
-                                    class: "card-text",
-                                    widget_entry.description
-                                }
-                                Link {
-                                    class: "stretched-link",
-                                    to: widget_entry.path
-                                }
+                                class: "card-title",
+                                widget_entry.title
+                            }
+                            div {
+                                class: "card-text",
+                                widget_entry.description
+                            }
+                            Link {
+                                class: "stretched-link",
+                                to: widget_entry.path
                             }
                         }
                     }

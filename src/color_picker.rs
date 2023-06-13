@@ -9,13 +9,10 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: color_picker,
 };
 
-pub fn color_picker(cx: Scope) -> Element {
+pub fn color_picker<'a>(cx: &'a ScopeState) -> Element<'a> {
     cx.render(rsx! {
         div {
-            div {
-                class: "widget-title",
-                WIDGET_ENTRY.title
-            }
+            class: "color-picker"
         }
     })
 }

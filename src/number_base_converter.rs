@@ -10,31 +10,25 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: number_base_converter,
 };
 
-pub fn number_base_converter(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || ConverterValue(0));
-    use_shared_state_provider(cx, || FormatNumberState(false));
+pub fn number_base_converter<'a>(cx: &'a ScopeState) -> Element<'a> {
+    use_shared_state_provider(&cx, || ConverterValue(0));
+    use_shared_state_provider(&cx, || FormatNumberState(false));
 
     cx.render(rsx! {
         div {
-            div {
-                class: "widget-title",
-                WIDGET_ENTRY.title
+            class: "number-base-converter",
+            format_number_toggle {}
+            converter_input {
+                base: NumberBase::Decimal
             }
-            div {
-                class: "widget-body",
-                format_number_toggle {}
-                converter_input {
-                    base: NumberBase::Decimal
-                }
-                converter_input {
-                    base: NumberBase::Hexadecimal
-                }
-                converter_input {
-                    base: NumberBase::Octal
-                }
-                converter_input {
-                    base: NumberBase::Binary
-                }
+            converter_input {
+                base: NumberBase::Hexadecimal
+            }
+            converter_input {
+                base: NumberBase::Octal
+            }
+            converter_input {
+                base: NumberBase::Binary
             }
         }
     })
@@ -59,7 +53,7 @@ fn format_number_toggle(cx: Scope) -> Element {
             label {
                 class: "form-check-label",
                 r#for: "format-string-toggle",
-                "Format Number"
+                "Format Numbers"
             }
         }
     })
@@ -70,14 +64,12 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
-    let current_value = value_context.read().0;
-    let formatted_value = format_number(current_value, *base, format_number_state.read().0);
     cx.render(rsx! {
         div {
             class: "form-floating mb-3",
             input {
                 class: "form-control",
-                value: "{formatted_value}",
+                value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
                 id: "{base}",
                 oninput: move |event| {
                     let event_value = event.value.clone();
