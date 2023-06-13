@@ -43,6 +43,11 @@ body {
   z-index: 101;
 }
 
+.sidebar-list .btn {
+  width: 100%;
+  text-align: left;
+}
+
 .sidebar-list .nav-item {
   width: 100%;
 }
@@ -72,12 +77,13 @@ body {
 .widget-title {
   position: fixed;
   top: 0;
-  font-size: 1.6em;
   background-color: var(--bs-body-bg);
   width: 100%;
   z-index: 100;
   /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
   margin-left: -2em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   padding-left: 2em;
 }
 

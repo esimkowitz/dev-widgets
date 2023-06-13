@@ -98,6 +98,7 @@ fn app(cx: Scope) -> Element {
                                     class: "nav-item pe-0",
                                     open: true,
                                     summary {
+                                        class: "btn btn-outline-secondary",
                                         *widget_type
                                     }
                                     ul {
@@ -142,7 +143,7 @@ fn app(cx: Scope) -> Element {
 fn widget_view(cx: Scope, widget_entry: widget_entry::WidgetEntry) -> Element {
 
     cx.render(rsx! {
-        div {
+        h3 {
             class: "widget-title",
             widget_entry.title
         }
