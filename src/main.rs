@@ -1,6 +1,9 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
+use dioxus_desktop::tao::event::WindowEvent;
+use dioxus_desktop::use_wry_event_handler;
+use dioxus_desktop::wry::application::event::Event as WryEvent;
 use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 use dioxus_router::{Router, Route, Link, Redirect, use_route};
 
@@ -81,6 +84,19 @@ fn main() {
 }
 
 fn app(cx: Scope) -> Element {
+    let window = dioxus_desktop::use_window(cx);
+    use_wry_event_handler(cx, {
+        to_owned![focused];
+        move |event, _| {
+            if let WryEvent::WindowEvent {
+                event: WindowEvent::Focused(new_focused),
+                ..
+            } = event
+            {
+                focused.set(*new_focused);
+            }
+        }
+    });
     cx.render(rsx! {
         div {
             class: "container-fluid d-flex flex-row wrapper",
