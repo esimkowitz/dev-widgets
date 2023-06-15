@@ -124,7 +124,8 @@ fn app(cx: Scope) -> Element {
                     Route {
                         to: HOME_PAGE_WIDGET_ENTRY.path,
                         widget_view {
-                            widget_entry: HOME_PAGE_WIDGET_ENTRY
+                            title: HOME_PAGE_WIDGET_ENTRY.title,
+                            children: (HOME_PAGE_WIDGET_ENTRY.function)(cx)
                         }
                     }
                     for widget_type in WIDGETS.keys() {
@@ -132,7 +133,8 @@ fn app(cx: Scope) -> Element {
                             Route {
                                 to: widget_entry.path,
                                 widget_view {
-                                    widget_entry: *widget_entry
+                                    title: widget_entry.title,
+                                    children: (widget_entry.function)(cx)
                                 }
                             }
                         }
@@ -144,18 +146,23 @@ fn app(cx: Scope) -> Element {
     })
 }
 
-#[inline_props]
-fn widget_view(cx: Scope, widget_entry: widget_entry::WidgetEntry) -> Element {
+fn widget_view<'a>(cx: Scope<'a, WidgetViewProps<'a>>) -> Element {
     cx.render(rsx! {
         h3 {
             class: "widget-title",
-            widget_entry.title
+            cx.props.title
         }
         div {
             class: "widget-body",
-            (widget_entry.function)(cx.scope)
+            &cx.props.children
         }
     })
+}
+
+#[derive(Props)]
+struct WidgetViewProps<'a> {
+    title: &'a str,
+    children: Element<'a>,
 }
 
 #[inline_props]
@@ -187,7 +194,7 @@ static HOME_PAGE_WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetE
     function: home_page,
 };
 
-fn home_page<'a>(cx: &'a ScopeState) -> Element<'a> {
+fn home_page(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "home-page d-flex flex-row flex-wrap gap-2",

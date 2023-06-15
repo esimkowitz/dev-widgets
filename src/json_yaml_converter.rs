@@ -9,7 +9,7 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: json_yaml_converter,
 };
 
-pub fn json_yaml_converter<'a>(cx: &'a ScopeState) -> Element<'a> {
+pub fn json_yaml_converter(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "json-yaml-converter"
