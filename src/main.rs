@@ -86,21 +86,29 @@ fn app(cx: Scope) -> Element {
             class: "container-fluid d-flex flex-row wrapper",
             Router {
                 div {
-                    class: "list-group sidebar-list ms-2 mb-2 pt-2 pe-3 fixed-top",
-                    sidebar_list_item {
-                        widget_entry: HOME_PAGE_WIDGET_ENTRY
-                    }
-                    for widget_type in WIDGETS.keys() {
-                        details {
-                            class: "list-group-item pe-0",
-                            open: true,
-                            summary {
-                                class: "section-header",
-                                *widget_type
-                            }
-                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                sidebar_list_item {
-                                    widget_entry: *widget_entry
+                    class: "sidebar-list",
+                    ul {
+                        class: "nav nav-pills flex-column ms-2 mb-2 pt-2 pe-3",
+                        sidebar_list_item {
+                            widget_entry: HOME_PAGE_WIDGET_ENTRY
+                        }
+                        for widget_type in WIDGETS.keys() {
+                            li {
+                                details {
+                                    class: "nav-item pe-0",
+                                    open: true,
+                                    summary {//
+                                        class: "btn btn-outline-secondary",
+                                        *widget_type
+                                    }
+                                    ul {
+                                        class: "nav nav-pills",
+                                        for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                            sidebar_list_item {
+                                                widget_entry: *widget_entry
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -135,7 +143,7 @@ fn app(cx: Scope) -> Element {
 fn widget_view(cx: Scope, widget_entry: widget_entry::WidgetEntry) -> Element {
 
     cx.render(rsx! {
-        div {
+        h3 {
             class: "widget-title",
             widget_entry.title
         }
@@ -157,12 +165,12 @@ fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
     };
 
     cx.render(rsx! {
-        div {
-            class: "list-group-item list-group-item-action {active_str}",
-            widget_entry.title
+        li {
+            class: "nav-item",
             Link {
-                class: "stretched-link",
+                class: "nav-link {active_str}",
                 to: widget_entry.path
+                widget_entry.title
             }
         }
     })

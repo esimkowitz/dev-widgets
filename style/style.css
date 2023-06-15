@@ -38,13 +38,22 @@ body {
 .sidebar-list {
   width: 14em;
   min-width: 14em;
-  height: 100%;
   overflow-y: scroll;
+  z-index: 101;
+}
+
+.sidebar-list .btn {
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-list .nav-item {
+  width: 100%;
 }
 
 .widget-view {
-  margin-left: 14em;
   width: 100%;
+  overflow-y: scroll;
 }
 
 .card-body {
@@ -68,12 +77,13 @@ body {
 .widget-title {
   position: fixed;
   top: 0;
-  font-size: 1.6em;
   background-color: var(--bs-body-bg);
   width: 100%;
   z-index: 100;
   /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
   margin-left: -2em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   padding-left: 2em;
 }
 
