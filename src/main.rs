@@ -97,7 +97,7 @@ fn app(cx: Scope) -> Element {
                                 details {
                                     class: "nav-item pe-0",
                                     open: true,
-                                    summary {
+                                    summary {//
                                         class: "btn btn-outline-secondary",
                                         *widget_type
                                     }
