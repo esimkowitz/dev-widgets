@@ -11,7 +11,7 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: base64_encoder,
 };
 
-pub fn base64_encoder<'a>(cx: &'a ScopeState) -> Element<'a> {
+pub fn base64_encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),

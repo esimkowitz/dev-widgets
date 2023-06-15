@@ -10,7 +10,7 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     function: number_base_converter,
 };
 
-pub fn number_base_converter<'a>(cx: &'a ScopeState) -> Element<'a> {
+pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(&cx, || ConverterValue(0));
     use_shared_state_provider(&cx, || FormatNumberState(false));
 
