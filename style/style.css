@@ -54,6 +54,7 @@ body {
 .widget-view {
   width: 100%;
   overflow-y: scroll;
+  padding-left: 1em;
 }
 
 .card-body {

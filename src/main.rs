@@ -1,8 +1,10 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
+use dioxus_router::{use_route, Link, Redirect, Route, Router};
+
+#[cfg(debug_assertions)]
 use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
-use dioxus_router::{Router, Route, Link, Redirect, use_route};
 
 use phf::phf_ordered_map;
 use widget_entry::WidgetEntry;
@@ -29,8 +31,11 @@ static WIDGETS: phf::OrderedMap<&str, &'static [widget_entry::WidgetEntry]> = ph
 };
 
 fn main() {
-    hot_reload_init!(HotReloadConfig::new().with_paths(&["src", "style", "scripts"]).with_rebuild_command("cargo run"));
-
+    if cfg!(debug_assertions) {
+        hot_reload_init!(HotReloadConfig::new()
+            .with_paths(&["src", "style", "scripts"])
+            .with_rebuild_command("cargo run"));
+    }
     // launch the dioxus app in a webview
     dioxus_desktop::launch_cfg(
         app,
@@ -141,7 +146,6 @@ fn app(cx: Scope) -> Element {
 
 #[inline_props]
 fn widget_view(cx: Scope, widget_entry: widget_entry::WidgetEntry) -> Element {
-
     cx.render(rsx! {
         h3 {
             class: "widget-title",
