@@ -88,7 +88,7 @@ fn main() {
 fn app(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "container-fluid d-flex flex-row wrapper",
+            class: "container-fluid d-flex flex-row wrapper pe-0",
             Router {
                 div {
                     class: "sidebar-list",
