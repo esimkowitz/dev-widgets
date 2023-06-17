@@ -33,7 +33,7 @@ static WIDGETS: phf::OrderedMap<&str, &'static [widget_entry::WidgetEntry]> = ph
 fn main() {
     if cfg!(debug_assertions) {
         hot_reload_init!(HotReloadConfig::new()
-            .with_paths(&["src", "style", "scripts"])
+            .with_paths(&["src", "style", "scss"])
             .with_rebuild_command("cargo run"));
     }
     // launch the dioxus app in a webview
@@ -46,7 +46,6 @@ fn main() {
                     <html data-bs-theme="light">
                         <head>
                             <title>Dev Widgets</title>
-                            <link rel="stylesheet" href="../style/bootstrap.min.css">
                             <link rel="stylesheet" href="../style/style.css">
                             <meta name="viewport" content="width=device-width, initial-scale=1">
                         </head>
