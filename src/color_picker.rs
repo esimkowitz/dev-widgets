@@ -12,7 +12,7 @@ pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
 pub fn color_picker(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "color-picker"
+            class: "color-picker",
             div {
                 class: "widget-body d-flex flex-row",
                 div {
