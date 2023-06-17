@@ -60,6 +60,10 @@ fn main() {
         .iter()
         .collect();
 
+        // Create grass output path if it does not already exist
+        let grass_output_dir = grass_output_path.parent().unwrap();
+        std::fs::create_dir_all(grass_output_dir).unwrap();
+
         let mut grass_output_file = File::create(&grass_output_path).unwrap();
 
         // We want to compress the output CSS in release builds, but not in debug builds.
