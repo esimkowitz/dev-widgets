@@ -19,18 +19,11 @@ pub fn base64_encoder(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "base64-encoder",
-            div {
-                class: "widget-title",
-                WIDGET_ENTRY.title
+            encoder_input {
+                direction: Direction::Encode
             }
-            div {
-                class: "widget-body",
-                encoder_input {
-                    direction: Direction::Encode
-                }
-                encoder_input {
-                    direction: Direction::Decode
-                }
+            encoder_input {
+                direction: Direction::Decode
             }
         }
     })

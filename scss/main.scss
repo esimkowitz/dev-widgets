@@ -1,3 +1,5 @@
+@import "../bootstrap/scss/bootstrap";
+
 html {
   overscroll-behavior: none;
 }
@@ -15,13 +17,12 @@ body {
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
-  clip-path: inset(0 0 0 0);
 }
 
 /* Taken from https://ordinarycoders.com/blog/article/codepen-bootstrap-card-hovers */
 .card {
   border-radius: 4px;
-  background: --bs-body-bg;
+  background: var(--bs-body-bg);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
   transition: 0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
     0.3s box-shadow,
@@ -38,13 +39,25 @@ body {
 .sidebar-list {
   width: 14em;
   min-width: 14em;
-  height: 100%;
   overflow-y: scroll;
+  z-index: 101;
+}
+
+.sidebar-list .btn {
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-list .nav-item {
+  width: 100%;
 }
 
 .widget-view {
-  margin-left: 14em;
   width: 100%;
+  overflow-y: scroll;
+  padding-left: 1em;
+  padding-right: 1em;
+  clip-path: inset(0 0 0 0);
 }
 
 .card-body {
@@ -68,12 +81,13 @@ body {
 .widget-title {
   position: fixed;
   top: 0;
-  font-size: 1.6em;
-  background-color: --bs-body-bg;
+  background-color: var(--bs-body-bg);
   width: 100%;
   z-index: 100;
   /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
   margin-left: -2em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   padding-left: 2em;
 }
 
