@@ -3,6 +3,15 @@ name = "dev-widgets"
 version = "0.1.0"
 edition = "2021"
 description = "Dev Widgets"
+readme = "README.md"
+
+[build-dependencies]
+curl = "0.4.44"
+grass = "0.12.4"
+zip-extract = "0.1.2"
+
+[dev-dependencies]
+dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
 
 [dependencies]
 base64 = "0.21.2"
