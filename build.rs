@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 fn main() {
     // Tell Cargo to rerun the build script if it changes.
-    println!("cargo:rerun-if-changed=$CARGO_MANIFEST_DIR/build.rs");
+    println!("cargo:rerun-if-changed=$CARGO_MANIFEST_DIR/scss");
 
     env::set_var("RUST_BACKTRACE", "1");
 
