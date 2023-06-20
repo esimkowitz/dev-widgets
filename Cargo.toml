@@ -11,13 +11,14 @@ grass = "0.12.4"
 zip-extract = "0.1.2"
 
 [dev-dependencies]
-dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
+dioxus-hot-reload = "0.1.1"
 
 [dependencies]
 base64 = "0.21.2"
-dioxus = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
-dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
-dioxus-router = { git = "https://github.com/DioxusLabs/dioxus", rev = "b264211cc2685232426317d3055046838047d3db" }
+dioxus = "0.3.2"
+dioxus-desktop = "0.3.0"
+dioxus-router = "0.3.0"
+dioxus-interpreter-js = "0.3.3"
 phf = { version = "0.11.1", features = ["macros"] }
 
 [package.metadata.bundle]
