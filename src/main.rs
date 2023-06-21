@@ -16,7 +16,7 @@ pub mod json_yaml_converter;
 pub mod number_base_converter;
 pub mod widget_entry;
 
-static WIDGETS: phf::OrderedMap<&str, &'static [widget_entry::WidgetEntry]> = phf_ordered_map! {
+static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
         base64_encoder::WIDGET_ENTRY,
     ],
@@ -180,14 +180,15 @@ fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
             Link {
                 class: "nav-link {active_str}",
                 to: widget_entry.path
-                widget_entry.title
+                widget_entry.short_title
             }
         }
     })
 }
 
-static HOME_PAGE_WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Home",
+    short_title: "Home",
     description: "Home page",
     path: "/home",
     function: home_page,
