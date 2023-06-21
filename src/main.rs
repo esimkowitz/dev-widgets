@@ -66,6 +66,7 @@ fn main() {
                                 // Update theme when the preferred scheme changes
                                 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
                             </script>
+                            <script type="text/javascript" src="../js/bootstrap.min.js"></script>
                         </body>
                     </html>
                 "#.to_string()
@@ -91,25 +92,30 @@ fn app(cx: Scope) -> Element {
             Router {
                 div {
                     class: "sidebar-list",
-                    ul {
-                        class: "nav nav-pills flex-column ms-2 mb-2 pt-2 pe-3",
+                    div {
+                        class: "list-unstyled flex-column ms-2 mb-2 pt-2 pe-3",
                         sidebar_list_item {
                             widget_entry: HOME_PAGE_WIDGET_ENTRY
                         }
                         for widget_type in WIDGETS.keys() {
                             li {
-                                details {
-                                    class: "nav-item pe-0",
-                                    open: true,
-                                    summary {//
-                                        class: "btn btn-outline-secondary",
-                                        *widget_type
-                                    }
-                                    ul {
-                                        class: "nav nav-pills",
-                                        for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                            sidebar_list_item {
-                                                widget_entry: *widget_entry
+                                button {
+                                    class: "btn btn-toggle d-inline-flex align-items-center rounded border-0",
+                                    r#type: "button",
+                                    aria_expanded: "false",
+                                    *widget_type
+                                }
+                                div {
+                                    class: "collapse show",
+                                    aria_labelledby: "flush-headingOne",
+                                    div {
+                                        class: "accordion-body",
+                                        ul {
+                                            class: "nav nav-pills",
+                                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                                sidebar_list_item {
+                                                    widget_entry: *widget_entry
+                                                }
                                             }
                                         }
                                     }
