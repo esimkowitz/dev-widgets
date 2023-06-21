@@ -9,6 +9,7 @@ use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 use phf::phf_ordered_map;
 use widget_entry::WidgetEntry;
 
+pub mod accordion;
 pub mod base64_encoder;
 pub mod color_picker;
 pub mod date_converter;
@@ -93,30 +94,17 @@ fn app(cx: Scope) -> Element {
                 div {
                     class: "sidebar-list",
                     div {
-                        class: "list-unstyled flex-column ms-2 mb-2 pt-2 pe-3",
+                        class: "accordion accordion-flush flex-column ms-2 mb-2 pt-2 pe-3",
                         sidebar_list_item {
                             widget_entry: HOME_PAGE_WIDGET_ENTRY
                         }
                         for widget_type in WIDGETS.keys() {
-                            li {
-                                button {
-                                    class: "btn btn-toggle d-inline-flex align-items-center rounded border-0",
-                                    r#type: "button",
-                                    aria_expanded: "false",
-                                    *widget_type
-                                }
-                                div {
-                                    class: "collapse show",
-                                    aria_labelledby: "flush-headingOne",
-                                    div {
-                                        class: "accordion-body",
-                                        ul {
-                                            class: "nav nav-pills",
-                                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                                sidebar_list_item {
-                                                    widget_entry: *widget_entry
-                                                }
-                                            }
+                            div {
+                                accordion::accordion {
+                                    title: *widget_type,
+                                    for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                        sidebar_list_item {
+                                            widget_entry: *widget_entry
                                         }
                                     }
                                 }
@@ -134,12 +122,15 @@ fn app(cx: Scope) -> Element {
                         }
                     }
                     for widget_type in WIDGETS.keys() {
-                        for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                            Route {
-                                to: widget_entry.path,
-                                widget_view {
-                                    title: widget_entry.title,
-                                    children: (widget_entry.function)(cx)
+                        div {
+                            class: "list-unstyled",
+                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                Route {
+                                    to: widget_entry.path,
+                                    widget_view {
+                                        title: widget_entry.title,
+                                        children: (widget_entry.function)(cx)
+                                    }
                                 }
                             }
                         }
@@ -151,23 +142,18 @@ fn app(cx: Scope) -> Element {
     })
 }
 
-fn widget_view<'a>(cx: Scope<'a, WidgetViewProps<'a>>) -> Element {
+#[inline_props]
+fn widget_view<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Element {
     cx.render(rsx! {
         h3 {
             class: "widget-title",
-            cx.props.title
+            *title
         }
         div {
             class: "widget-body",
-            &cx.props.children
+            children
         }
     })
-}
-
-#[derive(Props)]
-struct WidgetViewProps<'a> {
-    title: &'a str,
-    children: Element<'a>,
 }
 
 #[inline_props]
@@ -181,13 +167,10 @@ fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
     };
 
     cx.render(rsx! {
-        li {
-            class: "nav-item",
-            Link {
-                class: "nav-link {active_str}",
-                to: widget_entry.path
-                widget_entry.short_title
-            }
+        Link {
+            class: "btn btn-sm {active_str}",
+            to: widget_entry.path
+            widget_entry.short_title
         }
     })
 }
