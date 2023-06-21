@@ -5,6 +5,7 @@ use crate::widget_entry;
 
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     title: "Number Base Converter",
+    short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
     path: "/number-base-converter",
     function: number_base_converter,

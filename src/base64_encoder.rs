@@ -6,6 +6,7 @@ use crate::widget_entry;
 
 pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
     title: "Base64 Encoder / Decoder",
+    short_title: "Base64",
     description: "Encode and decode base64 strings",
     path: "/base64-encoder",
     function: base64_encoder,
