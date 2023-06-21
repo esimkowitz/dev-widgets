@@ -20,9 +20,7 @@ dioxus-desktop = "0.3.0"
 dioxus-router = "0.3.0"
 dioxus-interpreter-js = "0.3.3"
 phf = { version = "0.11.1", features = ["macros"] }
-web-sys = "0.3.64"
-dioxus-material-icons = "1.1.0"
-dioxus-free-icons = "0.6.0"
+dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
 
 [package.metadata.bundle]
 name = "Dev Widgets"

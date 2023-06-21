@@ -1,6 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
+use dioxus_free_icons::{icons::bs_icons::{BsHouseDoorFill, BsHash}, IconShape, Icon};
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
 
 #[cfg(debug_assertions)]
@@ -16,6 +17,7 @@ pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
 pub mod widget_entry;
+pub mod sidebar_icon;
 
 static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
@@ -96,7 +98,8 @@ fn app(cx: Scope) -> Element {
                     div {
                         class: "accordion accordion-flush flex-column ms-2 mb-2 pt-2 pe-3",
                         sidebar_list_item {
-                            widget_entry: HOME_PAGE_WIDGET_ENTRY
+                            widget_entry: HOME_PAGE_WIDGET_ENTRY,
+                            icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
                         }
                         for widget_type in WIDGETS.keys() {
                             div {
@@ -104,7 +107,8 @@ fn app(cx: Scope) -> Element {
                                     title: *widget_type,
                                     for widget_entry in WIDGETS.get(widget_type).unwrap() {
                                         sidebar_list_item {
-                                            widget_entry: *widget_entry
+                                            widget_entry: *widget_entry,
+                                            icon: (widget_entry.icon)(cx)
                                         }
                                     }
                                 }
@@ -157,7 +161,7 @@ fn widget_view<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Elem
 }
 
 #[inline_props]
-fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
+fn sidebar_list_item<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'a>) -> Element {
     let route = use_route(cx);
 
     let active_str = if route.url().path() == widget_entry.path {
@@ -167,6 +171,7 @@ fn sidebar_list_item(cx: Scope, widget_entry: WidgetEntry) -> Element {
     };
 
     cx.render(rsx! {
+        icon
         Link {
             class: "btn btn-sm {active_str}",
             to: widget_entry.path
@@ -181,6 +186,7 @@ static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Home page",
     path: "/home",
     function: home_page,
+    icon: home_icon,
 };
 
 fn home_page(cx: Scope) -> Element {
@@ -209,6 +215,16 @@ fn home_page(cx: Scope) -> Element {
                     }
                 }
             }
+        }
+    })
+}
+
+
+pub fn home_icon(cx: Scope) -> Element {
+    cx.render(rsx! {
+        Icon {
+            class: "home-icon",
+            icon: BsHouseDoorFill
         }
     })
 }
