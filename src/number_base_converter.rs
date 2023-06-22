@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
-use crate::{widget_entry::WidgetEntry, sidebar_icon::sidebar_icon};
+use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -10,7 +10,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
     path: "/number-base-converter",
     function: number_base_converter,
-    icon: sidebar_icon::<BsHash>,
+    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+};
+
+const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
+    icon: BsHash,
 };
 
 pub fn number_base_converter(cx: Scope) -> Element {

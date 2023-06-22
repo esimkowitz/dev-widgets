@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsHash;
+use dioxus_free_icons::icons::bs_icons::{BsHash, BsEyedropper};
+use once_cell::sync::Lazy;
 
-use crate::{widget_entry::WidgetEntry, sidebar_icon::sidebar_icon};
+use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",
@@ -9,7 +10,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Pick a color and get its output in different formats",
     path: "/color-picker",
     function: color_picker,
-    icon: sidebar_icon::<BsHash>,
+    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+};
+
+const SIDEBAR_ICON: SidebarIcon<BsEyedropper> = SidebarIcon {
+    icon: BsEyedropper,
 };
 
 pub fn color_picker(cx: Scope) -> Element {

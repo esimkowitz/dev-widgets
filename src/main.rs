@@ -8,6 +8,7 @@ use dioxus_router::{use_route, Link, Redirect, Route, Router};
 use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 
 use phf::phf_ordered_map;
+use sidebar_icon::SidebarIcon;
 use widget_entry::WidgetEntry;
 
 pub mod accordion;
@@ -171,10 +172,10 @@ fn sidebar_list_item<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element
     };
 
     cx.render(rsx! {
-        icon
         Link {
             class: "btn btn-sm {active_str}",
             to: widget_entry.path
+            icon
             widget_entry.short_title
         }
     })
@@ -186,7 +187,7 @@ static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Home page",
     path: "/home",
     function: home_page,
-    icon: home_icon,
+    icon: |cx| HOME_SIDEBAR_ICON.sidebar_icon(cx),
 };
 
 fn home_page(cx: Scope) -> Element {
@@ -219,6 +220,9 @@ fn home_page(cx: Scope) -> Element {
     })
 }
 
+const HOME_SIDEBAR_ICON: SidebarIcon<BsHouseDoorFill> = SidebarIcon {
+    icon: BsHouseDoorFill,
+};
 
 pub fn home_icon(cx: Scope) -> Element {
     cx.render(rsx! {
