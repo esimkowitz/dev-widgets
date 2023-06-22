@@ -1,7 +1,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
-use dioxus_free_icons::{icons::bs_icons::{BsHouseDoorFill, BsHash}, IconShape, Icon};
+use dioxus_free_icons::{icons::bs_icons::BsHouseDoorFill, Icon};
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
 
 #[cfg(debug_assertions)]

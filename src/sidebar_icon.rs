@@ -9,6 +9,7 @@ impl<T: IconShape + Copy> SidebarIcon<T> {
     pub fn sidebar_icon<'a>(&'a self, cx: Scope<'a>) -> Element<'a> {
         cx.render(rsx! {
             Icon::<T> {
+                class: "sidebar-icon",
                 icon: self.icon,
             }
         })

@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::{BsHash, BsEyedropper};
-use once_cell::sync::Lazy;
+use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
 use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 

@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsHash;
-use once_cell::sync::Lazy;
+use dioxus_free_icons::icons::bs_icons::BsClock;
 
 use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
@@ -13,12 +12,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
 };
 
-const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
-    icon: BsHash,
+const SIDEBAR_ICON: SidebarIcon<BsClock> = SidebarIcon {
+    icon: BsClock,
 };
 
 pub fn date_converter(cx: Scope) -> Element {
-    let x = Box::new(BsHash);
     cx.render(rsx! {
         div {
             class: "date-converter"
