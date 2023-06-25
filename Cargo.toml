@@ -20,12 +20,13 @@ dioxus-desktop = "0.3.0"
 dioxus-router = "0.3.0"
 dioxus-interpreter-js = "0.3.3"
 phf = { version = "0.11.1", features = ["macros"] }
+dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
 version = "0.1.0"
-resources = ["style/*css"]
+resources = ["style/*css", "js/*js"]
 copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
