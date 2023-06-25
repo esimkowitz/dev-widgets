@@ -1,7 +1,8 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 
 #[inline_props]
-pub fn accordion<'a>(
+pub fn Accordion<'a>(
     cx: Scope<'a>,
     children: Element<'a>,
     title: &'a str,

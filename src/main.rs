@@ -1,11 +1,13 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
-use dioxus_free_icons::{icons::bs_icons::BsHouseDoorFill, Icon};
+use dioxus_free_icons::icons::bs_icons::BsHouseDoorFill;
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
 
 #[cfg(debug_assertions)]
 use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
+use std::{env, time::SystemTime, alloc::System};
 
 use phf::phf_ordered_map;
 use sidebar_icon::SidebarIcon;
@@ -17,8 +19,8 @@ pub mod color_picker;
 pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
-pub mod widget_entry;
 pub mod sidebar_icon;
+pub mod widget_entry;
 
 static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
@@ -36,13 +38,15 @@ static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map!
 
 fn main() {
     if cfg!(debug_assertions) {
+        env::set_var("RUST_BACKTRACE", "1");
+
         hot_reload_init!(HotReloadConfig::new()
             .with_paths(&["src", "style", "scss"])
             .with_rebuild_command("cargo run"));
     }
     // launch the dioxus app in a webview
     dioxus_desktop::launch_cfg(
-        app,
+        App,
         DesktopConfig::default()
             .with_custom_index(
                 r#"
@@ -89,39 +93,45 @@ fn main() {
     );
 }
 
-fn app(cx: Scope) -> Element {
+fn App(cx: Scope) -> Element {
+    use_shared_state_provider(cx, || SidebarState {
+        is_tracking: false,
+        start_width: 0.0,
+        start_screen_x: 0.0,
+        current_width: 230.0,
+        max_width: 500.0,
+        min_width: 1.0,
+        last_event_time: SystemTime::now(),
+    });
+    let sidebar_state = use_shared_state::<SidebarState>(cx).unwrap();
     cx.render(rsx! {
         div {
-            class: "container-fluid d-flex flex-row wrapper pe-0",
-            Router {
-                div {
-                    class: "sidebar-list",
-                    div {
-                        class: "accordion accordion-flush flex-column ms-2 mb-2 pt-2 pe-3",
-                        sidebar_list_item {
-                            widget_entry: HOME_PAGE_WIDGET_ENTRY,
-                            icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
-                        }
-                        for widget_type in WIDGETS.keys() {
-                            div {
-                                accordion::accordion {
-                                    title: *widget_type,
-                                    for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                        sidebar_list_item {
-                                            widget_entry: *widget_entry,
-                                            icon: (widget_entry.icon)(cx)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            class: "container-fluid",
+            onmousemove: |event| {
+                event.stop_propagation();
+                if sidebar_state.read().is_tracking && sidebar_state.read().last_event_time.elapsed().unwrap().as_millis() > 10 {
+                    let mut state = sidebar_state.read().clone();
+                    let screen_x_delta = event.screen_coordinates().x - state.start_screen_x;
+                    let new_width = f64::min(state.current_width + screen_x_delta, state.max_width);
+                    state.current_width = f64::max(new_width, state.min_width);
+                    state.last_event_time = SystemTime::now();
+                    *sidebar_state.write() = state;
                 }
+            },
+            onmouseup: move |event| {
+                event.stop_propagation();
+                if sidebar_state.read().is_tracking {
+                    sidebar_state.write().is_tracking = false;
+                }
+                println!("mouseup");
+            },
+            Router {
+                Sidebar {}
                 div {
                     class: "widget-view",
                     Route {
                         to: HOME_PAGE_WIDGET_ENTRY.path,
-                        widget_view {
+                        WidgetView {
                             title: HOME_PAGE_WIDGET_ENTRY.title,
                             children: (HOME_PAGE_WIDGET_ENTRY.function)(cx)
                         }
@@ -132,7 +142,7 @@ fn app(cx: Scope) -> Element {
                             for widget_entry in WIDGETS.get(widget_type).unwrap() {
                                 Route {
                                     to: widget_entry.path,
-                                    widget_view {
+                                    WidgetView {
                                         title: widget_entry.title,
                                         children: (widget_entry.function)(cx)
                                     }
@@ -147,8 +157,76 @@ fn app(cx: Scope) -> Element {
     })
 }
 
+fn Sidebar(cx: Scope) -> Element {
+    let sidebar_state = use_shared_state::<SidebarState>(cx).unwrap();
+
+    let current_state = sidebar_state.read().clone();
+    let current_width = current_state.current_width;
+    let sidebar_css = if current_width == current_state.min_width {
+        format!("width: {current_width}px; cursor: e-resize;")
+    } else if current_width == current_state.max_width {
+        format!("width: {current_width}px; cursor: w-resize;")
+    } else {
+        format!("width: {current_width}px; cursor: col-resize;")
+    };
+
+    cx.render(rsx! {
+        div {
+            class: "sidebar",
+            style: "{sidebar_css}",
+            div {
+                class: "sidebar-list",
+                div {
+                    class: "accordion",
+                    SidebarListItem {
+                        widget_entry: HOME_PAGE_WIDGET_ENTRY,
+                        icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
+                    }
+                    for widget_type in WIDGETS.keys() {
+                        div {
+                            accordion::Accordion {
+                                title: *widget_type,
+                                is_open: true,
+                                for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                                    SidebarListItem {
+                                        widget_entry: *widget_entry,
+                                        icon: (widget_entry.icon)(cx)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            div {
+                class: "vr",
+                onmousedown: move |event| {
+                    event.stop_propagation();
+                    let mut current_state = sidebar_state.read().clone();
+                    current_state.is_tracking = true;
+                    current_state.start_width = current_state.current_width;
+                    current_state.start_screen_x = event.screen_coordinates().x;
+                    *sidebar_state.write() = current_state;
+                    println!("mousedown");
+                },
+            }
+        }
+    })
+}
+
+#[derive(Clone, Copy, Debug)]
+struct SidebarState {
+    is_tracking: bool,
+    start_width: f64,
+    start_screen_x: f64,
+    current_width: f64,
+    max_width: f64,
+    min_width: f64,
+    last_event_time: SystemTime,
+}
+
 #[inline_props]
-fn widget_view<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Element {
+fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Element {
     cx.render(rsx! {
         h3 {
             class: "widget-title",
@@ -162,7 +240,7 @@ fn widget_view<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Elem
 }
 
 #[inline_props]
-fn sidebar_list_item<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'a>) -> Element {
+fn SidebarListItem<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'a>) -> Element {
     let route = use_route(cx);
 
     let active_str = if route.url().path() == widget_entry.path {
@@ -173,7 +251,7 @@ fn sidebar_list_item<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element
 
     cx.render(rsx! {
         Link {
-            class: "btn btn-sm {active_str}",
+            class: "btn {active_str}",
             to: widget_entry.path
             icon
             widget_entry.short_title
@@ -186,18 +264,18 @@ static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Home",
     description: "Home page",
     path: "/home",
-    function: home_page,
+    function: HomePage,
     icon: |cx| HOME_SIDEBAR_ICON.sidebar_icon(cx),
 };
 
-fn home_page(cx: Scope) -> Element {
+fn HomePage(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "home-page d-flex flex-row flex-wrap gap-2",
+            class: "home-page",
             for widget_type in WIDGETS.keys() {
                 for widget_entry in WIDGETS.get(widget_type).unwrap() {
                     div {
-                        class: "card p-0",
+                        class: "card",
                         div {
                             class: "card-body",
                             div {
@@ -223,12 +301,3 @@ fn home_page(cx: Scope) -> Element {
 const HOME_SIDEBAR_ICON: SidebarIcon<BsHouseDoorFill> = SidebarIcon {
     icon: BsHouseDoorFill,
 };
-
-pub fn home_icon(cx: Scope) -> Element {
-    cx.render(rsx! {
-        Icon {
-            class: "home-icon",
-            icon: BsHouseDoorFill
-        }
-    })
-}
