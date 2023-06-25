@@ -92,12 +92,12 @@ fn main() {
 fn app(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "container-fluid d-flex flex-row wrapper pe-0",
+            class: "container-fluid",
             Router {
                 div {
                     class: "sidebar-list",
                     div {
-                        class: "accordion accordion-flush flex-column ms-2 mb-2 pt-2 pe-3",
+                        class: "accordion",
                         sidebar_list_item {
                             widget_entry: HOME_PAGE_WIDGET_ENTRY,
                             icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
@@ -173,7 +173,7 @@ fn sidebar_list_item<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element
 
     cx.render(rsx! {
         Link {
-            class: "btn btn-sm {active_str}",
+            class: "btn",
             to: widget_entry.path
             icon
             widget_entry.short_title
@@ -193,11 +193,11 @@ static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 fn home_page(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "home-page d-flex flex-row flex-wrap gap-2",
+            class: "home-page",
             for widget_type in WIDGETS.keys() {
                 for widget_entry in WIDGETS.get(widget_type).unwrap() {
                     div {
-                        class: "card p-0",
+                        class: "card",
                         div {
                             class: "card-body",
                             div {

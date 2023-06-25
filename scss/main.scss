@@ -14,6 +14,7 @@ body {
 }
 
 .container-fluid {
+  @extend .d-flex, .flex-row, .wrapper, .pe-0;
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
@@ -37,21 +38,26 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
+.sidebar {
+  @extend .flex-row, .d-flex;
+}
+
 .sidebar-list {
-  flex-basis: 14em;
   overflow-y: scroll;
-  min-width: 12em;
-  padding-right: 1em;
-}
-
-.sidebar-list .btn {
   width: 100%;
-  text-align: left;
-  white-space: nowrap;
-}
 
-.sidebar-list .accordion-button:not(.collapsed){
-  background-color: var(--bs-body-bg);
+  .btn {
+    @extend .btn-sm;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .accordion {
+    @extend .accordion-flush, .flex-column, .ms-2, .mb-2, .pt-2, .pe-3;
+  }
+  .accordion-button:not(.collapsed) {
+    background-color: var(--bs-body-bg);
+  }
 }
 
 .widget-view {
@@ -59,6 +65,7 @@ body {
   overflow-y: scroll;
   padding-left: 1em;
   padding-right: 1em;
+  clip-path: inset(0 0 0 0);
 }
 
 .card-body {
@@ -69,22 +76,28 @@ body {
   height: 1em;
   width: 1em;
   margin-right: 0.5em;
+  margin-top: -0.25em;
 }
 
-.home-page .card {
-  width: 10em;
-  height: 10em;
+.home-page {
+  @extend .d-flex, .flex-row, .flex-wrap, .gap-2;
+
+  .card {
+    @extend .p-0;
+    width: 10em;
+    height: 10em;
+
+    .card-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .card-body {
+      font-size: 0.8em;
+    }
+  }
 }
 
-.home-page .card .card-title {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.home-page .card .card-body {
-  font-size: 0.8em;
-}
-
+$widget-title-left-overflow: 0.5em;
 .widget-title {
   position: fixed;
   top: 0;
@@ -92,10 +105,10 @@ body {
   width: 100%;
   z-index: 100;
   /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
-  margin-left: -2em;
+  margin-left: -$widget-title-left-overflow;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
-  padding-left: 2em;
+  padding-left: $widget-title-left-overflow;
 }
 
 .widget-body {
