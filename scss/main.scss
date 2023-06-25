@@ -15,9 +15,11 @@ body {
 
 .container-fluid {
   @extend .d-flex, .flex-row, .wrapper, .pe-0;
+  @extend .d-flex, .flex-row, .wrapper, .pe-0;
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
+  justify-content: flex-start;
   justify-content: flex-start;
 }
 
@@ -58,6 +60,20 @@ body {
   .accordion-button:not(.collapsed) {
     background-color: var(--bs-body-bg);
   }
+  width: 100%;
+
+  .btn {
+    @extend .btn-sm;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .accordion {
+    @extend .accordion-flush, .flex-column, .ms-2, .mb-2, .pt-2, .pe-3;
+  }
+  .accordion-button:not(.collapsed) {
+    background-color: var(--bs-body-bg);
+  }
 }
 
 .widget-view {
@@ -72,6 +88,20 @@ body {
   width: 100%;
 }
 
+.sidebar-icon {
+  height: 1em;
+  width: 1em;
+  margin-right: 0.5em;
+  margin-top: -0.25em;
+}
+
+.home-page {
+  @extend .d-flex, .flex-row, .flex-wrap, .gap-2;
+
+  .card {
+    @extend .p-0;
+    width: 10em;
+    height: 10em;
 .sidebar-icon {
   height: 1em;
   width: 1em;

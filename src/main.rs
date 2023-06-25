@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
