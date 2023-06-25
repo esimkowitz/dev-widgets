@@ -214,6 +214,10 @@ fn HomePage(cx: Scope) -> Element {
                     div {
                         class: "card",
                         div {
+                            class: "card-img-top",
+                            (widget_entry.icon)(cx)
+                        }
+                        div {
                             class: "card-body",
                             div {
                                 class: "card-title",
