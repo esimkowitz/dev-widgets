@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsHash;
+use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
@@ -13,8 +13,8 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
 };
 
-const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
-    icon: BsHash,
+const SIDEBAR_ICON: SidebarIcon<Bs123> = SidebarIcon {
+    icon: Bs123,
 };
 
 pub fn number_base_converter(cx: Scope) -> Element {

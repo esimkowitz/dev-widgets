@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsHash;
+use dioxus_free_icons::icons::bs_icons::BsFileText;
 
 use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
@@ -12,8 +12,8 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
 };
 
-const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
-    icon: BsHash,
+const SIDEBAR_ICON: SidebarIcon<BsFileText> = SidebarIcon {
+    icon: BsFileText,
 };
 
 pub fn json_yaml_converter(cx: Scope) -> Element {
