@@ -17,6 +17,7 @@ body {
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
+  justify-content: flex-start;
 }
 
 /* Taken from https://ordinarycoders.com/blog/article/codepen-bootstrap-card-hovers */
@@ -37,15 +38,16 @@ body {
 }
 
 .sidebar-list {
-  width: 14em;
-  min-width: 14em;
+  flex-basis: 14em;
   overflow-y: scroll;
-  z-index: 101;
+  min-width: 12em;
+  padding-right: 1em;
 }
 
 .sidebar-list .btn {
   width: 100%;
   text-align: left;
+  white-space: nowrap;
 }
 
 .sidebar-list .accordion-button:not(.collapsed){
@@ -57,7 +59,6 @@ body {
   overflow-y: scroll;
   padding-left: 1em;
   padding-right: 1em;
-  clip-path: inset(0 0 0 0);
 }
 
 .card-body {
