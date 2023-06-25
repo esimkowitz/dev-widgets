@@ -40,6 +40,7 @@ body {
 
 .sidebar {
   @extend .flex-row, .d-flex;
+  width: 14em;
 }
 
 .sidebar-list {
