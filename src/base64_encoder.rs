@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
-use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
+use crate::widget_entry::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
@@ -11,10 +11,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Encode and decode base64 strings",
     path: "/base64-encoder",
     function: base64_encoder,
-    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+    icon: move |cx| ICON.icon(cx),
 };
 
-const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
+const ICON: WidgetIcon<BsHash> = WidgetIcon {
     icon: BsHash,
 };
 

@@ -52,6 +52,13 @@ body {
     width: 100%;
     text-align: left;
     white-space: nowrap;
+
+    .icon {
+      height: 1em;
+      width: 1em;
+      margin-right: 0.5em;
+      margin-top: -0.25em;
+    }
   }
   .accordion {
     @extend .accordion-flush, .flex-column, .ms-2, .mb-2, .pt-2, .pe-3;
@@ -71,13 +78,6 @@ body {
 
 .card-body {
   width: 100%;
-}
-
-.sidebar-icon {
-  height: 1em;
-  width: 1em;
-  margin-right: 0.5em;
-  margin-top: -0.25em;
 }
 
 .home-page {

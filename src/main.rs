@@ -10,8 +10,7 @@ use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 use std::env;
 
 use phf::phf_ordered_map;
-use sidebar_icon::SidebarIcon;
-use widget_entry::WidgetEntry;
+use widget_entry::{WidgetEntry, WidgetIcon};
 
 pub mod accordion;
 pub mod base64_encoder;
@@ -19,7 +18,6 @@ pub mod color_picker;
 pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
-pub mod sidebar_icon;
 pub mod widget_entry;
 
 static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
@@ -204,7 +202,7 @@ static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Home page",
     path: "/home",
     function: HomePage,
-    icon: |cx| HOME_SIDEBAR_ICON.sidebar_icon(cx),
+    icon: |cx| HOME_ICON.icon(cx),
 };
 
 fn HomePage(cx: Scope) -> Element {
@@ -237,6 +235,6 @@ fn HomePage(cx: Scope) -> Element {
     })
 }
 
-const HOME_SIDEBAR_ICON: SidebarIcon<BsHouseDoorFill> = SidebarIcon {
+const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
     icon: BsHouseDoorFill,
 };
