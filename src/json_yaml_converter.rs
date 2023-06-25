@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsFileText;
 
-use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
+use crate::widget_entry::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "JSON <> YAML Converter",
@@ -9,10 +9,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     description: "Convert between JSON and YAML file formats",
     path: "/json-yaml-converter",
     function: json_yaml_converter,
-    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+    icon: move |cx| ICON.icon(cx),
 };
 
-const SIDEBAR_ICON: SidebarIcon<BsFileText> = SidebarIcon {
+const ICON: WidgetIcon<BsFileText> = WidgetIcon {
     icon: BsFileText,
 };
 
