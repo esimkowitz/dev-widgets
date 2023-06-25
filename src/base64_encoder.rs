@@ -1,14 +1,21 @@
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
+use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
-use crate::widget_entry;
+use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
-pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
+    short_title: "Base64",
     description: "Encode and decode base64 strings",
     path: "/base64-encoder",
     function: base64_encoder,
+    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+};
+
+const SIDEBAR_ICON: SidebarIcon<BsHash> = SidebarIcon {
+    icon: BsHash,
 };
 
 pub fn base64_encoder(cx: Scope) -> Element {

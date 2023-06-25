@@ -1,12 +1,19 @@
 use dioxus::prelude::*;
+use dioxus_free_icons::icons::bs_icons::BsFileText;
 
-use crate::widget_entry;
+use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
-pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "JSON <> YAML Converter",
+    short_title: "JSON <> YAML",
     description: "Convert between JSON and YAML file formats",
     path: "/json-yaml-converter",
     function: json_yaml_converter,
+    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+};
+
+const SIDEBAR_ICON: SidebarIcon<BsFileText> = SidebarIcon {
+    icon: BsFileText,
 };
 
 pub fn json_yaml_converter(cx: Scope) -> Element {

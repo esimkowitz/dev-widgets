@@ -1,13 +1,20 @@
 use dioxus::prelude::*;
+use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
-use crate::widget_entry;
+use crate::{widget_entry::WidgetEntry, sidebar_icon::SidebarIcon};
 
-pub const WIDGET_ENTRY: widget_entry::WidgetEntry = widget_entry::WidgetEntry {
+pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
+    short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
     path: "/number-base-converter",
     function: number_base_converter,
+    icon: move |cx| SIDEBAR_ICON.sidebar_icon(cx),
+};
+
+const SIDEBAR_ICON: SidebarIcon<Bs123> = SidebarIcon {
+    icon: Bs123,
 };
 
 pub fn number_base_converter(cx: Scope) -> Element {
@@ -103,48 +110,49 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
                 true => add_number_delimiters(number_binary, ' ', 4),
                 false => number_binary,
             }
-        },
+        }
         NumberBase::Octal => {
             let number_octal = format!("{:o}", number);
             match format_number {
                 true => add_number_delimiters(number_octal, ' ', 3),
                 false => number_octal,
             }
-        },
+        }
         NumberBase::Decimal => {
             let number_decimal = format!("{}", number);
             match format_number {
                 true => add_number_delimiters(number_decimal, ',', 3),
                 false => number_decimal,
             }
-        },
+        }
         NumberBase::Hexadecimal => {
             let number_hexadecimal = format!("{:X}", number);
             match format_number {
                 true => add_number_delimiters(number_hexadecimal, ' ', 4),
                 false => number_hexadecimal,
             }
-        },
+        }
     }
 }
 
 fn add_number_delimiters(number_str: String, delimiter: char, frequency: usize) -> String {
-    number_str.chars()
-    .rev()
-    .enumerate()
-    .flat_map(|(i, c)| {
-        if i != 0 && i % frequency == 0 {
-            Some(delimiter)
-        } else {
-            None
-        }
-        .into_iter()
-        .chain(std::iter::once(c))
-    })
-    .collect::<String>()
-    .chars()
-    .rev()
-    .collect::<String>()
+    number_str
+        .chars()
+        .rev()
+        .enumerate()
+        .flat_map(|(i, c)| {
+            if i != 0 && i % frequency == 0 {
+                Some(delimiter)
+            } else {
+                None
+            }
+            .into_iter()
+            .chain(std::iter::once(c))
+        })
+        .collect::<String>()
+        .chars()
+        .rev()
+        .collect::<String>()
 }
 
 fn sanitize_string(string: String) -> String {

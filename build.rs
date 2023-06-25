@@ -9,6 +9,9 @@ fn main() {
 
     env::set_var("RUST_BACKTRACE", "1");
 
+    let cargo_manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let cargo_manifest_dir = cargo_manifest_dir.as_str();
+
     // Install Bootstrap
     {
         // Download Bootstrap archive
@@ -33,19 +36,42 @@ fn main() {
         println!("response code: {response_code}, vec length: {vec_len}");
 
         // Extract Bootstrap archive
-        let target_dir: PathBuf = [
-            env::var("CARGO_MANIFEST_DIR").unwrap().as_str(),
+        let bootstrap_extract_target_dir: PathBuf = [
+            cargo_manifest_dir,
             "bootstrap",
         ]
         .iter()
         .collect();
-        zip_extract::extract(std::io::Cursor::new(bootstrap_zip), &target_dir, true).unwrap();
+        zip_extract::extract(std::io::Cursor::new(bootstrap_zip), &bootstrap_extract_target_dir, true).unwrap();
+
+        // Copy Bootstrap JS files
+        let bootstrap_js_filename = "bootstrap.min.js";
+        let bootstrap_js_origin_path: PathBuf = [
+            "dist",
+            "js",
+            bootstrap_js_filename,
+        ]
+        .iter()
+        .collect();
+        let bootstrap_js_origin_path = bootstrap_extract_target_dir.join(bootstrap_js_origin_path);
+
+        let bootstrap_js_target_path: PathBuf = [
+            cargo_manifest_dir,
+            "js",
+            bootstrap_js_filename,
+        ]
+        .iter()
+        .collect();
+
+        // Create js path if it does not already exist
+        create_dir_all(&bootstrap_js_target_path);
+        std::fs::copy(bootstrap_js_origin_path, bootstrap_js_target_path).unwrap();
     }
 
     // Compile Sass
     {
         let grass_input_path: PathBuf = [
-            env::var("CARGO_MANIFEST_DIR").unwrap().as_str(),
+            cargo_manifest_dir,
             "scss",
             "main.scss",
         ]
@@ -53,7 +79,7 @@ fn main() {
         .collect();
 
         let grass_output_path: PathBuf = [
-            env::var("CARGO_MANIFEST_DIR").unwrap().as_str(),
+            cargo_manifest_dir,
             "style",
             "style.css",
         ]
@@ -61,8 +87,7 @@ fn main() {
         .collect();
 
         // Create grass output path if it does not already exist
-        let grass_output_dir = grass_output_path.parent().unwrap();
-        std::fs::create_dir_all(grass_output_dir).unwrap();
+        create_dir_all(&grass_output_path);
 
         let mut grass_output_file = File::create(&grass_output_path).unwrap();
 
@@ -79,4 +104,8 @@ fn main() {
             )
             .unwrap();
     }
+}
+
+fn create_dir_all(dir: &PathBuf) {
+    std::fs::create_dir_all(dir.parent().unwrap()).unwrap();
 }
