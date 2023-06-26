@@ -28,7 +28,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
     let result = qrcode_generator::to_svg_to_string(
         qr_code_value.get(),
         *qr_code_error_correction.get(),
-        300,
+        1024,
         None::<&str>,
     );
     let result = match result {
@@ -61,15 +61,13 @@ pub fn qr_code_generator(cx: Scope) -> Element {
             }
 
             div {
-                if result.is_empty() {
-                    "Input string is too long."
-                }
-                else {
-                    ""
-                }
+                class: "alert alert-warning",
+                display: if !result.is_empty() { "none" } else { "block" },
+                "Input string is too long to generate a QR code with this level of error correction."
             }
             img {
                 class: "qr-code",
+                display: if result.is_empty() { "none" } else { "block" },
                 src: "data:image/svg+xml;base64,{result}"
             }
         }

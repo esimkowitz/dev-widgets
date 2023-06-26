@@ -2,7 +2,12 @@
 use dioxus::prelude::*;
 
 #[inline_props]
-pub fn SelectForm<'a>(cx: Scope<'a>, label: &'a str, options: Vec<&'a str>, oninput: EventHandler<'a, Event<FormData>>) -> Element<'a> {
+pub fn SelectForm<'a>(
+    cx: Scope<'a>,
+    label: &'a str,
+    options: Vec<&'a str>,
+    oninput: EventHandler<'a, Event<FormData>>,
+) -> Element<'a> {
     cx.render(rsx! {
         div {
             class: "select-form form-floating",
