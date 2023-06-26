@@ -98,7 +98,7 @@ fn main() {
         let grass_options = grass::Options::default().style(grass_output_style);
         grass_output_file
             .write_all(
-                grass::from_path(&grass_input_path, &grass_options)
+                grass::from_path(grass_input_path, &grass_options)
                     .unwrap()
                     .as_bytes(),
             )
