@@ -1,0 +1,29 @@
+.home-page {
+  @extend .d-flex, .flex-row, .flex-wrap, .gap-2;
+
+  .card {
+    @extend .p-0;
+    width: 10em;
+    height: 14em;
+
+    .card-img-top {
+      @extend .text-center;
+      margin-top: 1em;
+    }
+
+    .icon {
+      height: 3em;
+      width: 3em;
+    }
+
+    .card-title {
+      @extend .text-start;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .card-body {
+      @extend .text-start;
+      font-size: 0.8em;
+    }
+  }
+}

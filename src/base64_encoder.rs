@@ -4,6 +4,7 @@ use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
 use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::textarea_form::TextAreaForm;
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
@@ -39,41 +40,33 @@ pub fn base64_encoder(cx: Scope) -> Element {
 #[inline_props]
 fn encoder_input(cx: Scope, direction: Direction) -> Element {
     let value_context = use_shared_state::<EncoderValue>(cx).unwrap();
-    let display_value = match direction {
+
+    let current_value = match direction {
         Direction::Encode => value_context.read().decoded_value.clone(),
         Direction::Decode => value_context.read().encoded_value.clone(),
     };
 
     const NOT_STRING: &str = "Not String";
     cx.render(rsx! {
-        div {
-            class: "form-floating mb-3",
-            style: "height: 14em;",
-            textarea {
-                class: "form-control h-100",
-                value: "{display_value}",
-                id: "{direction}",
-                oninput: move |event| {
-                    let input_value = event.value.clone();
-                    match direction {
-                        Direction::Encode => {
-                            value_context.write().decoded_value = input_value.clone();
-                            value_context.write().encoded_value = general_purpose::STANDARD.encode(input_value);
-                        },
-                        Direction::Decode => {
-                            value_context.write().encoded_value = input_value.clone();
-                            let decode_val = general_purpose::STANDARD.decode(input_value).unwrap_or_default();
-                            value_context.write().decoded_value = String::from_utf8(decode_val).unwrap_or(NOT_STRING.to_string());
-                        },
-                    };
-                }
-            }
-            label {
-                r#for: "{direction}",
+        TextAreaForm {
+            label: match direction {
+                Direction::Encode => "Encode",
+                Direction::Decode => "Decode",
+            },
+            value: "{current_value}",
+            oninput: move |event: Event<FormData>| {
+                let input_value = event.value.clone();
                 match direction {
-                    Direction::Encode => "Encode",
-                    Direction::Decode => "Decode",
-                }
+                    Direction::Encode => {
+                        value_context.write().decoded_value = input_value.clone();
+                        value_context.write().encoded_value = general_purpose::STANDARD.encode(input_value);
+                    },
+                    Direction::Decode => {
+                        value_context.write().encoded_value = input_value.clone();
+                        let decode_val = general_purpose::STANDARD.decode(input_value).unwrap_or_default();
+                        value_context.write().decoded_value = String::from_utf8(decode_val).unwrap_or(NOT_STRING.to_string());
+                    },
+                };
             }
         }
     })

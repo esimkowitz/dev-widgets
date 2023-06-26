@@ -1,0 +1,6 @@
+.textarea-form {
+    @extend .form-floating, .mb-3;
+    textarea {
+        @extend .form-control, .h-100;
+    }
+}
