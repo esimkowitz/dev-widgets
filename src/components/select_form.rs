@@ -10,9 +10,8 @@ pub fn SelectForm<'a>(
 ) -> Element<'a> {
     cx.render(rsx! {
         div {
-            class: "select-form form-floating",
+            class: "select-form",
             select {
-                class: "form-select",
                 id: "{label}",
                 aria_label: "{label}",
                 oninput: move |event| oninput.call(event),

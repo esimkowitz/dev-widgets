@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
-use crate::textarea_form::TextAreaForm;
+use crate::components::textarea_form::TextAreaForm;
 use crate::widget_entry::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {

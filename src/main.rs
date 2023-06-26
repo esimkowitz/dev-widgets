@@ -2,43 +2,18 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{Config as DesktopConfig, WindowBuilder};
-use dioxus_free_icons::icons::bs_icons::BsHouseDoorFill;
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
 
 #[cfg(debug_assertions)]
 use dioxus_hot_reload::{hot_reload_init, Config as HotReloadConfig};
 use std::env;
 
-use phf::phf_ordered_map;
-use widget_entry::{WidgetEntry, WidgetIcon};
+use pages::{home_page::HOME_PAGE_WIDGET_ENTRY, WIDGETS};
+use widget_entry::WidgetEntry;
 
-pub mod accordion;
-pub mod base64_encoder;
-pub mod color_picker;
-pub mod date_converter;
-pub mod json_yaml_converter;
-pub mod number_base_converter;
-pub mod qr_code_generator;
-pub mod select_form;
-pub mod textarea_form;
+pub mod components;
+pub mod pages;
 pub mod widget_entry;
-
-static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
-    "Encoder" => &[
-        base64_encoder::WIDGET_ENTRY,
-    ],
-    "Converter" => &[
-        number_base_converter::WIDGET_ENTRY,
-        date_converter::WIDGET_ENTRY,
-        json_yaml_converter::WIDGET_ENTRY,
-    ],
-    "Media" => &[
-        color_picker::WIDGET_ENTRY,
-    ],
-    "Generator" => &[
-        qr_code_generator::WIDGET_ENTRY,
-    ],
-};
 
 fn main() {
     if cfg!(debug_assertions) {
@@ -113,15 +88,12 @@ fn App(cx: Scope) -> Element {
                         }
                     }
                     for widget_type in WIDGETS.keys() {
-                        div {
-                            class: "list-unstyled",
-                            for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                                Route {
-                                    to: widget_entry.path,
-                                    WidgetView {
-                                        title: widget_entry.title,
-                                        children: (widget_entry.function)(cx)
-                                    }
+                        for widget_entry in WIDGETS.get(widget_type).unwrap() {
+                            Route {
+                                to: widget_entry.path,
+                                WidgetView {
+                                    title: widget_entry.title,
+                                    children: (widget_entry.function)(cx)
                                 }
                             }
                         }
@@ -147,7 +119,7 @@ fn Sidebar(cx: Scope) -> Element {
                     }
                     for widget_type in WIDGETS.keys() {
                         div {
-                            accordion::Accordion {
+                            components::accordion::Accordion {
                                 title: *widget_type,
                                 is_open: true,
                                 for widget_entry in WIDGETS.get(widget_type).unwrap() {
@@ -201,50 +173,3 @@ fn SidebarListItem<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'
         }
     })
 }
-
-static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
-    title: "Home",
-    short_title: "Home",
-    description: "Home page",
-    path: "/home",
-    function: HomePage,
-    icon: |cx| HOME_ICON.icon(cx),
-};
-
-fn HomePage(cx: Scope) -> Element {
-    cx.render(rsx! {
-        div {
-            class: "home-page",
-            for widget_type in WIDGETS.keys() {
-                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                    div {
-                        class: "card",
-                        div {
-                            class: "card-img-top",
-                            (widget_entry.icon)(cx)
-                        }
-                        div {
-                            class: "card-body",
-                            div {
-                                class: "card-title",
-                                widget_entry.title
-                            }
-                            div {
-                                class: "card-text",
-                                widget_entry.description
-                            }
-                            Link {
-                                class: "stretched-link",
-                                to: widget_entry.path
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    })
-}
-
-const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
-    icon: BsHouseDoorFill,
-};

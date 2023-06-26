@@ -1,0 +1,6 @@
+.select-form {
+    @extend .form-floating;
+    select {
+        @extend .form-select;
+    }
+}

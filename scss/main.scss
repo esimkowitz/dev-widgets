@@ -21,10 +21,7 @@ body {
   justify-content: flex-start;
 }
 
-@import "card.scss";
-@import "widget_view.scss";
-@import "sidebar.scss";
-@import "textarea_form.scss";
-@import "home_page.scss";
-@import "base64_encoder.scss";
-@import "qr_code_generator.scss";
+@import "components/components.scss";
+@import "pages/home_page.scss";
+@import "pages/base64_encoder.scss";
+@import "pages/qr_code_generator.scss";
