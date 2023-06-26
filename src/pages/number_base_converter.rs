@@ -3,6 +3,7 @@ use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::components::switch::Switch;
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -19,10 +20,18 @@ pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     use_shared_state_provider(cx, || FormatNumberState(false));
 
+    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
+
     cx.render(rsx! {
         div {
             class: "number-base-converter",
-            format_number_toggle {}
+            Switch {
+                label: "Format Number",
+                checked: format_number_state.read().0,
+                oninput: move |is_enabled| {
+                    format_number_state.write().0 = is_enabled;
+                }
+            }
             converter_input {
                 base: NumberBase::Decimal
             }
@@ -34,31 +43,6 @@ pub fn number_base_converter(cx: Scope) -> Element {
             }
             converter_input {
                 base: NumberBase::Binary
-            }
-        }
-    })
-}
-
-fn format_number_toggle(cx: Scope) -> Element {
-    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
-    cx.render(rsx! {
-        div {
-            class: "form-check form-switch",
-            input {
-                class: "form-check-input",
-                r#type: "checkbox",
-                id: "format-string-toggle",
-                role: "switch",
-                checked: "{format_number_state.read().0}",
-                oninput: move |event| {
-                    let is_enabled = event.value == "true";
-                    format_number_state.write().0 = is_enabled;
-                }
-            }
-            label {
-                class: "form-check-label",
-                r#for: "format-string-toggle",
-                "Format Numbers"
             }
         }
     })

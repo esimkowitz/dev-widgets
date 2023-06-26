@@ -1,0 +1,9 @@
+.switch {
+  @extend .form-check, .form-switch;
+  input {
+    @extend .form-check-input;
+  }
+  label {
+    @extend .form-check-label;
+  }
+}
