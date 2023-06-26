@@ -18,8 +18,8 @@ const ICON: WidgetIcon<Bs123> = WidgetIcon {
 };
 
 pub fn number_base_converter(cx: Scope) -> Element {
-    use_shared_state_provider(&cx, || ConverterValue(0));
-    use_shared_state_provider(&cx, || FormatNumberState(false));
+    use_shared_state_provider(cx, || ConverterValue(0));
+    use_shared_state_provider(cx, || FormatNumberState(false));
 
     cx.render(rsx! {
         div {
