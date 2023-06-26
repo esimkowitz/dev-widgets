@@ -12,9 +12,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<BsFileText> = WidgetIcon {
-    icon: BsFileText,
-};
+const ICON: WidgetIcon<BsFileText> = WidgetIcon { icon: BsFileText };
 
 pub fn json_yaml_converter(cx: Scope) -> Element {
     cx.render(rsx! {

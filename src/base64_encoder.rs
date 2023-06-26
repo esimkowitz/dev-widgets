@@ -3,8 +3,8 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
 use crate::textarea_form::TextAreaForm;
+use crate::widget_entry::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
@@ -15,9 +15,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<BsHash> = WidgetIcon {
-    icon: BsHash,
-};
+const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
 pub fn base64_encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {

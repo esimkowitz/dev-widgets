@@ -12,9 +12,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<BsEyedropper> = WidgetIcon {
-    icon: BsEyedropper,
-};
+const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 
 pub fn color_picker(cx: Scope) -> Element {
     cx.render(rsx! {

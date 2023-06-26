@@ -12,9 +12,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<BsClock> = WidgetIcon {
-    icon: BsClock,
-};
+const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
 pub fn date_converter(cx: Scope) -> Element {
     cx.render(rsx! {

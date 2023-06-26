@@ -13,9 +13,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<Bs123> = WidgetIcon {
-    icon: Bs123,
-};
+const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn number_base_converter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
