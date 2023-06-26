@@ -16,8 +16,11 @@ pub mod accordion;
 pub mod base64_encoder;
 pub mod color_picker;
 pub mod date_converter;
+pub mod select_form;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
+pub mod qr_code_generator;
+pub mod textarea_form;
 pub mod widget_entry;
 
 static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
@@ -31,6 +34,9 @@ static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map!
     ],
     "Media" => &[
         color_picker::WIDGET_ENTRY,
+    ],
+    "Generator" => &[
+        qr_code_generator::WIDGET_ENTRY,
     ],
 };
 

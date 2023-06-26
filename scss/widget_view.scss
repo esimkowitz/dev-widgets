@@ -1,0 +1,26 @@
+.widget-view {
+  width: 100%;
+  overflow-y: scroll;
+  padding-left: 1em;
+  padding-right: 1em;
+  clip-path: inset(0 0 0 0);
+}
+
+$widget-title-left-overflow: 0.5em;
+.widget-title {
+  position: fixed;
+  top: 0;
+  background-color: var(--bs-body-bg);
+  width: 100%;
+  z-index: 100;
+  /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
+  margin-left: -$widget-title-left-overflow;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  padding-left: $widget-title-left-overflow;
+}
+
+.widget-body {
+  padding-top: 3em;
+  width: 100%;
+}
