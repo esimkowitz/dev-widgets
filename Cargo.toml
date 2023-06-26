@@ -21,6 +21,7 @@ dioxus-router = "0.3.0"
 dioxus-interpreter-js = "0.3.3"
 phf = { version = "0.11.1", features = ["macros"] }
 dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
+qrcode-generator = "4.1.8"
 
 [package.metadata.bundle]
 name = "Dev Widgets"
