@@ -1,9 +1,13 @@
+use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
-
 use qrcode_generator::QrCodeEcc;
 
-use crate::{widget_entry::{WidgetEntry, WidgetIcon}, textarea_form::TextAreaForm, select_form::SelectForm};
+use crate::{
+    select_form::SelectForm,
+    textarea_form::TextAreaForm,
+    widget_entry::{WidgetEntry, WidgetIcon},
+};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "QR Code Generator",
@@ -14,15 +18,19 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move |cx| ICON.icon(cx),
 };
 
-const ICON: WidgetIcon<BsQrCode> = WidgetIcon {
-    icon: BsQrCode,
-};
+const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
 pub fn qr_code_generator(cx: Scope) -> Element {
     let qr_code_value = use_state(cx, || "".to_string());
     let qr_code_error_correction = use_state(cx, || QrCodeEcc::Low);
 
-    let result: String = qrcode_generator::to_svg_to_string(qr_code_value.get(), *qr_code_error_correction.get(), 300, None::<&str>).unwrap();
+    let result = qrcode_generator::to_png_to_vec_from_str(
+        qr_code_value.get(),
+        *qr_code_error_correction.get(),
+        1024,
+    )
+    .unwrap();
+
     cx.render(rsx! {
         div {
             class: "qr-code-generator",
@@ -46,9 +54,9 @@ pub fn qr_code_generator(cx: Scope) -> Element {
                     qr_code_value.set(event.value.clone());
                 }
             }
-            div {
+            img {
                 class: "qr-code",
-                dangerous_inner_html: "{result}"
+                src: format_args!("data:image/png;base64,{}", general_purpose::STANDARD.encode(result)),
             }
         }
     })
