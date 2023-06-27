@@ -1,4 +1,4 @@
-div.switch-form {
+div.switch-input {
   @extend .form-check, .form-switch;
   input[type=checkbox] {
     @extend .form-check-input;

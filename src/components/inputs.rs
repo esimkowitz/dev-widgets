@@ -32,7 +32,7 @@ pub fn SelectForm<'a>(
 }
 
 #[inline_props]
-pub fn Switch<'a>(
+pub fn SwitchInput<'a>(
     cx: Scope<'a>,
     label: &'a str,
     checked: bool,
@@ -40,7 +40,7 @@ pub fn Switch<'a>(
 ) -> Element<'a> {
     cx.render(rsx! {
         div {
-            class: "switch-form",
+            class: "switch-input",
             input {
                 r#type: "checkbox",
                 id: "{label}",

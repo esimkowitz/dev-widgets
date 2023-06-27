@@ -3,7 +3,7 @@ use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::widget_entry::{WidgetEntry, WidgetIcon};
-use crate::components::inputs::{Switch, TextInput};
+use crate::components::inputs::{SwitchInput, TextInput};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -25,7 +25,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "number-base-converter",
-            Switch {
+            SwitchInput {
                 label: "Format Numbers",
                 checked: format_number_state.read().0,
                 oninput: move |is_enabled| {
