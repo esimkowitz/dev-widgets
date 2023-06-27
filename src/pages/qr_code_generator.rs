@@ -5,7 +5,7 @@ use dioxus_free_icons::icons::bs_icons::BsQrCode;
 use qrcode_generator::QrCodeEcc;
 
 use crate::{
-    components::{select_form::SelectForm, textarea_form::TextAreaForm},
+    components::inputs::{SelectForm, TextAreaForm},
     widget_entry::{WidgetEntry, WidgetIcon},
 };
 

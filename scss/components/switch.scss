@@ -1,7 +1,8 @@
-.switch {
+div.switch-form {
   @extend .form-check, .form-switch;
-  input {
+  input[type=checkbox] {
     @extend .form-check-input;
+    border-radius: 0.5em;
   }
   label {
     @extend .form-check-label;

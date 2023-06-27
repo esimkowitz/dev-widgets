@@ -3,7 +3,7 @@ use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::widget_entry::{WidgetEntry, WidgetIcon};
-use crate::components::switch::Switch;
+use crate::components::inputs::{Switch, TextInput};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -26,7 +26,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
         div {
             class: "number-base-converter",
             Switch {
-                label: "Format Number",
+                label: "Format Numbers",
                 checked: format_number_state.read().0,
                 oninput: move |is_enabled| {
                     format_number_state.write().0 = is_enabled;
@@ -54,31 +54,23 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
     cx.render(rsx! {
-        div {
-            class: "form-floating mb-3",
-            input {
-                class: "form-control",
-                value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
-                id: "{base}",
-                oninput: move |event| {
-                    let event_value = event.value.clone();
-                    let event_value = sanitize_string(event_value);
-                    value_context.write().0 = match base {
-                        NumberBase::Binary => i64::from_str_radix(&event_value, 2),
-                        NumberBase::Octal => i64::from_str_radix(&event_value, 8),
-                        NumberBase::Decimal => event_value.parse::<i64>(),
-                        NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
-                    }.unwrap_or(0);
-                }
-            }
-            label {
-                r#for: "{base}",
-                match base {
-                    NumberBase::Binary => "Binary",
-                    NumberBase::Octal => "Octal",
-                    NumberBase::Decimal => "Decimal",
-                    NumberBase::Hexadecimal => "Hexadecimal",
-                }
+        TextInput {
+            label: match base {
+                NumberBase::Binary => "Binary",
+                NumberBase::Octal => "Octal",
+                NumberBase::Decimal => "Decimal",
+                NumberBase::Hexadecimal => "Hexadecimal",
+            },
+            value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
+            oninput: move |event: Event<FormData>| {
+                let event_value = event.value.clone();
+                let event_value = sanitize_string(event_value);
+                value_context.write().0 = match base {
+                    NumberBase::Binary => i64::from_str_radix(&event_value, 2),
+                    NumberBase::Octal => i64::from_str_radix(&event_value, 8),
+                    NumberBase::Decimal => event_value.parse::<i64>(),
+                    NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
+                }.unwrap_or(0);
             }
         }
     })
