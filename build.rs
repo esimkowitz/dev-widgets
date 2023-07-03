@@ -1,7 +1,7 @@
 use std::env;
 use std::fs::File;
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 
 fn main() {
     // Tell Cargo to rerun the build script if it changes.
@@ -87,6 +87,6 @@ fn main() {
     }
 }
 
-fn create_dir_all(dir: &PathBuf) {
+fn create_dir_all(dir: &Path) {
     std::fs::create_dir_all(dir.parent().unwrap()).unwrap();
 }
