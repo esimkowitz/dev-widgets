@@ -2,7 +2,7 @@
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 use dioxus_desktop::{
-    tao::{self, menu::MenuBar},
+    tao::menu::{MenuBar, MenuItem},
     Config as DesktopConfig, WindowBuilder,
 };
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
@@ -94,12 +94,12 @@ impl WindowBuilderExt for WindowBuilder {
     fn with_file_menu(self) -> Self {
         let mut menu = MenuBar::new();
         let mut file_menu = MenuBar::new();
-        file_menu.add_native_item(tao::menu::MenuItem::SelectAll);
-        file_menu.add_native_item(tao::menu::MenuItem::Cut);
-        file_menu.add_native_item(tao::menu::MenuItem::Copy);
-        file_menu.add_native_item(tao::menu::MenuItem::Paste);
-        file_menu.add_native_item(tao::menu::MenuItem::Undo);
-        file_menu.add_native_item(tao::menu::MenuItem::Quit);
+        file_menu.add_native_item(MenuItem::SelectAll);
+        file_menu.add_native_item(MenuItem::Cut);
+        file_menu.add_native_item(MenuItem::Copy);
+        file_menu.add_native_item(MenuItem::Paste);
+        file_menu.add_native_item(MenuItem::Undo);
+        file_menu.add_native_item(MenuItem::Quit);
         menu.add_submenu("File", true, file_menu);
         self.with_menu(menu)
     }
