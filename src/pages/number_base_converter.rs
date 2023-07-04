@@ -2,8 +2,8 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
 use crate::components::inputs::{SwitchInput, TextInput};
+use crate::widget_entry::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",

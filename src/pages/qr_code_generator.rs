@@ -69,7 +69,9 @@ pub fn qr_code_generator(cx: Scope) -> Element {
     })
 }
 
-#[derive(Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq)]
+#[derive(
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+)]
 enum Ecc {
     #[default]
     Low,

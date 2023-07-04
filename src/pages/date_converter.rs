@@ -1,6 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
-use chrono::{TimeZone, NaiveDateTime, Utc};
+use chrono::{NaiveDateTime, TimeZone, Utc};
 use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
@@ -29,7 +29,12 @@ pub fn date_converter(cx: Scope) -> Element {
     });
     let date_state = use_shared_state::<DateConverterState>(cx).unwrap();
 
-    let date_time_str = date_state.read().time_zone.inner().from_utc_datetime(&date_state.read().time).to_string();
+    let date_time_str = date_state
+        .read()
+        .time_zone
+        .inner()
+        .from_utc_datetime(&date_state.read().time)
+        .to_string();
 
     cx.render(rsx! {
         div {

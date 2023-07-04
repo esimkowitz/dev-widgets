@@ -7,7 +7,15 @@ use dioxus::prelude::*;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
-    IntoEnumIterator + Into<&'static str> + FromStr + Default + Debug + Display + Copy + Clone + PartialEq
+    IntoEnumIterator
+    + Into<&'static str>
+    + FromStr
+    + Default
+    + Debug
+    + Display
+    + Copy
+    + Clone
+    + PartialEq
 {
 }
 
