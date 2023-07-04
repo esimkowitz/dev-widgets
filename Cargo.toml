@@ -24,6 +24,8 @@ dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
 qrcode-generator = "4.1.8"
 strum = "0.25.0"
 strum_macros = "0.25.1"
+chrono-tz = "0.8.3"
+chrono = "0.4.26"
 
 [package.metadata.bundle]
 name = "Dev Widgets"
