@@ -43,13 +43,14 @@ pub fn date_converter(cx: Scope) -> Element {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
                     date_state.write().time_zone = tz;
-                }
+                },
                 value: date_state.read().time_zone,
             }
             TextInput {
                 label: "Date",
                 value: "{date_time_str}",
-                readonly: true
+                oninput: |_| {},
+                readonly: true,
             }
         }
     })

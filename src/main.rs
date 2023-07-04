@@ -200,7 +200,7 @@ fn SidebarListItem<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'
     cx.render(rsx! {
         Link {
             class: "btn {active_str}",
-            to: widget_entry.path
+            to: widget_entry.path,
             icon
             widget_entry.short_title
         }

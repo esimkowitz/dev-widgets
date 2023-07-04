@@ -44,7 +44,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
                 label: "Error Correction Level",
                 oninput: |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
-                }
+                },
                 value: *qr_code_error_correction.get(),
             }
             TextAreaForm {
@@ -52,7 +52,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
                 value: qr_code_value,
                 oninput: |event: Event<FormData>| {
                     qr_code_value.set(event.value.clone());
-                }
+                },
             }
 
             div {
