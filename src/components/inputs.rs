@@ -6,39 +6,38 @@ use dioxus::prelude::*;
 
 use strum::IntoEnumIterator;
 
-pub struct SelectForm<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
-    phantom: std::marker::PhantomData<&'a T>,
+pub trait SelectFormEnum:
+    IntoEnumIterator + Into<&'static str> + FromStr + Default + Debug + Display + Copy + Clone
+{
 }
 
-impl<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> SelectForm<'a, T> {
-    pub fn SelectForm(cx: Scope<'a, SelectFormProps<'a, T>>) -> Element<'a> {
-        cx.render(rsx! {
-            div {
-                class: "select-form",
-                select {
-                    id: "{cx.props.label}",
-                    aria_label: "{cx.props.label}",
-                    oninput: move |event| {
-                        cx.props.oninput.call(T::from_str(&event.value).unwrap_or_default());
-                    },
-                    for enumInst in T::iter() {
-                        option {
-                            value: "{enumInst.into()}",
-                            "{enumInst.into()}"
-                        }
+pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) -> Element<'a> {
+    cx.render(rsx! {
+        div {
+            class: "select-form",
+            select {
+                id: "{cx.props.label}",
+                aria_label: "{cx.props.label}",
+                oninput: move |event| {
+                    cx.props.oninput.call(T::from_str(&event.value).unwrap_or_default());
+                },
+                for enumInst in T::iter() {
+                    option {
+                        value: "{enumInst.into()}",
+                        "{enumInst.into()}"
                     }
                 }
-                label {
-                    r#for: "{cx.props.label}",
-                    "{cx.props.label}"
-                }
             }
-        })
-    }
+            label {
+                r#for: "{cx.props.label}",
+                "{cx.props.label}"
+            }
+        }
+    })
 }
 
 #[derive(Props)]
-struct SelectFormProps<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
+pub struct SelectFormProps<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
     label: &'a str,
     oninput: EventHandler<'a, T>,
 }

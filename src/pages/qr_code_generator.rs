@@ -1,14 +1,14 @@
-use std::{str::FromStr, marker::PhantomData};
+use std::{marker::PhantomData, str::FromStr};
 
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
 
 use qrcode_generator;
-use strum_macros::{IntoStaticStr, EnumIter, Display, EnumString};
+use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
-    components::inputs::{SelectForm, TextAreaForm},
+    components::inputs::{SelectForm, SelectFormEnum, TextAreaForm},
     widget_entry::{WidgetEntry, WidgetIcon},
 };
 
@@ -39,14 +39,10 @@ pub fn qr_code_generator(cx: Scope) -> Element {
     };
     let result = general_purpose::STANDARD.encode(result);
 
-    let select_form = SelectForm::<Ecc> {
-        phantom: PhantomData,
-    };
-
     cx.render(rsx! {
         div {
             class: "qr-code-generator",
-            select_form.SelectForm {
+            SelectForm::<Ecc> {
                 label: "Error Correction Level",
                 oninput: |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
@@ -74,13 +70,13 @@ pub fn qr_code_generator(cx: Scope) -> Element {
     })
 }
 
-#[derive(IntoStaticStr, EnumString, Default, EnumIter, Debug, Display, PartialEq)]
+#[derive(Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr)]
 enum Ecc {
     #[default]
-    Low = 0,
-    Medium = 1,
-    Quartile = 2,
-    High = 3,
+    Low,
+    Medium,
+    Quartile,
+    High,
 }
 
 impl From<&Ecc> for qrcode_generator::QrCodeEcc {
@@ -93,3 +89,5 @@ impl From<&Ecc> for qrcode_generator::QrCodeEcc {
         }
     }
 }
+
+impl SelectFormEnum for Ecc {}
