@@ -76,9 +76,7 @@ impl Default for DcTimeZone {
 
 impl Display for DcTimeZone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Base(tz) => write!(f, "{}", tz),
-        }
+        write!(f, "{}", self.inner())
     }
 }
 
@@ -110,9 +108,7 @@ impl IntoEnumIterator for DcTimeZone {
 
 impl From<DcTimeZone> for &'static str {
     fn from(val: DcTimeZone) -> Self {
-        match val {
-            DcTimeZone::Base(tz) => tz.name(),
-        }
+        val.inner().name()
     }
 }
 
