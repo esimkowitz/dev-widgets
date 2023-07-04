@@ -7,12 +7,14 @@ pub mod color_picker;
 pub mod date_converter;
 pub mod home_page;
 pub mod json_yaml_converter;
+pub mod jwt_decoder;
 pub mod number_base_converter;
 pub mod qr_code_generator;
 
 pub static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
-    "Encoder" => &[
+    "Encoders" => &[
         base64_encoder::WIDGET_ENTRY,
+        jwt_decoder::WIDGET_ENTRY
     ],
     "Converter" => &[
         number_base_converter::WIDGET_ENTRY,
