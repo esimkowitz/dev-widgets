@@ -49,7 +49,6 @@ pub fn date_converter(cx: Scope) -> Element {
             TextInput {
                 label: "Date",
                 value: "{date_time_str}",
-                oninput: move |_| {}
                 readonly: true
             }
         }
