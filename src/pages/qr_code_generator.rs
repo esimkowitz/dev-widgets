@@ -23,7 +23,7 @@ const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
 pub fn qr_code_generator(cx: Scope) -> Element {
     let qr_code_value = use_state(cx, || "".to_string());
-    let qr_code_error_correction = use_state(cx, || Ecc::default());
+    let qr_code_error_correction = use_state(cx, Ecc::default);
 
     let result = qrcode_generator::to_svg_to_string(
         qr_code_value.get(),
