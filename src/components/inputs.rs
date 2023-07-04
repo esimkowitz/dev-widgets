@@ -37,7 +37,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
 }
 
 #[derive(Props)]
-pub struct SelectFormProps<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
+pub struct SelectFormProps<'a, T: SelectFormEnum> {
     label: &'a str,
     oninput: EventHandler<'a, T>,
 }
