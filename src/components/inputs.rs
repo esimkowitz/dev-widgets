@@ -98,15 +98,21 @@ pub fn TextInput<'a>(
     cx: Scope<'a>,
     value: &'a str,
     label: &'a str,
-    oninput: EventHandler<'a, Event<FormData>>,
+    oninput: Option<EventHandler<'a, Event<FormData>>>,
+    readonly: Option<bool>,
 ) -> Element<'a> {
+    let readonly = readonly.unwrap_or(false);
     cx.render(rsx! {
         div {
             class: "text-input",
             input {
                 r#type: "text",
                 value: "{value}",
-                oninput: move |event| oninput.call(event)
+                oninput: move |event| match oninput {
+                    Some(oninput) => oninput.call(event),
+                    None => {}
+                },
+                readonly: readonly
             }
             label {
                 r#for: "{label}",

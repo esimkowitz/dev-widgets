@@ -1,12 +1,13 @@
 use std::{fmt::Display, str::FromStr};
 
+use chrono::{TimeZone, NaiveDateTime, Utc};
 use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
 
 use crate::{
-    components::inputs::{SelectForm, SelectFormEnum},
+    components::inputs::{SelectForm, SelectFormEnum, TextInput},
     widget_entry::{WidgetEntry, WidgetIcon},
 };
 
@@ -22,31 +23,52 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
 pub fn date_converter(cx: Scope) -> Element {
+    use_shared_state_provider(cx, || DateConverterState {
+        time_zone: DcTimeZone::default(),
+        time: Utc::now().naive_utc(),
+    });
+    let date_state = use_shared_state::<DateConverterState>(cx).unwrap();
+
+    let date_time_str = date_state.read().time_zone.inner().from_utc_datetime(&date_state.read().time).to_string();
+
     cx.render(rsx! {
         div {
             class: "date-converter",
-            SelectForm::<TimeZone> {
+            SelectForm::<DcTimeZone> {
                 label: "Time Zone",
-                oninput: move |tz: TimeZone| {
+                oninput: move |tz: DcTimeZone| {
                     println!("Time Zone: {}", tz);
+                    date_state.write().time_zone = tz;
                 }
+            }
+            TextInput {
+                label: "Date",
+                value: "{date_time_str}",
+                oninput: move |_| {}
+                readonly: true
             }
         }
     })
 }
 
+#[derive(Clone, Copy)]
+struct DateConverterState {
+    time_zone: DcTimeZone,
+    time: NaiveDateTime,
+}
+
 #[derive(Copy, Clone, Debug, Hash)]
-enum TimeZone {
+enum DcTimeZone {
     Base(Tz),
 }
 
-impl Default for TimeZone {
+impl Default for DcTimeZone {
     fn default() -> Self {
         Self::Base(Tz::UTC)
     }
 }
 
-impl Display for TimeZone {
+impl Display for DcTimeZone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Base(tz) => write!(f, "{}", tz),
@@ -54,7 +76,7 @@ impl Display for TimeZone {
     }
 }
 
-impl FromStr for TimeZone {
+impl FromStr for DcTimeZone {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Self::Base(Tz::from_str(s)?))
     }
@@ -62,7 +84,7 @@ impl FromStr for TimeZone {
     type Err = ParseError;
 }
 
-impl IntoEnumIterator for TimeZone {
+impl IntoEnumIterator for DcTimeZone {
     fn iter() -> Self::Iterator {
         TZ_VARIANTS
             .iter()
@@ -74,12 +96,20 @@ impl IntoEnumIterator for TimeZone {
     type Iterator = std::vec::IntoIter<Self>;
 }
 
-impl From<TimeZone> for &'static str {
-    fn from(val: TimeZone) -> Self {
+impl From<DcTimeZone> for &'static str {
+    fn from(val: DcTimeZone) -> Self {
         match val {
-            TimeZone::Base(tz) => tz.name(),
+            DcTimeZone::Base(tz) => tz.name(),
         }
     }
 }
 
-impl SelectFormEnum for TimeZone {}
+impl SelectFormEnum for DcTimeZone {}
+
+impl DcTimeZone {
+    fn inner(&self) -> Tz {
+        match self {
+            Self::Base(tz) => *tz,
+        }
+    }
+}
