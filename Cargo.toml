@@ -15,17 +15,17 @@ dioxus-hot-reload = "0.1.1"
 
 [dependencies]
 base64 = "0.21.2"
+chrono = "0.4.26"
+chrono-tz = "0.8.3"
 dioxus = "0.3.2"
 dioxus-desktop = "0.3.0"
-dioxus-router = "0.3.0"
-dioxus-interpreter-js = "0.3.3"
-phf = { version = "0.11.1", features = ["macros"] }
 dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
+dioxus-interpreter-js = "0.3.3"
+dioxus-router = "0.3.0"
+phf = { version = "0.11.1", features = ["macros"] }
 qrcode-generator = "4.1.8"
 strum = "0.25.0"
 strum_macros = "0.25.1"
-chrono-tz = "0.8.3"
-chrono = "0.4.26"
 
 [package.metadata.bundle]
 name = "Dev Widgets"

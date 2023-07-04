@@ -1,11 +1,14 @@
 use std::{fmt::Display, str::FromStr};
 
+use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
-use chrono_tz::{TZ_VARIANTS, Tz, ParseError};
 
-use crate::{widget_entry::{WidgetEntry, WidgetIcon}, components::inputs::{SelectFormEnum, SelectForm}};
+use crate::{
+    components::inputs::{SelectForm, SelectFormEnum},
+    widget_entry::{WidgetEntry, WidgetIcon},
+};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Date Converter",
@@ -61,7 +64,11 @@ impl FromStr for TimeZone {
 
 impl IntoEnumIterator for TimeZone {
     fn iter() -> Self::Iterator {
-        TZ_VARIANTS.iter().map(|tz| Self::Base(*tz)).collect::<Vec<_>>().into_iter()
+        TZ_VARIANTS
+            .iter()
+            .map(|tz| Self::Base(*tz))
+            .collect::<Vec<_>>()
+            .into_iter()
     }
 
     type Iterator = std::vec::IntoIter<Self>;
@@ -74,6 +81,5 @@ impl From<TimeZone> for &'static str {
         }
     }
 }
-
 
 impl SelectFormEnum for TimeZone {}
