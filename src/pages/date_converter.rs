@@ -42,7 +42,6 @@ pub fn date_converter(cx: Scope) -> Element {
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
-                    println!("Time Zone: {}", tz);
                     date_state.write().time_zone = tz;
                 }
                 value: date_state.read().time_zone,
