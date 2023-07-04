@@ -77,6 +77,8 @@ enum Ecc {
     High,
 }
 
+impl SelectFormEnum for Ecc {}
+
 impl From<&Ecc> for qrcode_generator::QrCodeEcc {
     fn from(ecc: &Ecc) -> Self {
         match *ecc {
@@ -87,5 +89,3 @@ impl From<&Ecc> for qrcode_generator::QrCodeEcc {
         }
     }
 }
-
-impl SelectFormEnum for Ecc {}
