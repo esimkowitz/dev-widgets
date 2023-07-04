@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
-    IntoEnumIterator + Into<&'static str> + FromStr + Default + Debug + Display + Copy + Clone
+    IntoEnumIterator + Into<&'static str> + FromStr + Default + Debug + Display + Copy + Clone + PartialEq
 {
 }
 
@@ -24,6 +24,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
                 for enumInst in T::iter() {
                     option {
                         value: "{enumInst.into()}",
+                        selected: enumInst == cx.props.value,
                         "{enumInst.into()}"
                     }
                 }
@@ -39,6 +40,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
 #[derive(Props)]
 pub struct SelectFormProps<'a, T: SelectFormEnum> {
     label: &'a str,
+    value: T,
     oninput: EventHandler<'a, T>,
 }
 

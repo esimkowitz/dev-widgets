@@ -40,6 +40,7 @@ pub fn date_converter(cx: Scope) -> Element {
                     println!("Time Zone: {}", tz);
                     date_state.write().time_zone = tz;
                 }
+                value: date_state.read().time_zone,
             }
             TextInput {
                 label: "Date",
@@ -57,7 +58,7 @@ struct DateConverterState {
     time: NaiveDateTime,
 }
 
-#[derive(Copy, Clone, Debug, Hash)]
+#[derive(Copy, Clone, Debug)]
 enum DcTimeZone {
     Base(Tz),
 }
@@ -82,6 +83,12 @@ impl FromStr for DcTimeZone {
     }
 
     type Err = ParseError;
+}
+
+impl PartialEq for DcTimeZone {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner() == other.inner()
+    }
 }
 
 impl IntoEnumIterator for DcTimeZone {
