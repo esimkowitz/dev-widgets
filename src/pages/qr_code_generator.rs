@@ -1,8 +1,11 @@
+use std::{str::FromStr, marker::PhantomData};
+
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
 
-use qrcode_generator::QrCodeEcc;
+use qrcode_generator;
+use strum_macros::{IntoStaticStr, EnumIter, Display, EnumString};
 
 use crate::{
     components::inputs::{SelectForm, TextAreaForm},
@@ -22,11 +25,11 @@ const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
 pub fn qr_code_generator(cx: Scope) -> Element {
     let qr_code_value = use_state(cx, || "".to_string());
-    let qr_code_error_correction = use_state(cx, || QrCodeEcc::Low);
+    let qr_code_error_correction = use_state(cx, || Ecc::Low);
 
     let result = qrcode_generator::to_svg_to_string(
         qr_code_value.get(),
-        *qr_code_error_correction.get(),
+        qrcode_generator::QrCodeEcc::from(qr_code_error_correction.get()),
         1024,
         None::<&str>,
     );
@@ -35,20 +38,18 @@ pub fn qr_code_generator(cx: Scope) -> Element {
         Err(_) => "".to_string(),
     };
     let result = general_purpose::STANDARD.encode(result);
+
+    let select_form = SelectForm::<Ecc> {
+        phantom: PhantomData,
+    };
+
     cx.render(rsx! {
         div {
             class: "qr-code-generator",
-            SelectForm {
+            select_form.SelectForm {
                 label: "Error Correction Level",
-                options: vec!["Low", "Medium", "Quartile", "High"],
-                oninput: |event: Event<FormData>| {
-                    qr_code_error_correction.set(match event.value.as_str() {
-                        "Low" => QrCodeEcc::Low,
-                        "Medium" => QrCodeEcc::Medium,
-                        "Quartile" => QrCodeEcc::Quartile,
-                        "High" => QrCodeEcc::High,
-                        _ => QrCodeEcc::Low,
-                    });
+                oninput: |ecc: Ecc| {
+                    qr_code_error_correction.set(ecc);
                 }
             }
             TextAreaForm {
@@ -71,4 +72,24 @@ pub fn qr_code_generator(cx: Scope) -> Element {
             }
         }
     })
+}
+
+#[derive(IntoStaticStr, EnumString, Default, EnumIter, Debug, Display, PartialEq)]
+enum Ecc {
+    #[default]
+    Low = 0,
+    Medium = 1,
+    Quartile = 2,
+    High = 3,
+}
+
+impl From<&Ecc> for qrcode_generator::QrCodeEcc {
+    fn from(ecc: &Ecc) -> Self {
+        match *ecc {
+            Ecc::Low => qrcode_generator::QrCodeEcc::Low,
+            Ecc::Medium => qrcode_generator::QrCodeEcc::Medium,
+            Ecc::Quartile => qrcode_generator::QrCodeEcc::Quartile,
+            Ecc::High => qrcode_generator::QrCodeEcc::High,
+        }
+    }
 }

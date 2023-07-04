@@ -1,34 +1,46 @@
 #![allow(non_snake_case)]
+use std::fmt::{Debug, Display};
+use std::str::FromStr;
+
 use dioxus::prelude::*;
 
+use strum::IntoEnumIterator;
 
-#[inline_props]
-pub fn SelectForm<'a>(
-    cx: Scope<'a>,
-    label: &'a str,
-    options: Vec<&'a str>,
-    oninput: EventHandler<'a, Event<FormData>>,
-) -> Element<'a> {
-    cx.render(rsx! {
-        div {
-            class: "select-form",
-            select {
-                id: "{label}",
-                aria_label: "{label}",
-                oninput: move |event| oninput.call(event),
-                for option in options.iter() {
-                    option {
-                        value: "{option}",
-                        *option
+pub struct SelectForm<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
+    phantom: std::marker::PhantomData<&'a T>,
+}
+
+impl<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> SelectForm<'a, T> {
+    pub fn SelectForm(cx: Scope<'a, SelectFormProps<'a, T>>) -> Element<'a> {
+        cx.render(rsx! {
+            div {
+                class: "select-form",
+                select {
+                    id: "{cx.props.label}",
+                    aria_label: "{cx.props.label}",
+                    oninput: move |event| {
+                        cx.props.oninput.call(T::from_str(&event.value).unwrap_or_default());
+                    },
+                    for enumInst in T::iter() {
+                        option {
+                            value: "{enumInst.into()}",
+                            "{enumInst.into()}"
+                        }
                     }
                 }
+                label {
+                    r#for: "{cx.props.label}",
+                    "{cx.props.label}"
+                }
             }
-            label {
-                r#for: "{label}",
-                *label
-            }
-        }
-    })
+        })
+    }
+}
+
+#[derive(Props)]
+struct SelectFormProps<'a, T: IntoEnumIterator + Into<&'static str> + FromStr + Default> {
+    label: &'a str,
+    oninput: EventHandler<'a, T>,
 }
 
 #[inline_props]
@@ -83,7 +95,12 @@ pub fn TextAreaForm<'a>(
 }
 
 #[inline_props]
-pub fn TextInput<'a>(cx: Scope<'a>, value: &'a str, label: &'a str, oninput: EventHandler<'a, Event<FormData>>) -> Element<'a> {
+pub fn TextInput<'a>(
+    cx: Scope<'a>,
+    value: &'a str,
+    label: &'a str,
+    oninput: EventHandler<'a, Event<FormData>>,
+) -> Element<'a> {
     cx.render(rsx! {
         div {
             class: "text-input",
