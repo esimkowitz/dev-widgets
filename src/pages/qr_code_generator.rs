@@ -1,5 +1,3 @@
-use std::{marker::PhantomData, str::FromStr};
-
 use base64::{engine::general_purpose, Engine as _};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
