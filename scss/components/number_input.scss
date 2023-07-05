@@ -1,0 +1,7 @@
+div.number-input {
+    @extend .form-floating, .mb-3;
+    input {
+      @extend .form-control;
+    }
+  }
+  

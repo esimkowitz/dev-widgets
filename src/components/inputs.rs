@@ -3,7 +3,7 @@ use std::fmt::{Debug, Display};
 use std::str::FromStr;
 
 use dioxus::prelude::*;
-
+use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
@@ -123,6 +123,35 @@ pub fn TextInput<'a>(
                     None => {}
                 },
                 readonly: readonly
+            }
+            label {
+                r#for: "{label}",
+                *label
+            }
+        }
+    })
+}
+
+#[inline_props]
+pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
+    cx: Scope<'a>,
+    class: Option<&'a str>,
+    value: T,
+    label: &'a str,
+    onchange: EventHandler<'a, T>,
+) -> Element<'a>
+{
+    cx.render(rsx! {
+        div {
+            class: "number-input {class.unwrap_or_default()}",
+            input {
+                r#type: "number",
+                value: "{value}",
+                id: "{label}",
+                onchange: move |event| {
+                    let value = event.value.parse::<T>().unwrap_or_default();
+                    onchange.call(value);
+                }
             }
             label {
                 r#for: "{label}",
