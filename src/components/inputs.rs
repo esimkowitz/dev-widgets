@@ -144,8 +144,7 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
     value: T,
     label: &'a str,
     onchange: EventHandler<'a, T>,
-) -> Element<'a>
-{
+) -> Element<'a> {
     cx.render(rsx! {
         div {
             class: "number-input {class.unwrap_or_default()}",

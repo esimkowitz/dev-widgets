@@ -3,8 +3,8 @@
 }
 
 .ymd-selectors {
-    @extend .flex-row, .gx-1, .d-flex;
-    .number-input {
-        @extend .flex-column;
-      }
+  @extend .flex-row, .gx-1, .d-flex;
+  .number-input {
+    @extend .flex-column;
+  }
 }
