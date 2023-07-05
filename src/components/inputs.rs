@@ -109,6 +109,7 @@ pub fn TextInput<'a>(
     value: &'a str,
     label: &'a str,
     oninput: Option<EventHandler<'a, Event<FormData>>>,
+    onchange: Option<EventHandler<'a, Event<FormData>>>,
     readonly: Option<bool>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
@@ -120,6 +121,10 @@ pub fn TextInput<'a>(
                 value: "{value}",
                 oninput: move |event| match oninput {
                     Some(oninput) => oninput.call(event),
+                    None => {}
+                },
+                onchange: move |event| match onchange {
+                    Some(onchange) => onchange.call(event),
                     None => {}
                 },
                 readonly: readonly

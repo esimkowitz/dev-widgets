@@ -1,13 +1,13 @@
 use std::{fmt::Display, str::FromStr};
 
-use chrono::{NaiveDateTime, TimeZone, Utc, Datelike, Timelike};
+use chrono::{Datelike, DateTime, NaiveDateTime, TimeZone, Timelike, Utc};
 use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
 
 use crate::{
-    components::inputs::{SelectForm, SelectFormEnum, TextInput, NumberInput},
+    components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
     widget_entry::{WidgetEntry, WidgetIcon},
 };
 
@@ -31,10 +31,10 @@ pub fn date_converter(cx: Scope) -> Element {
 
     let date_time_str = date_state
         .read()
-        .time_zone
-        .inner()
-        .from_utc_datetime(&date_state.read().time)
+        .local_datetime()
         .to_string();
+
+    let unix_time_str = date_state.read().time.timestamp().to_string();
 
     cx.render(rsx! {
         div {
@@ -49,63 +49,75 @@ pub fn date_converter(cx: Scope) -> Element {
             TextInput {
                 label: "Date",
                 value: "{date_time_str}",
-                oninput: |_| {},
                 readonly: true,
+            }
+            TextInput {
+                label: "Unix Timestamp",
+                value: "{unix_time_str}",
+                onchange: move |event: Event<FormData>| {
+                    let new_unix_time = event.value.clone();
+                    if let Ok(unix_time) = i64::from_str(&new_unix_time) {
+                        date_state.write().time = match Utc.timestamp_opt(unix_time, 0) {
+                            chrono::LocalResult::Single(datetime) => datetime.naive_utc(),
+                            _ => date_state.read().time,
+                        };
+                    }
+                }
             }
             div {
                 class: "ymd-selectors",
                 NumberInput::<i32> {
                     class: "year",
                     label: "Year",
-                    value: date_state.read().time.year(),
+                    value: date_state.read().local_datetime().year(),
                     onchange: move |year| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_year(year).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_year(year).unwrap_or(datetime));
                     }
                 }
                 NumberInput::<u32> {
                     class: "month",
                     label: "Month",
-                    value: date_state.read().time.month(),
+                    value: date_state.read().local_datetime().month(),
                     onchange: move |month| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_month(month).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_month(month).unwrap_or(datetime));
                     }
                 }
                 NumberInput::<u32> {
                     class: "day",
                     label: "Day",
-                    value: date_state.read().time.day(),
+                    value: date_state.read().local_datetime().day(),
                     onchange: move |day| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_day(day).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_day(day).unwrap_or(datetime));
                     }
                 }
                 NumberInput::<u32> {
                     class: "hour",
                     label: "Hour",
-                    value: date_state.read().time.hour(),
+                    value: date_state.read().local_datetime().hour(),
                     onchange: move |hour| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_hour(hour).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_hour(hour).unwrap_or(datetime));
                     }
                 }
                 NumberInput::<u32> {
                     class: "minute",
                     label: "Minute",
-                    value: date_state.read().time.minute(),
+                    value: date_state.read().local_datetime().minute(),
                     onchange: move |minute| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_minute(minute).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_minute(minute).unwrap_or(datetime));
                     }
                 }
                 NumberInput::<u32> {
                     class: "second",
                     label: "Second",
-                    value: date_state.read().time.second(),
+                    value: date_state.read().local_datetime().second(),
                     onchange: move |second| {
-                        let datetime = date_state.read().time;
-                        date_state.write().time = datetime.with_second(second).unwrap_or(datetime);
+                        let datetime = date_state.read().local_datetime();
+                        date_state.write().set_local_datetime(datetime.with_second(second).unwrap_or(datetime));
                     }
                 }
             }
@@ -117,6 +129,16 @@ pub fn date_converter(cx: Scope) -> Element {
 struct DateConverterState {
     time_zone: DcTimeZone,
     time: NaiveDateTime,
+}
+
+impl DateConverterState {
+    fn local_datetime(&self) -> DateTime<Tz> {
+        self.time_zone.inner().from_utc_datetime(&self.time)
+    }
+
+    fn set_local_datetime(&mut self, datetime: DateTime<Tz>) {
+        self.time = datetime.naive_utc();
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
