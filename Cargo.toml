@@ -11,17 +11,17 @@ grass = "0.12.4"
 zip-extract = "0.1.2"
 
 [dev-dependencies]
-dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"}
 
 [dependencies]
 base64 = "0.21.2"
 chrono = "0.4.26"
 chrono-tz = "0.8.3"
-dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-dioxus-free-icons = { version = "0.6.0", features = ["bootstrap"] }
-dioxus-interpreter-js = "0.3.3"
-dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"}
+dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"}
+dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
+dioxus-interpreter-js = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"}
+dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"}
 phf = { version = "0.11.1", features = ["macros"] }
 qrcode-generator = "4.1.8"
 strum = "0.25.0"
