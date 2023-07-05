@@ -2,9 +2,24 @@
   margin-bottom: 1em;
 }
 
-.ymd-selectors {
-  @extend .flex-row, .gx-1, .d-flex;
-  .number-input {
-    @extend .flex-column;
+.selectors-wrapper {
+  @extend .flex-row, .d-flex;
+
+  flex-wrap: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+  .selectors-wrapper {
+    flex-wrap: wrap;
+  }
+}
+
+.selectors {
+  @extend .flex-column;
+  .selectors-inner {
+    @extend .flex-row, .d-flex, .flex-nowrap;
+    .number-input {
+      @extend .flex-column, .flex-fill, .me-2;
+    }
   }
 }

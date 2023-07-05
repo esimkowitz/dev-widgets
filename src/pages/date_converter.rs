@@ -62,59 +62,71 @@ pub fn date_converter(cx: Scope) -> Element {
                 }
             }
             div {
-                class: "ymd-selectors",
-                NumberInput::<i32> {
-                    class: "year",
-                    label: "Year",
-                    value: date_state.read().local_datetime().year(),
-                    onchange: move |year| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_year(year).unwrap_or(datetime));
+                class: "selectors-wrapper",
+                div {
+                    class: "ymd selectors",
+                    div {
+                        class: "selectors-inner",
+                        NumberInput::<i32> {
+                            class: "year",
+                            label: "Year",
+                            value: date_state.read().local_datetime().year(),
+                            onchange: move |year| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_year(year).unwrap_or(datetime));
+                            }
+                        }
+                        NumberInput::<u32> {
+                            class: "month",
+                            label: "Month",
+                            value: date_state.read().local_datetime().month(),
+                            onchange: move |month| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_month(month).unwrap_or(datetime));
+                            }
+                        }
+                        NumberInput::<u32> {
+                            class: "day",
+                            label: "Day",
+                            value: date_state.read().local_datetime().day(),
+                            onchange: move |day| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_day(day).unwrap_or(datetime));
+                            }
+                        }
                     }
                 }
-                NumberInput::<u32> {
-                    class: "month",
-                    label: "Month",
-                    value: date_state.read().local_datetime().month(),
-                    onchange: move |month| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_month(month).unwrap_or(datetime));
-                    }
-                }
-                NumberInput::<u32> {
-                    class: "day",
-                    label: "Day",
-                    value: date_state.read().local_datetime().day(),
-                    onchange: move |day| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_day(day).unwrap_or(datetime));
-                    }
-                }
-                NumberInput::<u32> {
-                    class: "hour",
-                    label: "Hour",
-                    value: date_state.read().local_datetime().hour(),
-                    onchange: move |hour| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_hour(hour).unwrap_or(datetime));
-                    }
-                }
-                NumberInput::<u32> {
-                    class: "minute",
-                    label: "Minute",
-                    value: date_state.read().local_datetime().minute(),
-                    onchange: move |minute| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_minute(minute).unwrap_or(datetime));
-                    }
-                }
-                NumberInput::<u32> {
-                    class: "second",
-                    label: "Second",
-                    value: date_state.read().local_datetime().second(),
-                    onchange: move |second| {
-                        let datetime = date_state.read().local_datetime();
-                        date_state.write().set_local_datetime(datetime.with_second(second).unwrap_or(datetime));
+                div {
+                    class: "hms selectors",
+                    div {
+                        class: "selectors-inner",
+                        NumberInput::<u32> {
+                            class: "hour",
+                            label: "Hour",
+                            value: date_state.read().local_datetime().hour(),
+                            onchange: move |hour| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_hour(hour).unwrap_or(datetime));
+                            }
+                        }
+                        NumberInput::<u32> {
+                            class: "minute",
+                            label: "Minute",
+                            value: date_state.read().local_datetime().minute(),
+                            onchange: move |minute| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_minute(minute).unwrap_or(datetime));
+                            }
+                        }
+                        NumberInput::<u32> {
+                            class: "second",
+                            label: "Second",
+                            value: date_state.read().local_datetime().second(),
+                            onchange: move |second| {
+                                let datetime = date_state.read().local_datetime();
+                                date_state.write().set_local_datetime(datetime.with_second(second).unwrap_or(datetime));
+                            }
+                        }
                     }
                 }
             }
