@@ -4,7 +4,6 @@ use chrono::{NaiveDateTime, TimeZone, Utc, Datelike, Timelike};
 use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
-use num_traits::Num;
 use strum::IntoEnumIterator;
 
 use crate::{
