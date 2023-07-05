@@ -85,15 +85,26 @@ pub fn TextAreaForm<'a>(
     cx: Scope<'a>,
     value: &'a str,
     label: &'a str,
-    oninput: EventHandler<'a, Event<FormData>>,
+    readonly: Option<bool>,
+    oninput: Option<EventHandler<'a, Event<FormData>>>,
+    onchange: Option<EventHandler<'a, Event<FormData>>>,
 ) -> Element<'a> {
+    let readonly = readonly.unwrap_or(false);
     cx.render(rsx! {
         div {
             class: "textarea-form",
             id: "{label}",
             textarea {
                 value: "{value}",
-                oninput: move |event| oninput.call(event)
+                oninput:  move |event| match oninput {
+                    Some(oninput) => oninput.call(event),
+                    None => {}
+                },
+                onchange: move |event| match onchange {
+                    Some(onchange) => onchange.call(event),
+                    None => {}
+                },
+                readonly: readonly,
             }
             label {
                 r#for: "{label}",
