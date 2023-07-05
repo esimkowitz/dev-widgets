@@ -3,11 +3,19 @@ use std::fmt::{Debug, Display};
 use std::str::FromStr;
 
 use dioxus::prelude::*;
-
+use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
-    IntoEnumIterator + Into<&'static str> + FromStr + Default + Debug + Display + Copy + Clone
+    IntoEnumIterator
+    + Into<&'static str>
+    + FromStr
+    + Default
+    + Debug
+    + Display
+    + Copy
+    + Clone
+    + PartialEq
 {
 }
 
@@ -24,6 +32,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
                 for enumInst in T::iter() {
                     option {
                         value: "{enumInst.into()}",
+                        selected: enumInst == cx.props.value,
                         "{enumInst.into()}"
                     }
                 }
@@ -39,6 +48,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
 #[derive(Props)]
 pub struct SelectFormProps<'a, T: SelectFormEnum> {
     label: &'a str,
+    value: T,
     oninput: EventHandler<'a, T>,
 }
 
@@ -98,15 +108,54 @@ pub fn TextInput<'a>(
     cx: Scope<'a>,
     value: &'a str,
     label: &'a str,
-    oninput: EventHandler<'a, Event<FormData>>,
+    oninput: Option<EventHandler<'a, Event<FormData>>>,
+    onchange: Option<EventHandler<'a, Event<FormData>>>,
+    readonly: Option<bool>,
 ) -> Element<'a> {
+    let readonly = readonly.unwrap_or(false);
     cx.render(rsx! {
         div {
             class: "text-input",
             input {
                 r#type: "text",
                 value: "{value}",
-                oninput: move |event| oninput.call(event)
+                oninput: move |event| match oninput {
+                    Some(oninput) => oninput.call(event),
+                    None => {}
+                },
+                onchange: move |event| match onchange {
+                    Some(onchange) => onchange.call(event),
+                    None => {}
+                },
+                readonly: readonly
+            }
+            label {
+                r#for: "{label}",
+                *label
+            }
+        }
+    })
+}
+
+#[inline_props]
+pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
+    cx: Scope<'a>,
+    class: Option<&'a str>,
+    value: T,
+    label: &'a str,
+    onchange: EventHandler<'a, T>,
+) -> Element<'a> {
+    cx.render(rsx! {
+        div {
+            class: "number-input {class.unwrap_or_default()}",
+            input {
+                r#type: "number",
+                value: "{value}",
+                id: "{label}",
+                onchange: move |event| {
+                    let value = event.value.parse::<T>().unwrap_or_default();
+                    onchange.call(value);
+                }
             }
             label {
                 r#for: "{label}",

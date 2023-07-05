@@ -44,14 +44,15 @@ pub fn qr_code_generator(cx: Scope) -> Element {
                 label: "Error Correction Level",
                 oninput: |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
-                }
+                },
+                value: *qr_code_error_correction.get(),
             }
             TextAreaForm {
                 label: "Input",
                 value: qr_code_value,
                 oninput: |event: Event<FormData>| {
                     qr_code_value.set(event.value.clone());
-                }
+                },
             }
 
             div {
@@ -68,7 +69,9 @@ pub fn qr_code_generator(cx: Scope) -> Element {
     })
 }
 
-#[derive(Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr)]
+#[derive(
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+)]
 enum Ecc {
     #[default]
     Low,
