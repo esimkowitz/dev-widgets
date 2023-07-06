@@ -23,11 +23,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
 pub fn date_converter(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || DateConverterState {
+    let date_state = use_ref(cx, || DateConverterState {
         time_zone: DcTimeZone::default(),
         time: Utc::now().naive_utc(),
     });
-    let date_state = use_shared_state::<DateConverterState>(cx).unwrap();
 
     let date_time_str = date_state.read().local_datetime().to_string();
 
