@@ -1,5 +1,6 @@
 use dioxus::{prelude::*, html::label};
 use dioxus_free_icons::icons::bs_icons::BsGlobe2;
+use uuid::Uuid;
 
 use crate::{widget_entry::{WidgetEntry, WidgetIcon}, components::inputs::{SwitchInput, NumberInput, TextAreaForm}};
 
@@ -24,20 +25,23 @@ pub fn uuid_generator(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "uuid-generator",
-            SwitchInput {
-                label: "Hyphens",
-                checked: true,
-                oninput: move |value| {
-                    println!("Hyphens: {}", value);
-                    hyphens_state.set(value);
+            div {
+                class: "switches",
+                SwitchInput {
+                    label: "Hyphens",
+                    checked: true,
+                    oninput: move |value| {
+                        println!("Hyphens: {}", value);
+                        hyphens_state.set(value);
+                    }
                 }
-            }
-            SwitchInput {
-                label: "Uppercase",
-                checked: true,
-                oninput: move |value| {
-                    println!("Uppercase: {}", value);
-                    uppercase_state.set(value);
+                SwitchInput {
+                    label: "Uppercase",
+                    checked: true,
+                    oninput: move |value| {
+                        println!("Uppercase: {}", value);
+                        uppercase_state.set(value);
+                    }
                 }
             }
             NumberInput::<usize> {
@@ -46,6 +50,42 @@ pub fn uuid_generator(cx: Scope) -> Element {
                 onchange: move |value| {
                     println!("Number of UUIDs: {}", value);
                     num_uuids_state.set(value);
+                }
+            }
+            div {
+                class: "buttons",
+                button {
+                    class: "btn btn-primary me-3",
+                    onclick: move |_| {
+                        let mut uuids = vec![];
+                        for _ in 0..**num_uuids_state {
+                            let uuid = uuid::Uuid::new_v4();
+                            let uuid = if **hyphens_state {
+                                uuid.hyphenated().to_string()
+                            } else {
+                                uuid.simple().to_string()
+                            };
+                            let uuid = if **uppercase_state {
+                                uuid.to_uppercase()
+                            } else {
+                                uuid
+                            };
+                            uuids.push(uuid);
+                        }
+                        uuids_state.with_mut(|uuids_vec| {
+                            uuids_vec.append(&mut uuids);
+                        })
+                    },
+                    "Generate"
+                }
+                button {
+                    class: "btn btn-secondary",
+                    onclick: move |_| {
+                        uuids_state.with_mut(|uuids_vec| {
+                            uuids_vec.clear();
+                        })
+                    },
+                    "Clear"
                 }
             }
             TextAreaForm {
