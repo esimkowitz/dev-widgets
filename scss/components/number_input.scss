@@ -1,7 +1,13 @@
 div.number-input {
-    @extend .form-floating, .mb-3;
-    input {
-      @extend .form-control;
-    }
+  @extend .form-floating, .mb-3;
+  input {
+    @extend .form-control;
   }
-  
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}

@@ -27,7 +27,9 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
                 id: "{cx.props.label}",
                 aria_label: "{cx.props.label}",
                 oninput: move |event| {
-                    cx.props.oninput.call(T::from_str(&event.value).unwrap_or_default());
+                    if let Ok(value) = T::from_str(&event.value) {
+                        cx.props.oninput.call(value);
+                    }
                 },
                 for enumInst in T::iter() {
                     option {
@@ -159,18 +161,43 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
     cx.render(rsx! {
         div {
             class: "number-input {class.unwrap_or_default()}",
-            input {
-                r#type: "number",
-                value: "{value}",
-                id: "{label}",
-                onchange: move |event| {
-                    let value = event.value.parse::<T>().unwrap_or_default();
-                    onchange.call(value);
+            div {
+                class: "input-group",
+                input {
+                    r#type: "number",
+                    value: "{value}",
+                    id: "{label}",
+                    onchange: move |event| {
+                        if let Ok(value) = event.value.parse::<T>() {
+                            onchange.call(value);
+                        }
+                    }
                 }
-            }
-            label {
-                r#for: "{label}",
-                *label
+                div {
+                    class: "button-group",
+                    button {
+                        class: "btn btn-sm btn-outline-secondary",
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_add(&T::one()) {
+                                onchange.call(value);
+                            };
+                        },
+                        "+"
+                    }
+                    button {
+                        class: "btn btn-sm btn-outline-secondary",
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_sub(&T::one()) {
+                                onchange.call(value);
+                            };
+                        },
+                        "-"
+                    }
+                }
+                label {
+                    r#for: "{label}",
+                    *label
+                }
             }
         }
     })
