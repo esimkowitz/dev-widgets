@@ -33,7 +33,6 @@ pub fn uuid_generator(cx: Scope) -> Element {
                     label: "Hyphens",
                     checked: true,
                     oninput: move |value| {
-                        println!("Hyphens: {}", value);
                         hyphens_state.set(value);
                     }
                 }
@@ -41,7 +40,6 @@ pub fn uuid_generator(cx: Scope) -> Element {
                     label: "Uppercase",
                     checked: true,
                     oninput: move |value| {
-                        println!("Uppercase: {}", value);
                         uppercase_state.set(value);
                     }
                 }
@@ -50,7 +48,6 @@ pub fn uuid_generator(cx: Scope) -> Element {
                 label: "Number of UUIDs to generate",
                 value: **num_uuids_state,
                 onchange: move |value| {
-                    println!("Number of UUIDs: {}", value);
                     num_uuids_state.set(value);
                 }
             }
