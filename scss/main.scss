@@ -4,6 +4,10 @@ html {
   overscroll-behavior: none;
 }
 
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: unset;
   padding: unset;
@@ -19,6 +23,10 @@ body {
   height: 100vh;
   overflow-y: scroll;
   justify-content: flex-start;
+}
+
+.container-fluid::-webkit-scrollbar {
+  display: none;
 }
 
 @import "components/components.scss";
