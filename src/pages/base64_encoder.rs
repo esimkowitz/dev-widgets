@@ -48,8 +48,8 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     cx.render(rsx! {
         TextAreaForm {
             label: match direction {
-                Direction::Encode => "Encode",
-                Direction::Decode => "Decode",
+                Direction::Encode => "Text",
+                Direction::Decode => "Encoded",
             },
             value: "{current_value}",
             oninput: move |event: Event<FormData>| {
