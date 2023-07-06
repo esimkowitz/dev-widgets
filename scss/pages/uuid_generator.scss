@@ -1,14 +1,14 @@
 div.uuid-generator {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    .switches {
-        @extend .mb-3;
-    }
-    .buttons {
-        @extend .mb-3;
-    }
-    .textarea-form {
-        flex: 1 1 auto;
-    }
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  .switches {
+    @extend .mb-3;
+  }
+  .buttons {
+    @extend .mb-3;
+  }
+  .textarea-form {
+    flex: 1 1 auto;
+  }
 }
