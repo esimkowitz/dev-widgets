@@ -3,6 +3,10 @@ use std::fmt::{Debug, Display};
 use std::str::FromStr;
 
 use dioxus::prelude::*;
+use dioxus_free_icons::{
+    icons::bs_icons::{BsDash, BsPlus},
+    Icon,
+};
 use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
@@ -163,40 +167,52 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
             class: "number-input {class.unwrap_or_default()}",
             div {
                 class: "input-group",
-                input {
-                    r#type: "number",
-                    value: "{value}",
-                    id: "{label}",
-                    onchange: move |event| {
-                        if let Ok(value) = event.value.parse::<T>() {
-                            onchange.call(value);
+                div {
+                    class: "input-and-label",
+                    input {
+                        class: "form-control",
+                        r#type: "number",
+                        value: "{value}",
+                        id: "{label}",
+                        onchange: move |event| {
+                            if let Ok(value) = event.value.parse::<T>() {
+                                onchange.call(value);
+                            }
                         }
+                    }
+                    label {
+                        r#for: "{label}",
+                        *label
                     }
                 }
                 div {
-                    class: "button-group",
+                    class: "btn-group-vertical input-group-text p-1",
                     button {
-                        class: "btn btn-sm btn-outline-secondary",
                         onclick: move |_| {
                             if let Some(value) = value.checked_add(&T::one()) {
                                 onchange.call(value);
                             };
                         },
-                        "+"
+                        Icon {
+                            icon: BsPlus,
+                            class: "button-icon",
+                            height: 15,
+                            width: 15,
+                        }
                     }
                     button {
-                        class: "btn btn-sm btn-outline-secondary",
                         onclick: move |_| {
                             if let Some(value) = value.checked_sub(&T::one()) {
                                 onchange.call(value);
                             };
                         },
-                        "-"
+                        Icon {
+                            icon: BsDash,
+                            class: "button-icon",
+                            height: 15,
+                            width: 15,
+                        }
                     }
-                }
-                label {
-                    r#for: "{label}",
-                    *label
                 }
             }
         }

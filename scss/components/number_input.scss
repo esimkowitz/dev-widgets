@@ -1,7 +1,17 @@
 div.number-input {
-  @extend .form-floating, .mb-3;
-  input {
-    @extend .form-control;
+  @extend .mb-3;
+  .input-and-label {
+    @extend .form-floating;
+    input {
+      @extend .form-control, .h-100;
+    }
+  }
+  button {
+    @extend .btn, .btn-outline-secondary, .p-0;
+
+    &:hover {
+      @extend .btn-outline-primary;
+    }
   }
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
