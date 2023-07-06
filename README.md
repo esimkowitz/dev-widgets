@@ -9,6 +9,8 @@ The following widgets are now stable:
 * Number Base Converter
 * Base64 Encoder/Decoder
 * QR Code Generator
+* Date/Timestamp converter
+* UUID Generator
 
 ## Installation instructions
 
