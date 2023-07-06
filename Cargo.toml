@@ -27,6 +27,7 @@ phf = { version = "0.11.1", features = ["macros"] }
 qrcode-generator = "4.1.8"
 strum = "0.25.0"
 strum_macros = "0.25.1"
+uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
 
 [package.metadata.bundle]
 name = "Dev Widgets"

@@ -9,6 +9,7 @@ pub mod home_page;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
 pub mod qr_code_generator;
+pub mod uuid_generator;
 
 pub static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
@@ -24,5 +25,6 @@ pub static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_
     ],
     "Generator" => &[
         qr_code_generator::WIDGET_ENTRY,
+        uuid_generator::WIDGET_ENTRY,
     ],
 };

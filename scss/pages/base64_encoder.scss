@@ -1,5 +1,8 @@
 .base64-encoder {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
   .textarea-form {
-    height: 14em;
+    flex: 1 1 50%;
   }
 }
