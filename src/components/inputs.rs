@@ -3,6 +3,10 @@ use std::fmt::{Debug, Display};
 use std::str::FromStr;
 
 use dioxus::prelude::*;
+use dioxus_free_icons::{
+    icons::bs_icons::{BsDash, BsPlus},
+    Icon,
+};
 use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
@@ -27,7 +31,9 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
                 id: "{cx.props.label}",
                 aria_label: "{cx.props.label}",
                 oninput: move |event| {
-                    cx.props.oninput.call(T::from_str(&event.value).unwrap_or_default());
+                    if let Ok(value) = T::from_str(&event.value) {
+                        cx.props.oninput.call(value);
+                    }
                 },
                 for enumInst in T::iter() {
                     option {
@@ -159,18 +165,55 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
     cx.render(rsx! {
         div {
             class: "number-input {class.unwrap_or_default()}",
-            input {
-                r#type: "number",
-                value: "{value}",
-                id: "{label}",
-                onchange: move |event| {
-                    let value = event.value.parse::<T>().unwrap_or_default();
-                    onchange.call(value);
+            div {
+                class: "input-group",
+                div {
+                    class: "input-and-label",
+                    input {
+                        class: "form-control",
+                        r#type: "number",
+                        value: "{value}",
+                        id: "{label}",
+                        onchange: move |event| {
+                            if let Ok(value) = event.value.parse::<T>() {
+                                onchange.call(value);
+                            }
+                        }
+                    }
+                    label {
+                        r#for: "{label}",
+                        *label
+                    }
                 }
-            }
-            label {
-                r#for: "{label}",
-                *label
+                div {
+                    class: "btn-group-vertical input-group-text p-1",
+                    button {
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_add(&T::one()) {
+                                onchange.call(value);
+                            };
+                        },
+                        Icon {
+                            icon: BsPlus,
+                            class: "button-icon",
+                            height: 15,
+                            width: 15,
+                        }
+                    }
+                    button {
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_sub(&T::one()) {
+                                onchange.call(value);
+                            };
+                        },
+                        Icon {
+                            icon: BsDash,
+                            class: "button-icon",
+                            height: 15,
+                            width: 15,
+                        }
+                    }
+                }
             }
         }
     })
