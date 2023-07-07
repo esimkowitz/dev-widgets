@@ -1,25 +1,31 @@
 div.widget-view {
-  @extend .ps-3;
+  @extend .ps-3, .pe-3;
   width: 100%;
+  height: 100%;
   overflow-y: scroll;
   overflow-x: clip;
 
   $widget-title-left-overflow: 0.5em;
+  $widget-title-padding: 0.25em;
   .widget-title {
     position: sticky;
     top: 0;
     background-color: var(--bs-body-bg);
-    width: inherit;
+    width: calc(100% + (2 * #{$widget-title-left-overflow}));
     z-index: 100;
     /* prevent widget body elements that may overflow the margin from appearing behind the title bar */
     margin-left: -$widget-title-left-overflow;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+    margin-bottom: 0;
+    margin-right: 0;
+    padding-top: $widget-title-padding;
+    padding-bottom: $widget-title-padding;
     padding-left: $widget-title-left-overflow;
-    margin-right: 3em;
   }
 
   .widget-body {
     width: 100%;
+    padding-top: 0.5em;
+    height: 1px;
+    min-height: calc(100% - 3em);
   }
 }
