@@ -1,4 +1,5 @@
 @import "../bootstrap/scss/bootstrap";
+$spacer: 1em;
 
 html {
   overscroll-behavior: none;
@@ -17,7 +18,7 @@ body {
   overflow-y: scroll;
 }
 
-.container-fluid {
+div.container-fluid {
   @extend .d-flex, .flex-row, .wrapper, .pe-0;
   width: 100vw;
   height: 100vh;
@@ -25,7 +26,7 @@ body {
   justify-content: flex-start;
 }
 
-.container-fluid::-webkit-scrollbar {
+div.container-fluid::-webkit-scrollbar {
   display: none;
 }
 
