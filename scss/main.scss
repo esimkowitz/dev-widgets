@@ -1,7 +1,12 @@
 @import "../bootstrap/scss/bootstrap";
+$spacer: 1em;
 
 html {
   overscroll-behavior: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -13,12 +18,16 @@ body {
   overflow-y: scroll;
 }
 
-.container-fluid {
+div.container-fluid {
   @extend .d-flex, .flex-row, .wrapper, .pe-0;
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
   justify-content: flex-start;
+}
+
+div.container-fluid::-webkit-scrollbar {
+  display: none;
 }
 
 @import "components/components.scss";
