@@ -189,9 +189,6 @@ fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Eleme
             class: "widget-body",
             children
         }
-        div {
-            class: "widget-footer"
-        }
     })
 }
 
