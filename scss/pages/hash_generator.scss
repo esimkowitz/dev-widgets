@@ -1,5 +1,6 @@
 div.hash-generator {
-    .textarea-form {
-        height: 20em;
-    }
+  @extend .d-grid, .column, .row-gap-3;
+  .textarea-form {
+    height: 20em;
+  }
 }

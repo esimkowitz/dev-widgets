@@ -89,6 +89,7 @@ pub fn SwitchInput<'a>(
 #[inline_props]
 pub fn TextAreaForm<'a>(
     cx: Scope<'a>,
+    class: Option<&'a str>,
     value: &'a str,
     label: &'a str,
     readonly: Option<bool>,
@@ -98,7 +99,7 @@ pub fn TextAreaForm<'a>(
     let readonly = readonly.unwrap_or(false);
     cx.render(rsx! {
         div {
-            class: "textarea-form",
+            class: "textarea-form {class.unwrap_or_default()}",
             id: "{label}",
             textarea {
                 value: "{value}",
@@ -170,7 +171,6 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
                 div {
                     class: "input-and-label",
                     input {
-                        class: "form-control",
                         r#type: "number",
                         value: "{value}",
                         id: "{label}",
@@ -186,7 +186,7 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
                     }
                 }
                 div {
-                    class: "btn-group-vertical input-group-text p-1",
+                    class: "inc-dec-buttons",
                     button {
                         onclick: move |_| {
                             if let Some(value) = value.checked_add(&T::one()) {

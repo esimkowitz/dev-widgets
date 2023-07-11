@@ -1,9 +1,7 @@
 .qr-code-generator {
+  @extend .d-grid, .column, .row-gap-3;
   .textarea-form {
     height: 14em;
-  }
-  .select-form {
-    margin-bottom: 1em;
   }
   .qr-code {
     width: 30em;
