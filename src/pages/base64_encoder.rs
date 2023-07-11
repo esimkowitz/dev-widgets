@@ -24,7 +24,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
     });
     cx.render(rsx! {
         div {
-            class: "base64-encoder widget-body-inner",
+            class: "base64-encoder",
             encoder_input {
                 direction: Direction::Encode
             }

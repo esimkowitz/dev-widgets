@@ -24,7 +24,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "number-base-converter widget-body-inner",
+            class: "number-base-converter",
             SwitchInput {
                 label: "Format Numbers",
                 checked: format_number_state.read().0,

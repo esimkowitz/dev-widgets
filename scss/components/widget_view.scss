@@ -28,8 +28,8 @@ div.widget-view {
     height: 1px;
     min-height: calc(100% - 3em);
 
-    .widget-body-inner {
-      @extend .pb-2;
+    > div {
+      @extend .pb-3;
     }
   }
 }

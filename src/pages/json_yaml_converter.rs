@@ -17,7 +17,7 @@ const ICON: WidgetIcon<BsFileText> = WidgetIcon { icon: BsFileText };
 pub fn json_yaml_converter(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "json-yaml-converter widget-body-inner"
+            class: "json-yaml-converter"
         }
     })
 }
