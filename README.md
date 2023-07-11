@@ -9,8 +9,9 @@ The following widgets are now stable:
 * Number Base Converter
 * Base64 Encoder/Decoder
 * QR Code Generator
-* Date/Timestamp converter
+* Date/Timestamp Converter
 * UUID Generator
+* Hash Generator
 
 ## Installation instructions
 
@@ -26,7 +27,7 @@ Run `cargo run` to start the application. The first build should take a couple m
 
 This app is heavily inspired by [DevToys](https://github.com/veler/DevToys) and [DevToysMac](https://github.com/ObuchiYuki/DevToysMac) and my roadmap for widgets I plan to support will align with these projects.
 
-Currently, I have only validated on macOS, though I now have a fairly stable programming model so I plan to set up some automated testing for macOS, Windows, and Linux soon, as well as start publishing releases.
+Currently, I have only validated on macOS, and performed very crude validations on Windows, though I now have a fairly stable programming model so I plan to set up some automated testing for macOS, Windows, and Linux soon, as well as start publishing releases.
 
 I also plan to publish this as a single-page application using dioxus-web and Github Pages.
 
