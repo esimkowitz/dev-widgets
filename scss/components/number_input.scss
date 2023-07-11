@@ -1,0 +1,29 @@
+div.number-input {
+  .input-and-label {
+    @extend .form-floating;
+    input {
+      @extend .form-control, .h-100;
+    }
+  }
+
+  .inc-dec-buttons {
+    @extend .btn-group-vertical, .input-group-text, .p-1;
+
+    button {
+      @extend .btn, .btn-outline-secondary, .p-0;
+
+      &:hover {
+        @extend .btn-outline-primary;
+      }
+    }
+  }
+
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}

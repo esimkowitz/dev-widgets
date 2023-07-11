@@ -1,4 +1,4 @@
-use base64::{engine::general_purpose, Engine as _};
+use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
@@ -48,8 +48,8 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     cx.render(rsx! {
         TextAreaForm {
             label: match direction {
-                Direction::Encode => "Encode",
-                Direction::Decode => "Decode",
+                Direction::Encode => "Text",
+                Direction::Decode => "Encoded",
             },
             value: "{current_value}",
             oninput: move |event: Event<FormData>| {
@@ -57,12 +57,15 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                 match direction {
                     Direction::Encode => {
                         value_context.write().decoded_value = input_value.clone();
-                        value_context.write().encoded_value = general_purpose::STANDARD.encode(input_value);
+                        value_context.write().encoded_value = Base64::encode_string(input_value.as_bytes());
                     },
                     Direction::Decode => {
                         value_context.write().encoded_value = input_value.clone();
-                        let decode_val = general_purpose::STANDARD.decode(input_value).unwrap_or_default();
-                        value_context.write().decoded_value = String::from_utf8(decode_val).unwrap_or(NOT_STRING.to_string());
+                        let decode_val = match Base64::decode_vec(input_value.as_str()) {
+                            Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
+                            Err(_) => NOT_STRING.to_string(),
+                        };
+                        value_context.write().decoded_value = decode_val;
                     },
                 };
             }

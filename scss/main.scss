@@ -1,7 +1,12 @@
 @import "../bootstrap/scss/bootstrap";
+$spacer: 1em;
 
 html {
   overscroll-behavior: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -13,7 +18,7 @@ body {
   overflow-y: scroll;
 }
 
-.container-fluid {
+div.container-fluid {
   @extend .d-flex, .flex-row, .wrapper, .pe-0;
   width: 100vw;
   height: 100vh;
@@ -21,8 +26,16 @@ body {
   justify-content: flex-start;
 }
 
+div.container-fluid::-webkit-scrollbar {
+  display: none;
+}
+
 @import "components/components.scss";
 @import "pages/home_page.scss";
 @import "pages/base64_encoder.scss";
 @import "pages/color_picker.scss";
+@import "pages/date_converter.scss";
+@import "pages/hash_generator.scss";
+@import "pages/number_base_converter.scss";
 @import "pages/qr_code_generator.scss";
+@import "pages/uuid_generator.scss";

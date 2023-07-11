@@ -1,5 +1,5 @@
 div.text-input {
-  @extend .form-floating, .mb-3;
+  @extend .form-floating;
   input {
     @extend .form-control;
   }

@@ -93,14 +93,19 @@ impl WindowBuilderExt for WindowBuilder {
     /// Workaround on macOS to get system keyboard shortcuts for copy, paste, etc.
     fn with_file_menu(self) -> Self {
         let mut menu = MenuBar::new();
-        let mut file_menu = MenuBar::new();
-        file_menu.add_native_item(MenuItem::SelectAll);
-        file_menu.add_native_item(MenuItem::Cut);
-        file_menu.add_native_item(MenuItem::Copy);
-        file_menu.add_native_item(MenuItem::Paste);
-        file_menu.add_native_item(MenuItem::Undo);
-        file_menu.add_native_item(MenuItem::Quit);
-        menu.add_submenu("File", true, file_menu);
+        let mut app_menu = MenuBar::new();
+        app_menu.add_native_item(MenuItem::Quit);
+        menu.add_submenu("Dev Widgets", true, app_menu);
+        let mut edit_menu = MenuBar::new();
+        edit_menu.add_native_item(MenuItem::Undo);
+        edit_menu.add_native_item(MenuItem::Redo);
+        edit_menu.add_native_item(MenuItem::Separator);
+        edit_menu.add_native_item(MenuItem::Cut);
+        edit_menu.add_native_item(MenuItem::Copy);
+        edit_menu.add_native_item(MenuItem::Paste);
+        edit_menu.add_native_item(MenuItem::Separator);
+        edit_menu.add_native_item(MenuItem::SelectAll);
+        menu.add_submenu("Edit", true, edit_menu);
         self.with_menu(menu)
     }
 }
@@ -184,6 +189,9 @@ fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Eleme
             class: "widget-body",
             children
         }
+        div {
+            class: "widget-footer"
+        }
     })
 }
 
@@ -200,7 +208,7 @@ fn SidebarListItem<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'
     cx.render(rsx! {
         Link {
             class: "btn {active_str}",
-            to: widget_entry.path
+            to: widget_entry.path,
             icon
             widget_entry.short_title
         }
