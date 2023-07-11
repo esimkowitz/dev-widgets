@@ -27,5 +27,9 @@ div.widget-view {
     padding-top: 0.5em;
     height: 1px;
     min-height: calc(100% - 3em);
+
+    .widget-body-inner {
+      @extend .pb-2;
+    }
   }
 }

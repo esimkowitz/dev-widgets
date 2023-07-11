@@ -38,7 +38,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "qr-code-generator",
+            class: "qr-code-generator widget-body-inner",
             SelectForm::<Ecc> {
                 label: "Error Correction Level",
                 oninput: |ecc: Ecc| {

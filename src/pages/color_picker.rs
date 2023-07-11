@@ -17,7 +17,7 @@ const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 pub fn color_picker(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "color-picker"
+            class: "color-picker widget-body-inner"
         }
     })
 }

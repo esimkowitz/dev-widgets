@@ -27,7 +27,7 @@ pub fn uuid_generator(cx: Scope) -> Element {
     let uuids = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     cx.render(rsx! {
         div {
-            class: "uuid-generator",
+            class: "uuid-generator widget-body-inner",
             div {
                 class: "switches",
                 SwitchInput {

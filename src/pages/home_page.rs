@@ -21,7 +21,7 @@ const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
 pub fn HomePage(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
-            class: "home-page",
+            class: "home-page widget-body-inner",
             for widget_type in WIDGETS.keys() {
                 for widget_entry in WIDGETS.get(widget_type).unwrap() {
                     div {
