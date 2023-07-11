@@ -21,9 +21,10 @@ pub fn uuid_generator(cx: Scope) -> Element {
     let hyphens_state = use_state(cx, || true);
     let uppercase_state = use_state(cx, || true);
     let num_uuids_state = use_state(cx, || 1);
-    let uuids_state = use_ref(cx, || vec![String::new()]);
+    #[allow(clippy::redundant_closure)]
+    let uuids_state = use_ref(cx, || Vec::<String>::new());
 
-    let uuids = uuids_state.read().join("\n");
+    let uuids = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     cx.render(rsx! {
         div {
             class: "uuid-generator",

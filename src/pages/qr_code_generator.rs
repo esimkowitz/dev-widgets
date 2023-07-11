@@ -1,4 +1,4 @@
-use base64::{engine::general_purpose, Engine as _};
+use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
 
@@ -32,10 +32,9 @@ pub fn qr_code_generator(cx: Scope) -> Element {
         None::<&str>,
     );
     let result = match result {
-        Ok(result) => result,
+        Ok(result) => Base64::encode_string(result.as_bytes()),
         Err(_) => "".to_string(),
     };
-    let result = general_purpose::STANDARD.encode(result);
 
     cx.render(rsx! {
         div {

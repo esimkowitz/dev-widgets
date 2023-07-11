@@ -28,9 +28,8 @@ pub fn date_converter(cx: Scope) -> Element {
         time: Utc::now().naive_utc(),
     });
 
-    let date_time_str = date_state.read().local_datetime().to_string();
-
-    let unix_time_str = date_state.read().time.timestamp().to_string();
+    let local_datetime = date_state.with(|date_state| date_state.local_datetime());
+    let unix_time = date_state.with(|date_state| date_state.time.timestamp());
 
     cx.render(rsx! {
         div {
@@ -38,25 +37,29 @@ pub fn date_converter(cx: Scope) -> Element {
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
-                    date_state.write().time_zone = tz;
+                    date_state.with_mut(|date_state| {
+                        date_state.time_zone = tz;
+                    });
                 },
-                value: date_state.read().time_zone,
+                value: date_state.with(|date_state| date_state.time_zone),
             }
             TextInput {
                 label: "Date",
-                value: "{date_time_str}",
+                value: "{local_datetime}",
                 readonly: true,
             }
             TextInput {
                 label: "Unix Timestamp",
-                value: "{unix_time_str}",
+                value: "{unix_time}",
                 onchange: move |event: Event<FormData>| {
                     let new_unix_time = event.value.clone();
                     if let Ok(unix_time) = i64::from_str(&new_unix_time) {
-                        date_state.write().time = match Utc.timestamp_opt(unix_time, 0) {
-                            chrono::LocalResult::Single(datetime) => datetime.naive_utc(),
-                            _ => date_state.read().time,
-                        };
+                        date_state.with_mut(|date_state| {
+                            date_state.time = match Utc.timestamp_opt(unix_time, 0) {
+                                chrono::LocalResult::Single(datetime) => datetime.naive_utc(),
+                                _ => date_state.time,
+                            };
+                        });
                     }
                 }
             }
@@ -69,28 +72,31 @@ pub fn date_converter(cx: Scope) -> Element {
                         NumberInput::<i32> {
                             class: "year",
                             label: "Year",
-                            value: date_state.read().local_datetime().year(),
+                            value: local_datetime.year(),
                             onchange: move |year| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_year(year).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_year(year).unwrap_or(local_datetime));
+                                });
                             }
                         }
                         NumberInput::<u32> {
                             class: "month",
                             label: "Month",
-                            value: date_state.read().local_datetime().month(),
+                            value: local_datetime.month(),
                             onchange: move |month| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_month(month).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_month(month).unwrap_or(local_datetime));
+                                });
                             }
                         }
                         NumberInput::<u32> {
                             class: "day",
                             label: "Day",
-                            value: date_state.read().local_datetime().day(),
+                            value: local_datetime.day(),
                             onchange: move |day| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_day(day).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_day(day).unwrap_or(local_datetime));
+                                });
                             }
                         }
                     }
@@ -102,28 +108,31 @@ pub fn date_converter(cx: Scope) -> Element {
                         NumberInput::<u32> {
                             class: "hour",
                             label: "Hour",
-                            value: date_state.read().local_datetime().hour(),
+                            value: local_datetime.hour(),
                             onchange: move |hour| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_hour(hour).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_hour(hour).unwrap_or(local_datetime));
+                                });
                             }
                         }
                         NumberInput::<u32> {
                             class: "minute",
                             label: "Minute",
-                            value: date_state.read().local_datetime().minute(),
+                            value: local_datetime.minute(),
                             onchange: move |minute| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_minute(minute).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_minute(minute).unwrap_or(local_datetime));
+                                });
                             }
                         }
                         NumberInput::<u32> {
                             class: "second",
                             label: "Second",
-                            value: date_state.read().local_datetime().second(),
+                            value: local_datetime.second(),
                             onchange: move |second| {
-                                let datetime = date_state.read().local_datetime();
-                                date_state.write().set_local_datetime(datetime.with_second(second).unwrap_or(datetime));
+                                date_state.with_mut(|date_state| {
+                                    date_state.set_local_datetime(local_datetime.with_second(second).unwrap_or(local_datetime));
+                                });
                             }
                         }
                     }

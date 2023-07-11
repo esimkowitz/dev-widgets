@@ -5,6 +5,7 @@ use crate::widget_entry::WidgetEntry;
 pub mod base64_encoder;
 pub mod color_picker;
 pub mod date_converter;
+pub mod hash_generator;
 pub mod home_page;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
@@ -26,5 +27,6 @@ pub static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_
     "Generator" => &[
         qr_code_generator::WIDGET_ENTRY,
         uuid_generator::WIDGET_ENTRY,
+        hash_generator::WIDGET_ENTRY,
     ],
 };
