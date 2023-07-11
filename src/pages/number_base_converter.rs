@@ -55,12 +55,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
 
     cx.render(rsx! {
         TextInput {
-            label: match base {
-                NumberBase::Binary => "Binary",
-                NumberBase::Octal => "Octal",
-                NumberBase::Decimal => "Decimal",
-                NumberBase::Hexadecimal => "Hexadecimal",
-            },
+            label: "{base}",
             value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
             oninput: move |event: Event<FormData>| {
                 let event_value = event.value.clone();
