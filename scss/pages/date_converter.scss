@@ -1,25 +1,25 @@
-.select-form {
-  margin-bottom: 1em;
-}
+div.date-converter {
+  @extend .d-grid, .column, .row-gap-3;
 
-.selectors-wrapper {
-  @extend .flex-row, .d-flex;
-
-  flex-wrap: nowrap;
-}
-
-@media screen and (max-width: 835px) {
   .selectors-wrapper {
-    flex-wrap: wrap;
-  }
-}
+    @extend .flex-row, .d-flex, .row-gap-3, .column-gap-2;
 
-.selectors {
-  @extend .flex-column;
-  .selectors-inner {
-    @extend .flex-row, .d-flex, .flex-nowrap;
-    .number-input {
-      @extend .flex-column, .flex-fill, .me-2;
+    flex-wrap: nowrap;
+
+    .selectors {
+      @extend .flex-column;
+      .selectors-inner {
+        @extend .flex-row, .d-flex, .flex-nowrap, .column-gap-2;
+        .number-input {
+          @extend .flex-column, .flex-fill;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 835px) {
+    .selectors-wrapper {
+      flex-wrap: wrap;
     }
   }
 }

@@ -1,8 +1,8 @@
 div.textarea-form {
-  @extend .form-floating, .mb-3;
+  @extend .form-floating;
   textarea {
     @extend .form-control, .h-100;
-    font-family:'Monaco', Courier, monospace;
+    font-family: "Monaco", Courier, monospace;
     letter-spacing: 0.05rem;
   }
 
