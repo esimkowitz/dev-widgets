@@ -3,7 +3,7 @@ div.widget-view {
   overflow-y: scroll;
   overflow-x: clip;
 
-  $widget-title-left-overflow: 0.5em;
+  $widget-title-left-overflow: 0.5rem;
   .widget-title {
     @extend .sticky-top, .mb-0, .pt-1, .pb-1;
     background-color: var(--bs-body-bg);
@@ -13,12 +13,15 @@ div.widget-view {
     margin-left: -$widget-title-left-overflow;
     margin-right: 0;
     padding-left: $widget-title-left-overflow;
+
+    font-size: 1.5rem;
+    font-weight: bold;
   }
 
   .widget-body {
     @extend .pt-2, .w-100;
     height: 1px;
-    min-height: calc(100% - 3em);
+    min-height: calc(100% - 3rem);
 
     > div {
       @extend .pb-3;

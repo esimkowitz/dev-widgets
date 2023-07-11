@@ -181,7 +181,7 @@ fn Sidebar(cx: Scope) -> Element {
 #[inline_props]
 fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Element {
     cx.render(rsx! {
-        h3 {
+        div {
             class: "widget-title",
             *title
         }

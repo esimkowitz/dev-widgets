@@ -2,5 +2,7 @@ div.text-input {
   @extend .form-floating;
   input {
     @extend .form-control;
+    font-family: "Monaco", Courier, monospace;
+    font-size: small;
   }
 }
