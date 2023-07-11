@@ -29,7 +29,7 @@ pub fn hash_generator(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "hash-generator widget-body-inner",
+            class: "number-base-converter",
             SwitchInput {
                 label: "Uppercase",
                 checked: hash_generator_state.read().uppercase,
