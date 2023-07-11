@@ -1,6 +1,6 @@
 div.sidebar {
   @extend .flex-row, .d-flex;
-  width: 15em;
+  width: 15rem;
 
   .sidebar-list {
     overflow-y: scroll;
@@ -13,10 +13,10 @@ div.sidebar {
       white-space: nowrap;
 
       .icon {
-        height: 1em;
-        width: 1em;
-        margin-right: 0.5em;
-        margin-top: -0.25em;
+        height: 1rem;
+        width: 1rem;
+        margin-right: 0.5rem;
+        margin-top: -0.25rem;
       }
     }
     .accordion {
