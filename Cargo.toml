@@ -48,7 +48,3 @@ copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]
-
-
-[package.metadata.wasm-pack.profile.release]
-wasm-opt = ["-Oz", "--enable-mutable-globals"]
