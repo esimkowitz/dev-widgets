@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
+build = "build.rs"
 
 [build-dependencies]
 curl = "0.4.44"
