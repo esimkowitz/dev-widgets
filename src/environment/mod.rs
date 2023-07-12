@@ -6,7 +6,7 @@ mod desktop;
 #[cfg(target_family = "wasm")]
 mod web;
 
-#[cfg(debug_assertions)]
+#[cfg(all(not(target_family = "wasm"), debug_assertions))]
 mod hot_reload;
 
 pub fn init(root: Component) {
@@ -18,6 +18,6 @@ pub fn init(root: Component) {
 }
 
 pub fn init_hot_reload() {
-    #[cfg(debug_assertions)]
+    #[cfg(all(not(target_family = "wasm"), debug_assertions))]
     hot_reload::init_hot_reload();
 }
