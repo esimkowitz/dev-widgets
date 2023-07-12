@@ -18,13 +18,17 @@ pub mod components;
 pub mod pages;
 pub mod widget_entry;
 
+const USE_HOT_RELOAD: bool = false;
+
 fn main() {
     if cfg!(debug_assertions) {
         env::set_var("RUST_BACKTRACE", "1");
 
-        hot_reload_init!(HotReloadConfig::new()
-            .with_paths(&["src", "style", "scss"])
-            .with_rebuild_command("cargo run"));
+        if USE_HOT_RELOAD {
+            hot_reload_init!(HotReloadConfig::new()
+                .with_paths(&["src", "style", "scss"])
+                .with_rebuild_command("cargo run"));
+        }
     }
 
     // Configure dioxus-desktop Tauri window

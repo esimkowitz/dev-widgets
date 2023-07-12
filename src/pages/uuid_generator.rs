@@ -24,7 +24,7 @@ pub fn uuid_generator(cx: Scope) -> Element {
     #[allow(clippy::redundant_closure)]
     let uuids_state = use_ref(cx, || Vec::<String>::new());
 
-    let uuids = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
+    let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     cx.render(rsx! {
         div {
             class: "uuid-generator",
@@ -60,16 +60,14 @@ pub fn uuid_generator(cx: Scope) -> Element {
                         let mut uuids = vec![];
                         for _ in 0..**num_uuids_state {
                             let uuid = uuid::Uuid::new_v4();
-                            let uuid = if **hyphens_state {
+                            let mut uuid = if **hyphens_state {
                                 uuid.hyphenated().to_string()
                             } else {
                                 uuid.simple().to_string()
                             };
-                            let uuid = if **uppercase_state {
-                                uuid.to_uppercase()
-                            } else {
-                                uuid
-                            };
+                            if **uppercase_state {
+                                uuid = uuid.to_uppercase();
+                            }
                             uuids.push(uuid);
                         }
                         uuids_state.with_mut(|uuids_vec| {
@@ -90,7 +88,7 @@ pub fn uuid_generator(cx: Scope) -> Element {
             }
             TextAreaForm {
                 label: "UUIDs",
-                value: "{uuids}",
+                value: "{uuids_str}",
                 readonly: true,
             }
         }

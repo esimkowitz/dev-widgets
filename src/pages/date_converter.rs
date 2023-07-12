@@ -54,12 +54,11 @@ pub fn date_converter(cx: Scope) -> Element {
                 onchange: move |event: Event<FormData>| {
                     let new_unix_time = event.value.clone();
                     if let Ok(unix_time) = i64::from_str(&new_unix_time) {
-                        date_state.with_mut(|date_state| {
-                            date_state.time = match Utc.timestamp_opt(unix_time, 0) {
-                                chrono::LocalResult::Single(datetime) => datetime.naive_utc(),
-                                _ => date_state.time,
-                            };
-                        });
+                        if let chrono::LocalResult::Single(datetime) = Utc.timestamp_opt(unix_time, 0) {
+                            date_state.with_mut(|date_state| {
+                                date_state.time = datetime.naive_utc();
+                            });
+                        }
                     }
                 }
             }

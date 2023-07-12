@@ -12,7 +12,7 @@ pub mod number_base_converter;
 pub mod qr_code_generator;
 pub mod uuid_generator;
 
-pub static WIDGETS: phf::OrderedMap<&str, &'static [WidgetEntry]> = phf_ordered_map! {
+pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
         base64_encoder::WIDGET_ENTRY,
     ],
