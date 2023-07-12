@@ -39,19 +39,21 @@ pub fn init_app(root: Component) {
             "#.to_string()
         );
 
+    #[cfg(target_os = "macos")]
+    let window_builder = WindowBuilder::new().with_default().with_file_menu();
+    #[cfg(not(target_os = "macos"))]
+    let window_builder = WindowBuilder::new().with_default();
+
     // Launch the app
     dioxus_desktop::launch_cfg(
         root,
-        config_builder.with_window(if cfg!(target_os = "macos") {
-            WindowBuilder::new().with_default().with_file_menu()
-        } else {
-            WindowBuilder::new().with_default()
-        }),
+        config_builder.with_window(window_builder),
     );
 }
 
 trait WindowBuilderExt {
     fn with_default(self) -> Self;
+    #[cfg(target_os = "macos")]
     fn with_file_menu(self) -> Self;
 }
 
@@ -68,6 +70,7 @@ impl WindowBuilderExt for WindowBuilder {
             ))
     }
 
+    #[cfg(target_os = "macos")]
     /// Workaround on macOS to get system keyboard shortcuts for copy, paste, etc.
     fn with_file_menu(self) -> Self {
         let mut menu = MenuBar::new();
