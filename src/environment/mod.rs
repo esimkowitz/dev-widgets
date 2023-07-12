@@ -3,15 +3,21 @@ use dioxus::prelude::Component;
 #[cfg(not(target_family = "wasm"))]
 mod desktop;
 
-#[cfg(all(debug_assertions, not(target_family = "wasm")))]
+#[cfg(target_family = "wasm")]
+mod web;
+
+#[cfg(debug_assertions)]
 mod hot_reload;
 
 pub fn init(root: Component) {
     #[cfg(not(target_family = "wasm"))]
     desktop::init_app(root);
+
+    #[cfg(target_family = "wasm")]
+    web::init_app(root);
 }
 
 pub fn init_hot_reload() {
-    #[cfg(all(debug_assertions, not(target_family = "wasm")))]
+    #[cfg(debug_assertions)]
     hot_reload::init_hot_reload();
 }

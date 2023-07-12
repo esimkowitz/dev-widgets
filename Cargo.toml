@@ -20,10 +20,17 @@ chrono = "0.4.26"
 chrono-tz = "0.8.3"
 digest = "0.10.7"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus-core = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab", features = ["serialize"] }
+dioxus-html = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab", features = ["wasm-bind"] }
+dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
 dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
-dioxus-interpreter-js = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus-interpreter-js = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab", features = [
+    "sledgehammer",
+    "minimal_bindings",
+] }
 dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+getrandom = { version= "0.2.10", features = ["js"] }
 md-5 = "0.10.5"
 num-traits = "0.2.15"
 phf = { version = "0.11.1", features = ["macros"] }
@@ -32,7 +39,10 @@ sha1 = "0.10.5"
 sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
+tokio = { version="1.29.1", features = ["sync", "macros", "io-util", "rt", "time"] }
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
+wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
+wasm-bindgen-futures = "0.4.37"
 
 [package.metadata.bundle]
 name = "Dev Widgets"
@@ -43,3 +53,7 @@ copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]
+
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]
