@@ -1,0 +1,5 @@
+[toolchain]
+channel = "stable"
+components = [ "rustfmt", "rustc", "clippy", "cargo" ]
+targets = [ "wasm32-unknown-unknown", "aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc", "x86_64-unknown-linux-musl" ]
+profile = "minimal"
