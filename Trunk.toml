@@ -2,7 +2,7 @@
 # The index HTML file to drive the bundling process.
 target = "trunk.html"
 dist="dist"
-public_url = "https://esimkowitz.github.io/dev-widgets/"
+public_url = "https://widgets.fyi/"
 
 # We need to build the Rust code before Trunk runs to ensure build.rs can download Bootstrap and compile the Sass.
 [[hooks]]
