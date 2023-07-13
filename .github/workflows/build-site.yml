@@ -21,7 +21,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
       - name: Install Dioxus CLI
         run: |
-          cargo install dioxus-cli --git https://github.com/DioxusLabs/dioxus.git --rev b25501af48977817d9d0bb2534c94cff30317c8c
+          cargo install dioxus-cli --git https://github.com/DioxusLabs/dioxus.git --rev b25501af48977817d9d0bb2534c94cff30317c8c --locked
       - name: Build Rust app
         run: |
           dioxus build --release
