@@ -11,12 +11,12 @@ name: rust-clippy analyze
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '42 10 * * 2'
+    - cron: "42 10 * * 2"
 
 jobs:
   rust-clippy-analyze:
@@ -41,12 +41,14 @@ jobs:
           components: clippy
           override: true
 
+      - name: Configure Cargo cache
+        uses: Swatinem/rust-cache@v2
+
       - name: Install required cargo
         run: cargo install clippy-sarif sarif-fmt
 
       - name: Run rust-clippy
-        run:
-          cargo clippy
+        run: cargo clippy
           --all-features
           --message-format=json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
