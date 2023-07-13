@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 16
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
