@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      
+      # Install toolchain
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1.0.6
         with:
@@ -23,10 +25,16 @@ jobs:
         uses: jetli/trunk-action@v0.4.0
         with:
           version: latest
+
+      # Build app
       - name: Build Rust app
+        run: |
+          cargo build --release
+      - name: Build static site
         run: |
           trunk build --release
 
+      # Upload artifact
       - name: Fix permissions for artifact upload
         run: |
           chmod -c -R +rX "./dist/" | while read line; do
