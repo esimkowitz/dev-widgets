@@ -3,16 +3,22 @@ name: Build static site
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1.0.6
       - name: Install Trunk
         uses: jetli/trunk-action@v0.4.0
         with:
           version: latest
+      - name: Install WASM targets
+        run: |
+          rustup target add wasm32-unknown-unknown
       - name: Build Rust app
         run: |
           trunk build --release
