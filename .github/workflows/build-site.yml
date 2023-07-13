@@ -17,15 +17,14 @@ jobs:
           profile: minimal
           toolchain: stable
           target: wasm32-unknown-unknown
-      - name: Install Trunk
-        uses: jetli/trunk-action@v0.4.0
-        with:
-          version: latest
       - name: Configure Cargo cache
         uses: Swatinem/rust-cache@v2
+      - name: Install Dioxus CLI
+        run: |
+          cargo install dioxus-cli --git https://github.com/DioxusLabs/dioxus.git --rev b25501af48977817d9d0bb2534c94cff30317c8c
       - name: Build Rust app
         run: |
-          trunk build --release
+          dioxus build --release
 
       - name: Fix permissions for artifact upload
         run: |
