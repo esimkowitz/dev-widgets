@@ -7,6 +7,7 @@ readme = "README.md"
 build = "build.rs"
 
 [build-dependencies]
+clap = "4.3.11"
 curl = "0.4.44"
 grass = "0.12.4"
 zip-extract = "0.1.2"
@@ -15,7 +16,6 @@ zip-extract = "0.1.2"
 base64ct = { version = "1.6.0", features = ["alloc"] }
 chrono = "0.4.26"
 chrono-tz = "0.8.3"
-clap = "4.3.11"
 digest = "0.10.7"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
