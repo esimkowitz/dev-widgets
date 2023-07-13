@@ -51,7 +51,7 @@ fn main() {
             ["dist", "js", bootstrap_js_filename].iter().collect();
         let bootstrap_js_origin_path = bootstrap_extract_target_dir.join(bootstrap_js_origin_path);
 
-        let bootstrap_js_target_path: PathBuf = [cargo_manifest_dir, "js", bootstrap_js_filename]
+        let bootstrap_js_target_path: PathBuf = [cargo_manifest_dir, "public", "js", bootstrap_js_filename]
             .iter()
             .collect();
 
@@ -65,7 +65,7 @@ fn main() {
         let grass_input_path: PathBuf = [cargo_manifest_dir, "scss", "main.scss"].iter().collect();
 
         let grass_output_path: PathBuf =
-            [cargo_manifest_dir, "style", "style.css"].iter().collect();
+            [cargo_manifest_dir, "public", "style", "style.css"].iter().collect();
 
         // Create grass output path if it does not already exist
         create_dir_all(&grass_output_path);

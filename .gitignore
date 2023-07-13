@@ -16,11 +16,12 @@ Cargo.lock
 
 # Bootstrap
 bootstrap/
-style/
-js/
+public/style/
+public/js/
 
 # macOS files
 .DS_Store
 
 # Dioxus
 dioxusin
+dist/

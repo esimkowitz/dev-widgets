@@ -1,4 +1,7 @@
 {
     "debug.allowBreakpointsEverywhere": true,
-    "rust-analyzer.check.command": "clippy"
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml"
+    ]
 }
