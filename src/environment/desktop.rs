@@ -6,9 +6,8 @@ use dioxus_desktop::{
 
 pub fn init_app(root: Component) {
     // Configure dioxus-desktop Tauri window
-    let config_builder = DesktopConfig::default()
-        .with_custom_index(
-            r#"
+    let config_builder = DesktopConfig::default().with_custom_index(
+        r#"
                 <!DOCTYPE html>
                 <html data-bs-theme="light">
                     <head>
@@ -21,8 +20,9 @@ pub fn init_app(root: Component) {
                         <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
                     </body>
                 </html>
-            "#.to_string()
-        );
+            "#
+        .to_string(),
+    );
 
     #[cfg(target_os = "macos")]
     let window_builder = WindowBuilder::new().with_default().with_file_menu();
@@ -30,10 +30,7 @@ pub fn init_app(root: Component) {
     let window_builder = WindowBuilder::new().with_default();
 
     // Launch the app
-    dioxus_desktop::launch_cfg(
-        root,
-        config_builder.with_window(window_builder),
-    );
+    dioxus_desktop::launch_cfg(root, config_builder.with_window(window_builder));
 }
 
 trait WindowBuilderExt {
