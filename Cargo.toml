@@ -24,12 +24,12 @@ md-5 = "0.10.5"
 num-traits = "0.2.15"
 phf = { version = "0.11.1", features = ["macros"] }
 qrcode-generator = "4.1.8"
-dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 sha1 = "0.10.5"
 sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
+wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
 
 [target."cfg(not(target_family = \"wasm\"))".dev-dependencies]
 dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
@@ -38,12 +38,13 @@ dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
 
 [target."cfg(target_family = \"wasm\")".dependencies]
+dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
 version = "0.1.0"
-resources = ["style/*css", "js/*js"]
+resources = ["public/**/*"]
 copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."

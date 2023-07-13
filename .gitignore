@@ -16,8 +16,10 @@ Cargo.lock
 
 # Bootstrap
 bootstrap/
+public/style/
+public/js/
 style/
-js/
+js/bootstrap.min.js
 
 # macOS files
 .DS_Store

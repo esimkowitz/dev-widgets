@@ -12,28 +12,13 @@ pub fn init_app(root: Component) {
                 <!DOCTYPE html>
                 <html data-bs-theme="light">
                     <head>
-                        <title>Dev Widgets</title>
-                        <link rel="stylesheet" href="../style/style.css">
+                        <link rel="stylesheet" href="public/style/style.css">
                         <meta name="viewport" content="width=device-width, initial-scale=1">
                     </head>
                     <body>
                         <div id="main"></div>
-                        <script type="text/javascript">
-                            // Set theme to the user's preferred color scheme
-                            function updateTheme() {
-                            const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ?
-                                "dark" :
-                                "light";
-                            document.querySelector("html").setAttribute("data-bs-theme", colorMode);
-                            }
-
-                            // Set theme on load
-                            updateTheme()
-
-                            // Update theme when the preferred scheme changes
-                            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
-                        </script>
-                        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+                        <script type="text/javascript" src="public/js/darkmode.js"></script>
+                        <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
                     </body>
                 </html>
             "#.to_string()
