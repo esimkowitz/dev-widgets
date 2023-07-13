@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 10
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
@@ -23,12 +19,13 @@ jobs:
           target: wasm32-unknown-unknown
       - name: Configure Cargo cache
         uses: Swatinem/rust-cache@v2
-      - name: Install Dioxus CLI
-        run: |
-          cargo install dioxus-cli --git https://github.com/DioxusLabs/dioxus.git --rev b25501af48977817d9d0bb2534c94cff30317c8c --locked
+      - name: Install Trunk
+        uses: jetli/trunk-action@v0.4.0
+        with:
+          version: latest
       - name: Build Rust app
         run: |
-          dioxus build --release
+          trunk build --release
 
       - name: Fix permissions for artifact upload
         run: |

@@ -1,0 +1,4 @@
+[build]
+# The index HTML file to drive the bundling process.
+target = "trunk.html"
+dist="dist"
