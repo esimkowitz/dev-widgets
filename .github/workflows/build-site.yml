@@ -23,6 +23,11 @@ jobs:
       - name: Build Rust app
         run: |
           trunk build --release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: github-pages
+          path: ./dist
   deploy:
     runs-on: ubuntu-latest
     needs: build
