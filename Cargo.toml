@@ -18,7 +18,6 @@ digest = "0.10.7"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
 dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-getrandom = { version= "0.2.10", features = ["js"] }
 md-5 = "0.10.5"
 num-traits = "0.2.15"
 phf = { version = "0.11.1", features = ["macros"] }
@@ -34,11 +33,13 @@ dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a
 
 [target."cfg(not(target_family = \"wasm\"))".dependencies]
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
+getrandom = "0.2.10"
 time = "0.3.23"
 time-tz = { version = "1.0.3", features = ["db", "system"] }
 
 [target."cfg(target_family = \"wasm\")".dependencies]
 dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+getrandom = { version= "0.2.10", features = ["js"] }
 time = { version = "0.3.23", features = ["wasm-bindgen"]}
 time-tz = { version = "1.0.3", features = ["db"] }
 wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
