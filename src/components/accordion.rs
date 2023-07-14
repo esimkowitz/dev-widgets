@@ -10,15 +10,15 @@ pub fn Accordion<'a>(
 ) -> Element {
     let default_open_flag = !is_open.unwrap_or(false);
     let is_close_accordion = use_state(cx, || default_open_flag);
-    let buttoncss = if *is_close_accordion.get() {
-        "accordion-button p-2 collapsed"
+    let isclosed_buttoncss = if *is_close_accordion.get() {
+        "collapsed"
     } else {
-        "accordion-button p-2"
+        ""
     };
-    let accordioncss = if *is_close_accordion.get() {
-        "accordion-collapse collapse"
+    let isclosed_accordioncss = if *is_close_accordion.get() {
+        ""
     } else {
-        "accordion-collapse collapse show"
+        "show"
     };
     cx.render(rsx! {
         div {
@@ -26,7 +26,7 @@ pub fn Accordion<'a>(
             h3 {
                 class: "accordion-header",
                 button {
-                    class: "{buttoncss}",
+                    class: "accordion-button p-2 {isclosed_buttoncss}",
                     r#type: "button",
                     aria_expanded: "{!is_close_accordion.get()}",
                     onclick: move |_| {
@@ -36,7 +36,7 @@ pub fn Accordion<'a>(
                 }
             }
             div {
-                class: "{accordioncss}",
+                class: "accordion-collapse collapse {isclosed_accordioncss}",
                 div {
                     class: "accordion-body p-0",
                     children
