@@ -27,19 +27,21 @@ sha1 = "0.10.5"
 sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
-time = "0.3.23"
-time-tz = { version = "1.0.3", features = ["db", "system"] }
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
-wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
 
 [target."cfg(not(target_family = \"wasm\"))".dev-dependencies]
 dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 
 [target."cfg(not(target_family = \"wasm\"))".dependencies]
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
+time = "0.3.23"
+time-tz = { version = "1.0.3", features = ["db", "system"] }
 
 [target."cfg(target_family = \"wasm\")".dependencies]
 dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+time = { version = "0.3.23", features = ["wasm-bindgen"]}
+time-tz = { version = "1.0.3", features = ["db"] }
+wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
 
 [package.metadata.bundle]
 name = "Dev Widgets"

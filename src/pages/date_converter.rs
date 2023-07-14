@@ -4,7 +4,10 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
 use time::{Month, OffsetDateTime, UtcOffset};
-use time_tz::{system, timezones, OffsetDateTimeExt, TimeZone, Tz};
+use time_tz::{timezones, OffsetDateTimeExt, TimeZone, Tz};
+
+#[cfg(not(target_family = "wasm"))]
+use time_tz::system;
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
@@ -162,8 +165,15 @@ enum DcTimeZone {
 }
 
 impl Default for DcTimeZone {
+    #[cfg(not(target_family = "wasm"))]
     fn default() -> Self {
         Self::Base(system::get_timezone().unwrap_or(timezones::db::UTC))
+    }
+
+
+    #[cfg(target_family = "wasm")]
+    fn default() -> Self {
+        Self::Base(timezones::db::UTC)
     }
 }
 
