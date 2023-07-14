@@ -14,8 +14,6 @@ zip-extract = "0.1.2"
 
 [dependencies]
 base64ct = { version = "1.6.0", features = ["alloc"] }
-chrono = "0.4.26"
-chrono-tz = "0.8.3"
 digest = "0.10.7"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
@@ -30,6 +28,7 @@ sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 time = "0.3.23"
+time-tz = { version = "1.0.3", features = ["db", "system"] }
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
 wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
 
