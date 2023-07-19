@@ -8,7 +8,7 @@ build = "build.rs"
 
 [build-dependencies]
 curl = "0.4.44"
-grass = "0.12.4"
+grass = "0.13.1"
 zip-extract = "0.1.2"
 
 [dependencies]
