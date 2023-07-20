@@ -26,7 +26,7 @@ sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
-time-tz = { version = "1.0.3", features = ["db", "system"], git = "https://github.com/esimkowitz/time-tz.git", rev = "13faa58f0a6b4c0c4f09fd4764bbc45a9b3fb586" }
+time-tz = { version = "1.0.3", features = ["db", "system"], git = "https://github.com/esimkowitz/time-tz.git", rev = "a59e5bf3545707460cf674def87e9428bd18be86" }
 log = { version = "0.4.19", features = ["std"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
