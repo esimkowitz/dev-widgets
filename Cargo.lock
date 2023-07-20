@@ -800,6 +800,7 @@ dependencies = [
  "dioxus-web",
  "getrandom 0.2.10",
  "grass",
+ "log",
  "md-5",
  "num-traits",
  "phf 0.11.1",
@@ -812,6 +813,7 @@ dependencies = [
  "time-tz",
  "uuid",
  "wasm-bindgen",
+ "wasm-logger",
  "zip-extract",
 ]
 
@@ -3562,10 +3564,10 @@ dependencies = [
 [[package]]
 name = "time-tz"
 version = "1.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a422f65dfdf08a81317d54fa00b45dc58cbccab69be78c1447391cc39ae8c9d4"
+source = "git+https://github.com/esimkowitz/time-tz.git?rev=13faa58f0a6b4c0c4f09fd4764bbc45a9b3fb586#13faa58f0a6b4c0c4f09fd4764bbc45a9b3fb586"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "parse-zoneinfo",
  "phf 0.11.1",
  "phf_codegen 0.11.2",
@@ -3573,6 +3575,7 @@ dependencies = [
  "serde-xml-rs",
  "thiserror",
  "time",
+ "wasm-bindgen",
  "windows-sys 0.32.0",
 ]
 
@@ -3851,6 +3854,17 @@ name = "wasm-bindgen-shared"
 version = "0.2.87"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca6ad05a4870b2bf5fe995117d3728437bd27d7cd5f06f13c17443ef369775a1"
+
+[[package]]
+name = "wasm-logger"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "074649a66bb306c8f2068c9016395fa65d8e08d2affcbf95acf3c24c3ab19718"
+dependencies = [
+ "log",
+ "wasm-bindgen",
+ "web-sys",
+]
 
 [[package]]
 name = "web-sys"

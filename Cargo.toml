@@ -26,22 +26,23 @@ sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
+time-tz = { version = "1.0.3", features = ["db", "system"], git = "https://github.com/esimkowitz/time-tz.git", rev = "13faa58f0a6b4c0c4f09fd4764bbc45a9b3fb586" }
+log = { version = "0.4.19", features = ["std"] }
 
-[target."cfg(not(target_family = \"wasm\"))".dev-dependencies]
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
 dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 
-[target."cfg(not(target_family = \"wasm\"))".dependencies]
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
 getrandom = "0.2.10"
 time = "0.3.23"
-time-tz = { version = "1.0.3", features = ["db", "system"] }
 
-[target."cfg(target_family = \"wasm\")".dependencies]
+[target.'cfg(target_family = "wasm")'.dependencies]
 dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 getrandom = { version= "0.2.10", features = ["js"] }
 time = { version = "0.3.23", features = ["wasm-bindgen"]}
-time-tz = { version = "1.0.3", features = ["db"] }
 wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
+wasm-logger = "0.2.0"
 
 [package.metadata.bundle]
 name = "Dev Widgets"

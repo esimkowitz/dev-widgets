@@ -4,10 +4,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
 use time::{Month, OffsetDateTime, UtcOffset};
-use time_tz::{timezones, OffsetDateTimeExt, TimeZone, Tz};
-
-#[cfg(not(target_family = "wasm"))]
-use time_tz::system;
+use time_tz::{system, timezones, OffsetDateTimeExt, TimeZone, Tz};
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
@@ -165,15 +162,14 @@ enum DcTimeZone {
 }
 
 impl Default for DcTimeZone {
-    #[cfg(not(target_family = "wasm"))]
     fn default() -> Self {
-        Self::Base(system::get_timezone().unwrap_or(timezones::db::UTC))
-    }
-
-
-    #[cfg(target_family = "wasm")]
-    fn default() -> Self {
-        Self::Base(timezones::db::UTC)
+        Self::Base(match system::get_timezone() {
+            Ok(tz) => tz,
+            Err(err) => {
+                log::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
+                timezones::get_by_name("UTC").unwrap()
+            },
+        })
     }
 }
 
@@ -187,7 +183,10 @@ impl FromStr for DcTimeZone {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match timezones::get_by_name(s) {
             Some(tz) => Ok(Self::Base(tz)),
-            None => Err(TzParseError),
+            None => {
+                log::error!("Failed to parse timezone: {}", s);
+                Err(TzParseError)
+            },
         }
     }
 
@@ -231,7 +230,7 @@ impl SelectFormEnum for DcTimeZone {}
 impl DcTimeZone {
     fn inner(&self) -> &'static Tz {
         match self {
-            Self::Base(tz) => *tz,
+            Self::Base(tz) => tz,
         }
     }
 }
