@@ -1,9 +1,12 @@
-form.text-input {
-  @extend .form-floating, .d-flex, .flex-row;
-  input {
-    @extend .form-control, .col;
+div.text-input {
+  @extend .input-group;
+  div.input-and-label {
+    @extend .form-floating;
+    input {
+      @extend .form-control;
+    }
   }
   button {
-    @extend .btn, .btn-primary, .col;
+    @extend .btn, .btn-primary;
   }
 }

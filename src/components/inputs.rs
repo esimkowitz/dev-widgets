@@ -140,46 +140,48 @@ pub fn TextInput<'a>(
     let form_state = use_ref(cx, || value.to_string());
 
     cx.render(rsx! {
-        form {
+        div {
             class: "text-input",
-            prevent_default: "onsubmit",
-            onsubmit: move |_| match onsubmit {
-                Some(onsubmit) => {
-                    let mut value = String::default();
-                    form_state.with(|form_value| {
-                        value = form_value.clone();
-                    });
-                    onsubmit.call(value);
-                },
-                None => {}
-            },
-            input {
-                r#type: "text",
-                value: "{value}",
-                oninput: move |event| match oninput {
-                    Some(oninput) => oninput.call(event),
-                    None => {}
-                },
-                onchange: move |event| {
-                    if onsubmit.is_some() {
-                        form_state.with_mut(|form_value| {
-                            *form_value = event.value.clone();
-                        });
-                    }
-                    match onchange {
-                        Some(onchange) => onchange.call(event),
+            div {
+                class: "input-and-label",
+                input {
+                    r#type: "text",
+                    value: "{value}",
+                    oninput: move |event| match oninput {
+                        Some(oninput) => oninput.call(event),
                         None => {}
-                    }
-                },
-                readonly: readonly
-            }
-            label {
-                r#for: "{label}",
-                *label
+                    },
+                    onchange: move |event| {
+                        if onsubmit.is_some() {
+                            form_state.with_mut(|form_value| {
+                                *form_value = event.value.clone();
+                            });
+                        }
+                        match onchange {
+                            Some(onchange) => onchange.call(event),
+                            None => {}
+                        }
+                    },
+                    readonly: readonly
+                }
+                label {
+                    r#for: "{label}",
+                    *label
+                }
             }
             button {
                 style: "{submit_button_css}",
                 r#type: "submit",
+                onclick: move |_| match onsubmit {
+                    Some(onsubmit) => {
+                        let mut value = String::default();
+                        form_state.with(|form_value| {
+                            value = form_value.clone();
+                        });
+                        onsubmit.call(value);
+                    },
+                    None => {}
+                },
                 "Submit"
             }
         }
