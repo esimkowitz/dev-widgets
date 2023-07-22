@@ -128,12 +128,22 @@ pub fn TextInput<'a>(
     label: &'a str,
     oninput: Option<EventHandler<'a, Event<FormData>>>,
     onchange: Option<EventHandler<'a, Event<FormData>>>,
+    onsubmit: Option<EventHandler<'a, Event<FormData>>>,
     readonly: Option<bool>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
+    let submit_button_css = match onsubmit {
+        Some(_) => "display: block;",
+        None => "display: none;",
+    };
+
     cx.render(rsx! {
-        div {
+        form {
             class: "text-input",
+            onsubmit: move |event| match onsubmit {
+                Some(onsubmit) => onsubmit.call(event),
+                None => {}
+            },
             input {
                 r#type: "text",
                 value: "{value}",
@@ -150,6 +160,11 @@ pub fn TextInput<'a>(
             label {
                 r#for: "{label}",
                 *label
+            }
+            button {
+                style: "{submit_button_css}",
+                r#type: "submit",
+                value: "Submit",
             }
         }
     })
