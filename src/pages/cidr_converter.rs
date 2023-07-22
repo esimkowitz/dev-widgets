@@ -1,12 +1,11 @@
-use std::net::{IpAddr, Ipv4Addr};
+use std::{net::{IpAddr, Ipv4Addr}, str::FromStr};
 
 use cidr::{Family, IpCidr};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsEthernet;
-use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
-    components::inputs::{SelectForm, SelectFormEnum, TextInput},
+    components::inputs::TextInput,
     pages::{WidgetEntry, WidgetIcon},
 };
 
@@ -31,9 +30,20 @@ pub fn cidr_converter(cx: Scope) -> Element {
             TextInput {
                 label: "CIDR",
                 value: "{cidr_ref.read().to_string()}",
-                onsubmit: |event: Event<FormData>| {
-                    let cidr = event.value.clone();
+                onsubmit: |event: String| {
+                    let cidr = event;
                     log::info!("CIDR: {}", cidr);
+                    let cidr = cidr.trim();
+                    cidr_ref.with_mut(|cidr_obj| {
+                        match IpCidr::from_str(cidr) {
+                            Ok(cidr) => {
+                                *cidr_obj = cidr;
+                            },
+                            Err(_) => {
+                                log::error!("Invalid CIDR: {}", cidr);
+                            }
+                        };
+                    });
                 }
             }
         }

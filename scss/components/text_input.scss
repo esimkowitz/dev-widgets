@@ -1,9 +1,9 @@
 form.text-input {
-  @extend .form-floating;
+  @extend .form-floating, .d-flex, .flex-row;
   input {
-    @extend .form-control;
+    @extend .form-control, .col;
   }
   button {
-    @extend .btn, .btn-primary;
+    @extend .btn, .btn-primary, .col;
   }
 }

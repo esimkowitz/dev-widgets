@@ -128,7 +128,7 @@ pub fn TextInput<'a>(
     label: &'a str,
     oninput: Option<EventHandler<'a, Event<FormData>>>,
     onchange: Option<EventHandler<'a, Event<FormData>>>,
-    onsubmit: Option<EventHandler<'a, Event<FormData>>>,
+    onsubmit: Option<EventHandler<'a, String>>,
     readonly: Option<bool>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
@@ -142,12 +142,13 @@ pub fn TextInput<'a>(
     cx.render(rsx! {
         form {
             class: "text-input",
-            onsubmit: move |event| match onsubmit {
+            onsubmit: move |_| match onsubmit {
                 Some(onsubmit) => {
+                    let mut value = String::default();
                     form_state.with(|form_value| {
-                        *(event.data).value = form_value.clone();
+                        value = form_value.clone();
                     });
-                    onsubmit.call(event);
+                    onsubmit.call(value);
                 },
                 None => {}
             },
@@ -159,9 +160,11 @@ pub fn TextInput<'a>(
                     None => {}
                 },
                 onchange: move |event| {
-                    form_state.with_mut(|form_value| {
-                        *form_value = event.value.clone();
-                    });
+                    if onsubmit.is_some() {
+                        form_state.with_mut(|form_value| {
+                            *form_value = event.value.clone();
+                        });
+                    }
                     match onchange {
                         Some(onchange) => onchange.call(event),
                         None => {}
