@@ -142,6 +142,7 @@ pub fn TextInput<'a>(
     cx.render(rsx! {
         form {
             class: "text-input",
+            prevent_default: "onsubmit",
             onsubmit: move |_| match onsubmit {
                 Some(onsubmit) => {
                     let mut value = String::default();
