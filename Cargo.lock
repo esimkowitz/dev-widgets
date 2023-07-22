@@ -3563,8 +3563,9 @@ dependencies = [
 
 [[package]]
 name = "time-tz"
-version = "1.0.3"
-source = "git+https://github.com/esimkowitz/time-tz.git?rev=9bad169699e6f0af98e1a2550e4cb991cade858d#9bad169699e6f0af98e1a2550e4cb991cade858d"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "733bc522e97980eb421cbf381160ff225bd14262a48a739110f6653c6258d625"
 dependencies = [
  "cfg-if",
  "js-sys",
