@@ -1,10 +1,10 @@
 use std::{fmt::Display, str::FromStr};
 
-use chrono::{DateTime, Datelike, NaiveDateTime, TimeZone, Timelike, Utc};
-use chrono_tz::{ParseError, Tz, TZ_VARIANTS};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsClock;
 use strum::IntoEnumIterator;
+use time::{Month, OffsetDateTime, UtcOffset};
+use time_tz::{system, timezones, OffsetDateTimeExt, TimeZone, Tz};
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
@@ -25,11 +25,11 @@ const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 pub fn date_converter(cx: Scope) -> Element {
     let date_state = use_ref(cx, || DateConverterState {
         time_zone: DcTimeZone::default(),
-        time: Utc::now().naive_utc(),
+        time_utc: OffsetDateTime::now_utc(),
     });
 
     let local_datetime = date_state.with(|date_state| date_state.local_datetime());
-    let unix_time = date_state.with(|date_state| date_state.time.timestamp());
+    let unix_time = date_state.with(|date_state| date_state.time_utc.unix_timestamp());
 
     cx.render(rsx! {
         div {
@@ -54,9 +54,9 @@ pub fn date_converter(cx: Scope) -> Element {
                 onchange: move |event: Event<FormData>| {
                     let new_unix_time = event.value.clone();
                     if let Ok(unix_time) = i64::from_str(&new_unix_time) {
-                        if let chrono::LocalResult::Single(datetime) = Utc.timestamp_opt(unix_time, 0) {
+                        if let Ok(datetime) = OffsetDateTime::from_unix_timestamp(unix_time) {
                             date_state.with_mut(|date_state| {
-                                date_state.time = datetime.naive_utc();
+                                date_state.set_local_datetime(datetime);
                             });
                         }
                     }
@@ -74,27 +74,27 @@ pub fn date_converter(cx: Scope) -> Element {
                             value: local_datetime.year(),
                             onchange: move |year| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_year(year).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_year(year).unwrap_or(local_datetime));
                                 });
                             }
                         }
-                        NumberInput::<u32> {
+                        NumberInput::<u8> {
                             class: "month",
                             label: "Month",
-                            value: local_datetime.month(),
+                            value: u8::from(local_datetime.month()),
                             onchange: move |month| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_month(month).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_month(Month::try_from(month).unwrap_or(local_datetime.month())).unwrap_or(local_datetime));
                                 });
                             }
                         }
-                        NumberInput::<u32> {
+                        NumberInput::<u8> {
                             class: "day",
                             label: "Day",
                             value: local_datetime.day(),
                             onchange: move |day| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_day(day).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_day(day).unwrap_or(local_datetime));
                                 });
                             }
                         }
@@ -104,33 +104,33 @@ pub fn date_converter(cx: Scope) -> Element {
                     class: "hms selectors",
                     div {
                         class: "selectors-inner",
-                        NumberInput::<u32> {
+                        NumberInput::<u8> {
                             class: "hour",
                             label: "Hour",
                             value: local_datetime.hour(),
                             onchange: move |hour| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_hour(hour).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_hour(hour).unwrap_or(local_datetime));
                                 });
                             }
                         }
-                        NumberInput::<u32> {
+                        NumberInput::<u8> {
                             class: "minute",
                             label: "Minute",
                             value: local_datetime.minute(),
                             onchange: move |minute| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_minute(minute).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_minute(minute).unwrap_or(local_datetime));
                                 });
                             }
                         }
-                        NumberInput::<u32> {
+                        NumberInput::<u8> {
                             class: "second",
                             label: "Second",
                             value: local_datetime.second(),
                             onchange: move |second| {
                                 date_state.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.with_second(second).unwrap_or(local_datetime));
+                                    date_state.set_local_datetime(local_datetime.replace_second(second).unwrap_or(local_datetime));
                                 });
                             }
                         }
@@ -141,45 +141,65 @@ pub fn date_converter(cx: Scope) -> Element {
     })
 }
 
-#[derive(Clone, Copy)]
 struct DateConverterState {
     time_zone: DcTimeZone,
-    time: NaiveDateTime,
+    time_utc: OffsetDateTime,
 }
 
 impl DateConverterState {
-    fn local_datetime(&self) -> DateTime<Tz> {
-        self.time_zone.inner().from_utc_datetime(&self.time)
+    fn local_datetime(&self) -> OffsetDateTime {
+        self.time_utc.to_timezone(self.time_zone.inner())
     }
 
-    fn set_local_datetime(&mut self, datetime: DateTime<Tz>) {
-        self.time = datetime.naive_utc();
+    fn set_local_datetime(&mut self, datetime: OffsetDateTime) {
+        self.time_utc = datetime.to_offset(UtcOffset::UTC);
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Debug, Clone, Copy)]
 enum DcTimeZone {
-    Base(Tz),
+    Base(&'static Tz),
 }
 
 impl Default for DcTimeZone {
     fn default() -> Self {
-        Self::Base(Tz::UTC)
+        Self::Base(match system::get_timezone() {
+            Ok(tz) => tz,
+            Err(err) => {
+                log::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
+                timezones::get_by_name("UTC").unwrap()
+            },
+        })
     }
 }
 
 impl Display for DcTimeZone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.inner())
+        write!(f, "{:?}", self.inner())
     }
 }
 
 impl FromStr for DcTimeZone {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self::Base(Tz::from_str(s)?))
+        match timezones::get_by_name(s) {
+            Some(tz) => Ok(Self::Base(tz)),
+            None => {
+                log::error!("Failed to parse timezone: {}", s);
+                Err(TzParseError)
+            },
+        }
     }
 
-    type Err = ParseError;
+    type Err = TzParseError;
+}
+
+#[derive(Debug, Clone)]
+struct TzParseError;
+
+impl Display for TzParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        "invalid timezone".fmt(f)
+    }
 }
 
 impl PartialEq for DcTimeZone {
@@ -190,9 +210,8 @@ impl PartialEq for DcTimeZone {
 
 impl IntoEnumIterator for DcTimeZone {
     fn iter() -> Self::Iterator {
-        TZ_VARIANTS
-            .iter()
-            .map(|tz| Self::Base(*tz))
+        timezones::iter()
+            .map(Self::Base)
             .collect::<Vec<_>>()
             .into_iter()
     }
@@ -209,9 +228,9 @@ impl From<DcTimeZone> for &'static str {
 impl SelectFormEnum for DcTimeZone {}
 
 impl DcTimeZone {
-    fn inner(&self) -> Tz {
+    fn inner(&self) -> &'static Tz {
         match self {
-            Self::Base(tz) => *tz,
+            Self::Base(tz) => tz,
         }
     }
 }
