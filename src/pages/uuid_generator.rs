@@ -3,7 +3,7 @@ use dioxus_free_icons::icons::bs_icons::BsGlobe2;
 
 use crate::{
     components::inputs::{NumberInput, SwitchInput, TextAreaForm},
-    widget_entry::{WidgetEntry, WidgetIcon},
+    pages::{WidgetEntry, WidgetIcon},
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {

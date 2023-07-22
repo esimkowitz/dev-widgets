@@ -1,8 +1,9 @@
+use dioxus::prelude::*;
+use dioxus_free_icons::{Icon, IconShape};
 use phf::phf_ordered_map;
 
-use crate::widget_entry::WidgetEntry;
-
 pub mod base64_encoder;
+pub mod cidr_encoder;
 pub mod color_picker;
 pub mod date_converter;
 pub mod hash_generator;
@@ -15,6 +16,7 @@ pub mod uuid_generator;
 pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
     "Encoder" => &[
         base64_encoder::WIDGET_ENTRY,
+        cidr_encoder::WIDGET_ENTRY,
     ],
     "Converter" => &[
         number_base_converter::WIDGET_ENTRY,
@@ -30,3 +32,28 @@ pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
         hash_generator::WIDGET_ENTRY,
     ],
 };
+
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub struct WidgetEntry {
+    pub title: &'static str,
+    pub short_title: &'static str,
+    pub description: &'static str,
+    pub path: &'static str,
+    pub function: fn(cx: Scope) -> Element,
+    pub icon: fn(cx: Scope) -> Element,
+}
+
+pub struct WidgetIcon<T: IconShape + Copy> {
+    pub(crate) icon: T,
+}
+
+impl<T: IconShape + Copy> WidgetIcon<T> {
+    pub fn icon<'a>(&'a self, cx: Scope<'a>) -> Element<'a> {
+        cx.render(rsx! {
+            Icon::<T> {
+                class: "icon",
+                icon: self.icon,
+            }
+        })
+    }
+}

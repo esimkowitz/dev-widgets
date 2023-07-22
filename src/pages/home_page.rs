@@ -3,8 +3,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHouseDoorFill;
 use dioxus_router::Link;
 
-use crate::pages::WIDGETS;
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::pages::{WidgetEntry, WidgetIcon, WIDGETS};
 
 pub static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Home",

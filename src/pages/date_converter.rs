@@ -8,7 +8,7 @@ use strum::IntoEnumIterator;
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
-    widget_entry::{WidgetEntry, WidgetIcon},
+    pages::{WidgetEntry, WidgetIcon},
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
