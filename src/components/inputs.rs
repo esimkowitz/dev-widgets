@@ -137,11 +137,18 @@ pub fn TextInput<'a>(
         None => "display: none;",
     };
 
+    let form_state = use_ref(cx, || value.to_string());
+
     cx.render(rsx! {
         form {
             class: "text-input",
             onsubmit: move |event| match onsubmit {
-                Some(onsubmit) => onsubmit.call(event),
+                Some(onsubmit) => {
+                    form_state.with(|form_value| {
+                        *(event.data).value = form_value.clone();
+                    });
+                    onsubmit.call(event);
+                },
                 None => {}
             },
             input {
@@ -151,9 +158,14 @@ pub fn TextInput<'a>(
                     Some(oninput) => oninput.call(event),
                     None => {}
                 },
-                onchange: move |event| match onchange {
-                    Some(onchange) => onchange.call(event),
-                    None => {}
+                onchange: move |event| {
+                    form_state.with_mut(|form_value| {
+                        *form_value = event.value.clone();
+                    });
+                    match onchange {
+                        Some(onchange) => onchange.call(event),
+                        None => {}
+                    }
                 },
                 readonly: readonly
             }
@@ -164,7 +176,7 @@ pub fn TextInput<'a>(
             button {
                 style: "{submit_button_css}",
                 r#type: "submit",
-                value: "Submit",
+                "Submit"
             }
         }
     })

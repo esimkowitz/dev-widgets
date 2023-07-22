@@ -3,4 +3,7 @@ form.text-input {
   input {
     @extend .form-control;
   }
+  button {
+    @extend .btn, .btn-primary;
+  }
 }
