@@ -139,6 +139,14 @@ pub fn TextInput<'a>(
 
     let form_state = use_ref(cx, || value.to_string());
 
+    let set_value = |value: String| {
+        if onsubmit.is_some() {
+            form_state.with_mut(|form_value| {
+                *form_value = value.clone();
+            });
+        }
+    };
+
     cx.render(rsx! {
         div {
             class: "text-input",
@@ -148,15 +156,14 @@ pub fn TextInput<'a>(
                     r#type: "text",
                     value: "{value}",
                     oninput: move |event| match oninput {
-                        Some(oninput) => oninput.call(event),
+                        Some(oninput) => {
+                            set_value(event.value.clone());
+                            oninput.call(event)
+                        },
                         None => {}
                     },
                     onchange: move |event| {
-                        if onsubmit.is_some() {
-                            form_state.with_mut(|form_value| {
-                                *form_value = event.value.clone();
-                            });
-                        }
+                        set_value(event.value.clone());
                         match onchange {
                             Some(onchange) => onchange.call(event),
                             None => {}

@@ -1,4 +1,4 @@
-use std::{net::{IpAddr, Ipv4Addr}, str::FromStr};
+use std::{net::{IpAddr, Ipv4Addr, Ipv6Addr}, str::FromStr};
 
 use cidr::{Family, IpCidr};
 use dioxus::prelude::*;
@@ -24,6 +24,23 @@ pub fn cidr_converter(cx: Scope) -> Element {
     let cidr_ref = use_ref(cx, || {
         IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap()
     });
+
+    let cidr_wildcard = cidr_ref.with(|cidr| {
+        match cidr.mask() {
+            IpAddr::V4(mask) => {
+                let mask = u32::from(mask);
+                let wildcard = u32::MAX - mask;
+                IpAddr::from(Ipv4Addr::from(wildcard))
+            }
+            IpAddr::V6(mask) => {
+                let mask = u128::from(mask);
+                let wildcard = u128::MAX - mask;
+                IpAddr::from(Ipv6Addr::from(wildcard))
+            }
+        }
+    });
+
+    let show_error_state = use_state(cx, || false);
     cx.render(rsx! {
         div {
             class: "cidr-converter",
@@ -38,13 +55,45 @@ pub fn cidr_converter(cx: Scope) -> Element {
                         match IpCidr::from_str(cidr) {
                             Ok(cidr) => {
                                 *cidr_obj = cidr;
+                                show_error_state.set(false);
                             },
-                            Err(_) => {
-                                log::error!("Invalid CIDR: {}", cidr);
+                            Err(err) => {
+                                log::error!("Invalid CIDR: {}, err: {}", cidr, err);
+                                show_error_state.set(true);
                             }
                         };
                     });
                 }
+            }
+            TextInput {
+                label: "Net Mask",
+                value: "{cidr_ref.with(|cidr| cidr.mask().to_string())}",
+                readonly: true,
+            }
+            TextInput {
+                label: "Wildcard Bits",
+                value: "{cidr_wildcard.to_string()}",
+                readonly: true,
+            }
+            TextInput {
+                label: "First IP",
+                value: "{cidr_ref.with(|cidr| cidr.first_address())}",
+                readonly: true,
+            }
+            TextInput {
+                label: "Last IP",
+                value: "{cidr_ref.with(|cidr| cidr.last_address())}",
+                readonly: true,
+            }
+            TextInput {
+                label: "Total Addresses",
+                value: "{cidr_ref.with(|cidr| cidr.iter().count())}",
+                readonly: true,
+            }
+            div {
+                class: "alert alert-warning",
+                display: if !show_error_state.get() { "none" } else { "block" },
+                "The provided CIDR is invalid."
             }
         }
     })
