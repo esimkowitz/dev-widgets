@@ -40,7 +40,13 @@ pub fn cidr_converter(cx: Scope) -> Element {
         }
     });
 
-    const base: u32 = 2;
+    const BASE: u128 = 2;
+    let addresses_count = cidr_ref.with(|cidr| {
+        BASE.pow(match cidr.family() {
+            Family::Ipv4 => 32,
+            Family::Ipv6 => 128,
+        } - u32::from(cidr.network_length())) - 2
+    });
 
     let show_error_state = use_state(cx, || false);
     cx.render(rsx! {
@@ -89,7 +95,7 @@ pub fn cidr_converter(cx: Scope) -> Element {
             }
             TextInput {
                 label: "Total Addresses",
-                value: "{cidr_ref.with(|cidr| base.pow(cidr.network_length().into()))}",
+                value: "{addresses_count}",
                 readonly: true,
             }
             div {
@@ -98,5 +104,5 @@ pub fn cidr_converter(cx: Scope) -> Element {
                 "The provided CIDR is invalid."
             }
         }
-    }.into())
+    })
 }
