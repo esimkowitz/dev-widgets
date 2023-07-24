@@ -132,10 +132,6 @@ pub fn TextInput<'a>(
     readonly: Option<bool>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
-    let submit_button_css = match onsubmit {
-        Some(_) => "display: block;",
-        None => "display: none;",
-    };
 
     let form_state = use_ref(cx, || value.to_string());
 
@@ -176,20 +172,20 @@ pub fn TextInput<'a>(
                     *label
                 }
             }
-            button {
-                style: "{submit_button_css}",
-                r#type: "submit",
-                onclick: move |_| match onsubmit {
-                    Some(onsubmit) => {
-                        let mut value = String::default();
-                        form_state.with(|form_value| {
-                            value = form_value.clone();
-                        });
-                        onsubmit.call(value);
-                    },
-                    None => {}
-                },
-                "Submit"
+            if let Some(onsubmit) = onsubmit {
+                rsx! { 
+                    button {
+                        r#type: "submit",
+                        onclick: move |_| {
+                            let mut value = String::default();
+                            form_state.with(|form_value| {
+                                value = form_value.clone();
+                            });
+                            onsubmit.call(value);
+                        },
+                        "Submit"
+                    }
+                }
             }
         }
     })

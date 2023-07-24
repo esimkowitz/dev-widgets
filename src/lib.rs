@@ -2,6 +2,7 @@
 pub mod components;
 pub mod environment;
 pub mod pages;
+pub mod utils;
 
 use dioxus::prelude::*;
 use dioxus_router::{use_route, Link, Redirect, Route, Router};

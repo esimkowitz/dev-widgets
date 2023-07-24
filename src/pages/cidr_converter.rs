@@ -7,6 +7,7 @@ use dioxus_free_icons::icons::bs_icons::BsEthernet;
 use crate::{
     components::inputs::TextInput,
     pages::{WidgetEntry, WidgetIcon},
+    utils::add_number_delimiters,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -40,12 +41,13 @@ pub fn cidr_converter(cx: Scope) -> Element {
         }
     });
 
-    const BASE: u128 = 2;
     let addresses_count = cidr_ref.with(|cidr| {
-        BASE.pow(match cidr.family() {
+        const BASE: u128 = 2;
+        let power = match cidr.family() {
             Family::Ipv4 => 32,
             Family::Ipv6 => 128,
-        } - u32::from(cidr.network_length())) - 2
+        } - u32::from(cidr.network_length());
+        BASE.pow(power)
     });
 
     let show_error_state = use_state(cx, || false);
@@ -95,7 +97,7 @@ pub fn cidr_converter(cx: Scope) -> Element {
             }
             TextInput {
                 label: "Total Addresses",
-                value: "{addresses_count}",
+                value: "{add_number_delimiters(addresses_count.to_string(), ',', 3)}",
                 readonly: true,
             }
             div {
