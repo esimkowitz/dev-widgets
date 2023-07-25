@@ -135,6 +135,12 @@ pub fn TextInput<'a>(
 
     let form_state = use_ref(cx, || value.to_string());
 
+    let input_group_css = if onsubmit.is_some() {
+        "input-group"
+    } else {
+        ""
+    };
+
     let set_value = |value: String| {
         if onsubmit.is_some() {
             form_state.with_mut(|form_value| {
@@ -145,10 +151,11 @@ pub fn TextInput<'a>(
 
     cx.render(rsx! {
         div {
-            class: "text-input",
+            class: "text-input {input_group_css}",
             div {
-                class: "input-and-label",
+                class: "form-floating",
                 input {
+                    class: "form-control",
                     r#type: "text",
                     value: "{value}",
                     oninput: move |event| match oninput {
@@ -175,6 +182,7 @@ pub fn TextInput<'a>(
             if let Some(onsubmit) = onsubmit {
                 rsx! { 
                     button {
+                        class: "btn btn-primary",
                         r#type: "submit",
                         onclick: move |_| {
                             let mut value = String::default();
