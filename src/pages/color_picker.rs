@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::pages::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",

@@ -3,7 +3,8 @@ use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::components::inputs::{SwitchInput, TextInput};
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::utils::{add_number_delimiters, sanitize_string};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -104,32 +105,6 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
     }
 }
 
-fn add_number_delimiters(number_str: String, delimiter: char, frequency: usize) -> String {
-    number_str
-        .chars()
-        .rev()
-        .enumerate()
-        .flat_map(|(i, c)| {
-            if i != 0 && i % frequency == 0 {
-                Some(delimiter)
-            } else {
-                None
-            }
-            .into_iter()
-            .chain(std::iter::once(c))
-        })
-        .collect::<String>()
-        .chars()
-        .rev()
-        .collect::<String>()
-}
-
-fn sanitize_string(string: String) -> String {
-    string
-        .chars()
-        .filter(|character| character.is_ascii_alphanumeric())
-        .collect::<String>()
-}
 
 struct ConverterValue(i64);
 

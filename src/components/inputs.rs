@@ -128,28 +128,72 @@ pub fn TextInput<'a>(
     label: &'a str,
     oninput: Option<EventHandler<'a, Event<FormData>>>,
     onchange: Option<EventHandler<'a, Event<FormData>>>,
+    onsubmit: Option<EventHandler<'a, String>>,
     readonly: Option<bool>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
+
+    let form_state = use_ref(cx, || value.to_string());
+
+    let input_group_css = if onsubmit.is_some() {
+        "input-group"
+    } else {
+        ""
+    };
+
+    let set_value = |value: String| {
+        if onsubmit.is_some() {
+            form_state.with_mut(|form_value| {
+                *form_value = value.clone();
+            });
+        }
+    };
+
     cx.render(rsx! {
         div {
-            class: "text-input",
-            input {
-                r#type: "text",
-                value: "{value}",
-                oninput: move |event| match oninput {
-                    Some(oninput) => oninput.call(event),
-                    None => {}
-                },
-                onchange: move |event| match onchange {
-                    Some(onchange) => onchange.call(event),
-                    None => {}
-                },
-                readonly: readonly
+            class: "text-input {input_group_css}",
+            div {
+                class: "form-floating",
+                input {
+                    class: "form-control",
+                    r#type: "text",
+                    value: "{value}",
+                    oninput: move |event| match oninput {
+                        Some(oninput) => {
+                            set_value(event.value.clone());
+                            oninput.call(event)
+                        },
+                        None => {}
+                    },
+                    onchange: move |event| {
+                        set_value(event.value.clone());
+                        match onchange {
+                            Some(onchange) => onchange.call(event),
+                            None => {}
+                        }
+                    },
+                    readonly: readonly
+                }
+                label {
+                    r#for: "{label}",
+                    *label
+                }
             }
-            label {
-                r#for: "{label}",
-                *label
+            if let Some(onsubmit) = onsubmit {
+                rsx! { 
+                    button {
+                        class: "btn btn-primary",
+                        r#type: "submit",
+                        onclick: move |_| {
+                            let mut value = String::default();
+                            form_state.with(|form_value| {
+                                value = form_value.clone();
+                            });
+                            onsubmit.call(value);
+                        },
+                        "Submit"
+                    }
+                }
             }
         }
     })

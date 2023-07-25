@@ -7,7 +7,7 @@ use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
     components::inputs::{SelectForm, SelectFormEnum, TextAreaForm},
-    widget_entry::{WidgetEntry, WidgetIcon},
+    pages::{WidgetEntry, WidgetIcon},
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {

@@ -2,14 +2,13 @@
 pub mod components;
 pub mod environment;
 pub mod pages;
-pub mod widget_entry;
+pub mod utils;
 
 use dioxus::prelude::*;
 use dioxus_router::{use_route, Link, Redirect, Route, Router};
 
 use crate::pages::home_page::HOME_PAGE_WIDGET_ENTRY;
-use crate::pages::WIDGETS;
-use crate::widget_entry::WidgetEntry;
+use crate::pages::{ WidgetEntry, WIDGETS };
 
 pub fn App(cx: Scope) -> Element {
     cx.render(rsx! {
