@@ -57,7 +57,13 @@ pub fn cidr_decoder(cx: Scope) -> Element {
                 Family::Ipv4 => 32,
                 Family::Ipv6 => 128,
             } - u32::from(cidr.network_length());
-            add_number_delimiters(BASE.pow(power).to_string(), ',', 3)
+
+            if power == 128 {
+                // This is too big to fit in a u128, so we have to hardcode it or use a non-std u256 crate.
+                "340,282,366,920,938,463,463,374,607,431,768,211,456".to_string()
+            } else {
+                add_number_delimiters(BASE.pow(power).to_string(), ',', 3)
+            }
         }));
         description
     });
