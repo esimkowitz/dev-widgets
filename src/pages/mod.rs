@@ -3,7 +3,7 @@ use dioxus_free_icons::{Icon, IconShape};
 use phf::phf_ordered_map;
 
 pub mod base64_encoder;
-pub mod cidr_converter;
+pub mod cidr_decoder;
 pub mod color_picker;
 pub mod date_converter;
 pub mod hash_generator;
@@ -14,14 +14,14 @@ pub mod qr_code_generator;
 pub mod uuid_generator;
 
 pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
-    "Encoder" => &[
+    "Encoder/Decoder" => &[
         base64_encoder::WIDGET_ENTRY,
+        cidr_decoder::WIDGET_ENTRY,
     ],
     "Converter" => &[
         number_base_converter::WIDGET_ENTRY,
         date_converter::WIDGET_ENTRY,
         json_yaml_converter::WIDGET_ENTRY,
-        cidr_converter::WIDGET_ENTRY,
     ],
     "Media" => &[
         color_picker::WIDGET_ENTRY,
