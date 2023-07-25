@@ -93,7 +93,7 @@ pub fn cidr_decoder(cx: Scope) -> Element {
                 }
             }
             div {
-                class: "alert alert-warning",
+                class: "alert alert-warning m-0",
                 hidden: !show_error_state.get(),
                 "The provided CIDR is invalid."
             }
