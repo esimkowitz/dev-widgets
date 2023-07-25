@@ -1,11 +1,14 @@
-use std::{net::{IpAddr, Ipv4Addr, Ipv6Addr}, str::FromStr};
+use std::{
+    net::{IpAddr, Ipv4Addr, Ipv6Addr},
+    str::FromStr,
+};
 
 use cidr::{Family, IpCidr};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsEthernet;
 
 use crate::{
-    components::inputs::TextInput,
+    components::inputs::{TextAreaForm, TextInput},
     pages::{WidgetEntry, WidgetIcon},
     utils::add_number_delimiters,
 };
@@ -26,28 +29,37 @@ pub fn cidr_decoder(cx: Scope) -> Element {
         IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap()
     });
 
-    let cidr_wildcard = cidr_ref.with(|cidr| {
-        match cidr.mask() {
-            IpAddr::V4(mask) => {
-                let mask = u32::from(mask);
-                let wildcard = u32::MAX - mask;
-                IpAddr::from(Ipv4Addr::from(wildcard))
-            }
-            IpAddr::V6(mask) => {
-                let mask = u128::from(mask);
-                let wildcard = u128::MAX - mask;
-                IpAddr::from(Ipv6Addr::from(wildcard))
-            }
-        }
-    });
+    let cidr_input_ref = use_ref(cx, || cidr_ref.with(|cidr| cidr.to_string()));
 
-    let addresses_count = cidr_ref.with(|cidr| {
-        const BASE: u128 = 2;
-        let power = match cidr.family() {
-            Family::Ipv4 => 32,
-            Family::Ipv6 => 128,
-        } - u32::from(cidr.network_length());
-        BASE.pow(power)
+    let cidr_description = cidr_ref.with(|cidr| {
+        let mut description = String::new();
+        description.push_str(&format!("Netmask: {}\n", cidr.mask()));
+        description.push_str(&format!(
+            "Wildcard: {}\n",
+            match cidr.mask() {
+                IpAddr::V4(mask) => {
+                    let mask = u32::from(mask);
+                    let wildcard = u32::MAX - mask;
+                    IpAddr::from(Ipv4Addr::from(wildcard))
+                }
+                IpAddr::V6(mask) => {
+                    let mask = u128::from(mask);
+                    let wildcard = u128::MAX - mask;
+                    IpAddr::from(Ipv6Addr::from(wildcard))
+                }
+            }
+        ));
+        description.push_str(&format!("First IP: {}\n", cidr.first_address()));
+        description.push_str(&format!("Last IP: {}\n", cidr.last_address()));
+        description.push_str(&format!("Total Addresses: {}\n", {
+            const BASE: u128 = 2;
+            let power = match cidr.family() {
+                Family::Ipv4 => 32,
+                Family::Ipv6 => 128,
+            } - u32::from(cidr.network_length());
+            add_number_delimiters(BASE.pow(power).to_string(), ',', 3)
+        }));
+        description
     });
 
     let show_error_state = use_state(cx, || false);
@@ -56,54 +68,33 @@ pub fn cidr_decoder(cx: Scope) -> Element {
             class: "cidr-decoder",
             TextInput {
                 label: "CIDR",
-                value: "{cidr_ref.read().to_string()}",
-                onsubmit: |event: String| {
-                    let cidr = event;
+                value: "{cidr_input_ref.with(|cidr_str| cidr_str.to_string())}",
+                oninput: |event: Event<FormData>| {
+                    let cidr = event.value.clone();
                     log::info!("CIDR: {}", cidr);
-                    let cidr = cidr.trim();
-                    cidr_ref.with_mut(|cidr_obj| {
-                        match IpCidr::from_str(cidr) {
-                            Ok(cidr) => {
-                                *cidr_obj = cidr;
-                                show_error_state.set(false);
-                            },
-                            Err(err) => {
-                                log::error!("Invalid CIDR: {}, err: {}", cidr, err);
-                                show_error_state.set(true);
-                            }
-                        };
+                    cidr_input_ref.with_mut(|cidr_input| {
+                        *cidr_input = cidr.clone();
                     });
+                    let cidr_trim = cidr.trim();
+                    if let Ok(cidr_valid) = IpCidr::from_str(cidr_trim) {
+                        cidr_ref.with_mut(|cidr_obj| {
+                            *cidr_obj = cidr_valid;
+                            show_error_state.set(false);
+                        });
+                    } else {
+                        show_error_state.set(true);
+                    }
                 }
-            }
-            TextInput {
-                label: "Net Mask",
-                value: "{cidr_ref.with(|cidr| cidr.mask().to_string())}",
-                readonly: true,
-            }
-            TextInput {
-                label: "Wildcard Bits",
-                value: "{cidr_wildcard.to_string()}",
-                readonly: true,
-            }
-            TextInput {
-                label: "First IP",
-                value: "{cidr_ref.with(|cidr| cidr.first_address())}",
-                readonly: true,
-            }
-            TextInput {
-                label: "Last IP",
-                value: "{cidr_ref.with(|cidr| cidr.last_address())}",
-                readonly: true,
-            }
-            TextInput {
-                label: "Total Addresses",
-                value: "{add_number_delimiters(addresses_count.to_string(), ',', 3)}",
-                readonly: true,
             }
             div {
                 class: "alert alert-warning",
-                display: if !show_error_state.get() { "none" } else { "block" },
+                hidden: !show_error_state.get(),
                 "The provided CIDR is invalid."
+            }
+            TextAreaForm {
+                label: "Description",
+                readonly: true,
+                value: "{cidr_description}",
             }
         }
     })
