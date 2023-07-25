@@ -12,6 +12,7 @@ The following widgets are now stable:
 * Date/Timestamp Converter
 * UUID Generator
 * Hash Generator
+* CIDR Decoder
 
 ## Development Setup
 
