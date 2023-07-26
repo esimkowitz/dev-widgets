@@ -38,13 +38,11 @@ pub fn cidr_decoder(cx: Scope) -> Element {
             "Wildcard: {}\n",
             match cidr.mask() {
                 IpAddr::V4(mask) => {
-                    let mask = u32::from(mask);
-                    let wildcard = u32::MAX - mask;
+                    let wildcard = !u32::from(mask);
                     IpAddr::from(Ipv4Addr::from(wildcard))
                 }
                 IpAddr::V6(mask) => {
-                    let mask = u128::from(mask);
-                    let wildcard = u128::MAX - mask;
+                    let wildcard = !u128::from(mask);
                     IpAddr::from(Ipv6Addr::from(wildcard))
                 }
             }
