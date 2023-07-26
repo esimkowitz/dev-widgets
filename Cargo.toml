@@ -4,24 +4,19 @@ version = "0.1.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
+build = "build.rs"
 
 [build-dependencies]
 curl = "0.4.44"
-grass = "0.12.4"
+grass = "0.13.1"
 zip-extract = "0.1.2"
-
-[dev-dependencies]
-dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 
 [dependencies]
 base64ct = { version = "1.6.0", features = ["alloc"] }
-chrono = "0.4.26"
-chrono-tz = "0.8.3"
+cidr = "0.2.2"
 digest = "0.10.7"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
-dioxus-interpreter-js = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
 md-5 = "0.10.5"
 num-traits = "0.2.15"
@@ -32,12 +27,29 @@ sha2 = "0.10.7"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
+time-tz = { version = "2.0.0", features = ["db", "system"] }
+log = { version = "0.4.19", features = ["std"] }
+
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
+dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
+getrandom = "0.2.10"
+time = "0.3.23"
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+getrandom = { version= "0.2.10", features = ["js"] }
+time = { version = "0.3.23", features = ["wasm-bindgen"]}
+wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
+wasm-logger = "0.2.0"
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
 version = "0.1.0"
-resources = ["style/*css", "js/*js"]
+resources = ["public/**/*"]
 copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."

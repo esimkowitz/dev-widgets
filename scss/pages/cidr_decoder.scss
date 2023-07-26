@@ -1,0 +1,6 @@
+div.cidr-decoder {
+  @extend .d-flex, .flex-column, .row-gap-3, .h-100;
+  .textarea-form {
+    flex: 1 1 auto;
+  }
+}

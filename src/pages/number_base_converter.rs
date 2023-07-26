@@ -3,7 +3,8 @@ use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
 
 use crate::components::inputs::{SwitchInput, TextInput};
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::utils::{add_number_delimiters, sanitize_string};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
@@ -55,12 +56,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
 
     cx.render(rsx! {
         TextInput {
-            label: match base {
-                NumberBase::Binary => "Binary",
-                NumberBase::Octal => "Octal",
-                NumberBase::Decimal => "Decimal",
-                NumberBase::Hexadecimal => "Hexadecimal",
-            },
+            label: "{base}",
             value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
             oninput: move |event: Event<FormData>| {
                 let event_value = event.value.clone();
@@ -109,32 +105,6 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
     }
 }
 
-fn add_number_delimiters(number_str: String, delimiter: char, frequency: usize) -> String {
-    number_str
-        .chars()
-        .rev()
-        .enumerate()
-        .flat_map(|(i, c)| {
-            if i != 0 && i % frequency == 0 {
-                Some(delimiter)
-            } else {
-                None
-            }
-            .into_iter()
-            .chain(std::iter::once(c))
-        })
-        .collect::<String>()
-        .chars()
-        .rev()
-        .collect::<String>()
-}
-
-fn sanitize_string(string: String) -> String {
-    string
-        .chars()
-        .filter(|character| character.is_ascii_alphanumeric())
-        .collect::<String>()
-}
 
 struct ConverterValue(i64);
 

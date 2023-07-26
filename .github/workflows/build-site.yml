@@ -1,0 +1,61 @@
+name: Build static site
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      # Install toolchain
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          profile: minimal
+          toolchain: stable
+          target: wasm32-unknown-unknown
+      - name: Configure Cargo cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Trunk
+        uses: jetli/trunk-action@v0.4.0
+        with:
+          version: latest
+
+      # Build app
+      - name: Build Rust and static site
+        run: |
+          trunk build --release
+
+      # Upload artifact
+      - name: Fix permissions for artifact upload
+        run: |
+          chmod -c -R +rX "./dist/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./dist
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

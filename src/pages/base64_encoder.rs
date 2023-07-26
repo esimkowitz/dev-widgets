@@ -4,7 +4,7 @@ use dioxus_free_icons::icons::bs_icons::BsHash;
 use std::fmt;
 
 use crate::components::inputs::TextAreaForm;
-use crate::widget_entry::{WidgetEntry, WidgetIcon};
+use crate::pages::{WidgetEntry, WidgetIcon};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
@@ -56,16 +56,20 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                 let input_value = event.value.clone();
                 match direction {
                     Direction::Encode => {
-                        value_context.write().decoded_value = input_value.clone();
-                        value_context.write().encoded_value = Base64::encode_string(input_value.as_bytes());
+                        *value_context.write() = EncoderValue {
+                            encoded_value: Base64::encode_string(input_value.as_bytes()),
+                            decoded_value: input_value,
+                        };
                     },
                     Direction::Decode => {
-                        value_context.write().encoded_value = input_value.clone();
                         let decode_val = match Base64::decode_vec(input_value.as_str()) {
                             Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
                             Err(_) => NOT_STRING.to_string(),
                         };
-                        value_context.write().decoded_value = decode_val;
+                        *value_context.write() = EncoderValue {
+                            encoded_value: input_value,
+                            decoded_value: decode_val,
+                        };
                     },
                 };
             }
