@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
@@ -8,27 +9,36 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Color Picker",
     description: "Pick a color and get its output in different formats",
     path: "/color-picker",
-    function: color_picker,
+    function: ColorPicker,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 
-pub fn color_picker(cx: Scope) -> Element {
+pub fn ColorPicker(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "color-picker",
             div {
-                class: "widget-body d-flex flex-row",
+                class: "colorwheel-wrapper",
                 div {
-                    class: "colorwheel-wrapper",
-                    div {
-                        class: "colorwheel-gradient",
-                        div {
-                            class: "colorwheel-inner"
-                        }
-                    }
+                    class: "colorwheel-gradient",
+                    ColorWheelOverlay {}
                 }
+            }
+        }
+    })
+}
+
+fn ColorWheelOverlay(cx: Scope) -> Element {
+    cx.render(rsx! {
+        div {
+            class: "colorwheel-overlay",
+            div {
+                class: "colorwheel-inner"
+            }
+            div {
+                class: "colorwheel-cursor"
             }
         }
     })

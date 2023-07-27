@@ -1,52 +1,85 @@
-.colorwheel-wrapper {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  user-select: none;
-  z-index: 10;
-}
+div.color-picker {
 
-$colorwheel_size: 17rem;
-.colorwheel-gradient {
-  height: $colorwheel_size;
-  width: $colorwheel_size;
-  background: conic-gradient(
-    from 90deg,
-    rgb(255 0 0),
-    rgb(255 0 255),
-    rgb(0 0 255),
-    rgb(0 255 255),
-    rgb(0 255 0),
-    rgb(255 255 0),
-    rgb(255, 0, 0)
-  );
-  border-radius: 50%;
-  z-index: 9;
-}
+  $colorwheel_diameter: 17rem;
+  --colorwheel_diameter: #{$colorwheel_diameter};
 
-.colorwheel-inner {
-  position: absolute;
-  display: block;
-  height: 0.85 * $colorwheel_size;
-  width: 0.85 * $colorwheel_size;
-  margin-top: 0.075 * $colorwheel_size;
-  margin-left: 0.075 * $colorwheel_size;
-  background-color: var(--bs-body-bg);
-  border-radius: 50%;
-  z-index: 10;
-}
-
-.saturation-brightness-picker {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(
-      0deg,
-      hsla(0deg, 0%, 50%, 0.5) 0%,
-      hsla(0deg, 100%, 50%, 0.5) 100%
-    ),
-    linear-gradient(
-      90deg,
-      hsla(0deg, 0%, 0%, 0.5) 0%,
-      hsla(0deg, 0%, 50%, 0.5) 100%
+  .colorwheel-wrapper {
+    position: relative;
+    width: $colorwheel_diameter;
+    height: $colorwheel_diameter;
+    user-select: none;
+    z-index: 10;
+  }
+  
+  .colorwheel-gradient {
+    height: $colorwheel_diameter;
+    width: $colorwheel_diameter;
+    background: conic-gradient(
+      from 90deg,
+      rgb(255 0 0),
+      rgb(255 0 255),
+      rgb(0 0 255),
+      rgb(0 255 255),
+      rgb(0 255 0),
+      rgb(255 255 0),
+      rgb(255, 0, 0)
     );
+    border-radius: 50%;
+    z-index: 9;
+  }
+
+  $colorwheel_circuit_width: 0.075 * $colorwheel_diameter;
+
+  $colorwheel_inner_diameter: $colorwheel_diameter - 2 * $colorwheel_circuit_width;
+  
+  .colorwheel-inner {
+    position: absolute;
+    display: block;
+    height: $colorwheel_inner_diameter;
+    width: $colorwheel_inner_diameter;
+    margin-top: $colorwheel_circuit_width;
+    margin-left: $colorwheel_circuit_width;
+    background-color: var(--bs-body-bg);
+    border-radius: 50%;
+    z-index: 10;
+  }
+
+  $colorwheel_cursor_diameter: 1.5 * $colorwheel_circuit_width;
+  --colorwheel_cursor_color: white;
+
+  .colorwheel-overlay {
+    height: $colorwheel_diameter;
+    width: $colorwheel_diameter;
+    transform-origin: center;
+    rotate: 90deg;
+    z-index: 11;
+  }
+  
+  .colorwheel-cursor {
+    position: absolute;
+    display: block;
+    height: $colorwheel_cursor_diameter;
+    width: $colorwheel_cursor_diameter;
+    border-radius: 50%;
+    background-color: var(--colorwheel_cursor_color);
+    margin-left: (0.5 * $colorwheel_diameter) - (0.5 * $colorwheel_cursor_diameter);
+    margin-top: -(0.5 * ($colorwheel_cursor_diameter - $colorwheel_circuit_width));
+    z-index: 11;
+  }
+  
+  .saturation-brightness-picker {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+        0deg,
+        hsla(0deg, 0%, 50%, 0.5) 0%,
+        hsla(0deg, 100%, 50%, 0.5) 100%
+      ),
+      linear-gradient(
+        90deg,
+        hsla(0deg, 0%, 0%, 0.5) 0%,
+        hsla(0deg, 0%, 50%, 0.5) 100%
+      );
+  }
+  
 }
