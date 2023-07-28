@@ -1,7 +1,6 @@
 div.color-picker {
 
   $colorwheel_diameter: 17rem;
-  --colorwheel_diameter: #{$colorwheel_diameter};
 
   .colorwheel-wrapper {
     position: relative;
@@ -29,8 +28,20 @@ div.color-picker {
   }
 
   $colorwheel_circuit_width: 0.075 * $colorwheel_diameter;
+  $border_width: 0.01 * $colorwheel_diameter;
+  $colorwheel_cursor_diameter: $colorwheel_circuit_width;
+  --colorwheel_cursor_color: white;
+  --colorwheel_cursor_rotation: 90deg;
+  
+  .colorwheel-overlay {
+    height: $colorwheel_diameter;
+    width: $colorwheel_diameter;
+    transform-origin: center;
+    rotate: var(--colorwheel_cursor_rotation);
+    z-index: 11;
+  }
 
-  $colorwheel_inner_diameter: $colorwheel_diameter - 2 * $colorwheel_circuit_width;
+  $colorwheel_inner_diameter: $colorwheel_diameter - (2 * $colorwheel_circuit_width);
   
   .colorwheel-inner {
     position: absolute;
@@ -43,27 +54,17 @@ div.color-picker {
     border-radius: 50%;
     z-index: 10;
   }
-
-  $colorwheel_cursor_diameter: 1.5 * $colorwheel_circuit_width;
-  --colorwheel_cursor_color: white;
-
-  .colorwheel-overlay {
-    height: $colorwheel_diameter;
-    width: $colorwheel_diameter;
-    transform-origin: center;
-    rotate: 90deg;
-    z-index: 11;
-  }
   
   .colorwheel-cursor {
     position: absolute;
     display: block;
     height: $colorwheel_cursor_diameter;
     width: $colorwheel_cursor_diameter;
-    border-radius: 50%;
     background-color: var(--colorwheel_cursor_color);
     margin-left: (0.5 * $colorwheel_diameter) - (0.5 * $colorwheel_cursor_diameter);
     margin-top: -(0.5 * ($colorwheel_cursor_diameter - $colorwheel_circuit_width));
+    border: solid $border_width var(--bs-light);
+    border-radius: 50%;
     z-index: 11;
   }
   
@@ -81,5 +82,13 @@ div.color-picker {
         hsla(0deg, 0%, 50%, 0.5) 100%
       );
   }
-  
+
+  --color-view-background: white;
+  .color-view {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 1rem;
+    background-color: var(--color-view-background);
+    border: solid $border_width var(--bs-dark);
+  }
 }
