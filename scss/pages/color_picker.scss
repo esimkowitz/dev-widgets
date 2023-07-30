@@ -2,7 +2,6 @@ div.color-picker {
   $colorwheel_diameter: 17rem;
 
   .colorwheel-wrapper {
-    position: relative;
     width: $colorwheel_diameter;
     height: $colorwheel_diameter;
     user-select: none;
@@ -13,6 +12,7 @@ div.color-picker {
     width: 100%;
 
     .colorwheel-svg {
+      position: absolute;
       z-index: 10;
     }
 
@@ -40,7 +40,6 @@ div.color-picker {
 
   .colorwheel-overlay {
     position: relative;
-    top: 0;
     height: $colorwheel_diameter;
     width: $colorwheel_diameter;
     transform-origin: center;

@@ -34,15 +34,12 @@ pub fn ColorPicker(cx: Scope) -> Element {
 fn ColorWheel(cx: Scope) -> Element {
     let color_state = use_shared_state::<Color>(cx).unwrap();
     let dimensions = use_ref(cx, Rect::zero);
+    let tracking_state = use_state(cx, || false);
     
     cx.render(rsx! {
         div {
             class: "colorwheel-wrapper",
-            onclick: move |event| {
-                let cursor_coordinates = event.data.page_coordinates();
-                let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-                color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
-            },
+            // onclicxz
             onmounted: move |cx| {
                 to_owned![dimensions];
                 async move {
@@ -50,6 +47,21 @@ fn ColorWheel(cx: Scope) -> Element {
                         dimensions.set(rect);
                     }
                 }
+            },
+            onmousedown: move |event| {
+                event.stop_propagation();
+                tracking_state.set(true);
+            },
+            onmousemove: move |event| {
+                if *tracking_state.get() {
+                    let cursor_coordinates = event.data.page_coordinates();
+                    let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
+                    color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
+                }
+            },
+            onmouseup: move |event| {
+                event.stop_propagation();
+                tracking_state.set(false);
             },
             ColorWheelSvg {
                 div {
