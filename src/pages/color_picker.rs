@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use dioxus::{html::geometry::{euclid::{Rect, Point2D}, PageSpace}, prelude::*};
+use dioxus::{html::{geometry::{euclid::{Rect, Point2D}, PageSpace}, radialGradient}, prelude::*};
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
 use crate::pages::{WidgetEntry, WidgetIcon};
@@ -68,18 +68,13 @@ fn ColorWheel(cx: Scope) -> Element {
                 process_mouse_event(event);
             },
             ColorWheelSvg {}
-            div {
-                class: "colorwheel-overlay",
-                style: "--colorwheel_cursor_rotation: {hue_to_css_rotation(color_state.read().hue)}deg; --colorwheel_cursor_color: hsl({color_state.read().hue}, 100%, 50%);",
-                div {                    
-                    class: "colorwheel-cursor"
-                }
+            ColorWheelCursorSvg {
+                hue: color_state.read().hue,
             }
         }
     })
 }
 
-#[inline_props]
 fn ColorWheelSvg(cx: Scope) -> Element {
     cx.render(rsx! {
         svg {
@@ -110,6 +105,57 @@ fn ColorWheelSvg(cx: Scope) -> Element {
                     class: "colorwheel-gradient",
                 }
             },
+        }
+    })
+}
+
+#[inline_props]
+fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
+    cx.render(rsx! {
+        svg {
+            view_box: "0 0 100 100",
+            class: "colorwheel-cursor",
+            defs {
+                radialGradient {
+                    id: "colorwheel-cursor-border",
+                    stop {
+                        offset: "0%",
+                        stop_color: "white",
+                        stop_opacity: 0,
+                    }
+                    stop {
+                        offset: "50%",
+                        stop_color: "white",
+                        stop_opacity: 1,
+                    }
+                    stop {
+                        offset: "90%",
+                        stop_color: "white",
+                        stop_opacity: 1,
+                    }
+                    stop {
+                        offset: "90%",
+                        stop_color: "lightgray",
+                        stop_opacity: 1,
+                    }
+                    stop {
+                        offset: "100%",
+                        stop_color: "lightgray",
+                        stop_opacity: 0,
+                    }
+                }
+            }
+            g {
+                transform: "rotate({hue_to_css_rotation(*hue)} 50 50)",
+                circle {
+                    cx: 50,
+                    cy: 3.75,
+                    r: 3.75,
+                    stroke: "url(#colorwheel-cursor-border)",
+                    stroke_width: 2,
+                    fill: "hsl({hue}, 100%, 50%)"
+                }
+            }
         }
     })
 }
