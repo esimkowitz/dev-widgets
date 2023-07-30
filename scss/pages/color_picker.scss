@@ -4,12 +4,8 @@ div.color-picker {
   .colorwheel-wrapper {
     width: $colorwheel_diameter;
     height: $colorwheel_diameter;
+    position: relative;
     user-select: none;
-  }
-
-  .colorwheel-svg-wrapper {
-    height: 100%;
-    width: 100%;
 
     .colorwheel-svg {
       position: absolute;
@@ -30,36 +26,36 @@ div.color-picker {
         rgb(255, 0, 0)
       );
     }
-  }
 
-  $colorwheel_circuit_width: 0.075 * $colorwheel_diameter;
-  $border_width: 0.01 * $colorwheel_diameter;
-  $colorwheel_cursor_diameter: $colorwheel_circuit_width;
-  --colorwheel_cursor_color: white;
-  --colorwheel_cursor_rotation: 90deg;
+    $colorwheel_circuit_width: 0.075 * $colorwheel_diameter;
+    $border_width: 0.01 * $colorwheel_diameter;
+    $colorwheel_cursor_diameter: $colorwheel_circuit_width;
+    --colorwheel_cursor_color: white;
+    --colorwheel_cursor_rotation: 90deg;
 
-  .colorwheel-overlay {
-    position: relative;
-    height: $colorwheel_diameter;
-    width: $colorwheel_diameter;
-    transform-origin: center;
-    rotate: var(--colorwheel_cursor_rotation);
-    z-index: 11;
-  }
+    .colorwheel-overlay {
+      position: relative;
+      height: $colorwheel_diameter;
+      width: $colorwheel_diameter;
+      transform-origin: center;
+      rotate: var(--colorwheel_cursor_rotation);
+      z-index: 11;
+    }
 
-  .colorwheel-cursor {
-    position: absolute;
-    display: block;
-    height: $colorwheel_cursor_diameter;
-    width: $colorwheel_cursor_diameter;
-    background-color: var(--colorwheel_cursor_color);
-    margin-left: (0.5 * $colorwheel_diameter) -
-      (0.5 * $colorwheel_cursor_diameter);
-    margin-top: -(0.5 *
-          ($colorwheel_cursor_diameter - $colorwheel_circuit_width));
-    border: solid $border_width var(--bs-light);
-    border-radius: 50%;
-    z-index: 11;
+    .colorwheel-cursor {
+      position: absolute;
+      display: block;
+      height: $colorwheel_cursor_diameter;
+      width: $colorwheel_cursor_diameter;
+      background-color: var(--colorwheel_cursor_color);
+      margin-left: (0.5 * $colorwheel_diameter) -
+        (0.5 * $colorwheel_cursor_diameter);
+      margin-top: -(0.5 *
+            ($colorwheel_cursor_diameter - $colorwheel_circuit_width));
+      border: solid $border_width var(--bs-light);
+      border-radius: 50%;
+      z-index: 11;
+    }
   }
 
   .saturation-brightness-picker {

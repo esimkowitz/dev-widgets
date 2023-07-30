@@ -35,11 +35,16 @@ fn ColorWheel(cx: Scope) -> Element {
     let color_state = use_shared_state::<Color>(cx).unwrap();
     let dimensions = use_ref(cx, Rect::zero);
     let tracking_state = use_state(cx, || false);
+
+    let process_mouse_event = move |event: Event<MouseData>| {
+        let cursor_coordinates = event.data.page_coordinates();
+        let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
+        color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
+    };
     
     cx.render(rsx! {
         div {
             class: "colorwheel-wrapper",
-            // onclicxz
             onmounted: move |cx| {
                 to_owned![dimensions];
                 async move {
@@ -48,28 +53,26 @@ fn ColorWheel(cx: Scope) -> Element {
                     }
                 }
             },
-            onmousedown: move |event| {
-                event.stop_propagation();
+            onmousedown: move |_| {
                 tracking_state.set(true);
+            },
+            onmouseup: move |_| {
+                tracking_state.set(false);
             },
             onmousemove: move |event| {
                 if *tracking_state.get() {
-                    let cursor_coordinates = event.data.page_coordinates();
-                    let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-                    color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
+                    process_mouse_event(event);
                 }
             },
-            onmouseup: move |event| {
-                event.stop_propagation();
-                tracking_state.set(false);
+            onclick: move |event| {
+                process_mouse_event(event);
             },
-            ColorWheelSvg {
-                div {
-                    class: "colorwheel-overlay",
-                    style: "--colorwheel_cursor_rotation: {hue_to_css_rotation(color_state.read().hue)}deg; --colorwheel_cursor_color: hsl({color_state.read().hue}, 100%, 50%);",
-                    div {                    
-                        class: "colorwheel-cursor"
-                    }
+            ColorWheelSvg {}
+            div {
+                class: "colorwheel-overlay",
+                style: "--colorwheel_cursor_rotation: {hue_to_css_rotation(color_state.read().hue)}deg; --colorwheel_cursor_color: hsl({color_state.read().hue}, 100%, 50%);",
+                div {                    
+                    class: "colorwheel-cursor"
                 }
             }
         }
@@ -77,40 +80,36 @@ fn ColorWheel(cx: Scope) -> Element {
 }
 
 #[inline_props]
-fn ColorWheelSvg<'a>(cx: Scope<'a>, children: Element<'a>) -> Element<'a> {
+fn ColorWheelSvg(cx: Scope) -> Element {
     cx.render(rsx! {
-        div {
-            class: "colorwheel-svg-wrapper",
-            svg {
-                view_box: "0 0 100 100",
-                class: "colorwheel-svg",
-                mask {
-                    id: "colorwheel-mask",
-                    circle {
-                        cx: 50,
-                        cy: 50,
-                        r: 50,
-                        fill: "white",
-                    }
-                    circle {
-                        cx: 50,
-                        cy: 50,
-                        r: 42.5,
-                        fill: "black",
-                    }
-                },
-                foreignObject {
-                    x: 0,
-                    y: 0,
-                    width: 100,
-                    height: 100,
-                    mask: "url(#colorwheel-mask)",
-                    div {
-                        class: "colorwheel-gradient",
-                    }
-                },
-            }
-            children
+        svg {
+            view_box: "0 0 100 100",
+            class: "colorwheel-svg",
+            mask {
+                id: "colorwheel-mask",
+                circle {
+                    cx: 50,
+                    cy: 50,
+                    r: 50,
+                    fill: "white",
+                }
+                circle {
+                    cx: 50,
+                    cy: 50,
+                    r: 42.5,
+                    fill: "black",
+                }
+            },
+            foreignObject {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                mask: "url(#colorwheel-mask)",
+                div {
+                    class: "colorwheel-gradient",
+                }
+            },
         }
     })
 }
@@ -134,11 +133,11 @@ struct Color {
 }
 
 fn cursor_position_to_hue(cursor_coordinates: Point2D<f64, PageSpace>, center_coordinates: Point2D<f64, PageSpace>) -> f64 {
-    log::info!("cursor_coordinates: {:?}, center_coordinates: {:?}", cursor_coordinates, center_coordinates);
+    log::trace!("cursor_coordinates: {:?}, center_coordinates: {:?}", cursor_coordinates, center_coordinates);
     let vector = cursor_coordinates - center_coordinates;
     let angle = vector.yx().angle_from_x_axis().positive().to_degrees() - 90f64;
     let angle = angle % 360f64;
-    log::info!("vector: {:?}, angle: {:?}", vector, angle);
+    log::trace!("vector: {:?}, angle: {:?}", vector, angle);
     angle
 }
 
