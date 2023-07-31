@@ -34,22 +34,22 @@ div.color-picker {
       z-index: 11;
     }
   }
-
-  .saturation-brightness-picker {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(
-        0deg,
-        hsla(0deg, 0%, 50%, 0.5) 0%,
-        hsla(0deg, 100%, 50%, 0.5) 100%
-      ),
-      linear-gradient(
-        90deg,
-        hsla(0deg, 0%, 0%, 0.5) 0%,
-        hsla(0deg, 0%, 50%, 0.5) 100%
-      );
+  .saturation-brightness-box {
+    position: relative;
+    height: $colorwheel_diameter;
+    width: $colorwheel_diameter;
+    .saturation-brightness-gradient {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-image: linear-gradient(to top, #000 0%, transparent 100%),
+        linear-gradient(to right, #fff 0%, transparent 100%);
+    }
+    .saturation-brightness-cursor {
+      position: absolute;
+    }
   }
-
+  
   --color-view-background: white;
   .color-view {
     height: 5rem;

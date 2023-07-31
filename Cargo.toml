@@ -29,6 +29,7 @@ strum_macros = "0.25.1"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
 time-tz = { version = "2.0.0", features = ["db", "system"] }
 log = { version = "0.4.19", features = ["std"] }
+color_processing = "0.6.2"
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
 dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
