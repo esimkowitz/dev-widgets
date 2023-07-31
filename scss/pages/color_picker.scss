@@ -1,0 +1,61 @@
+div.color-picker {
+  $colorwheel_diameter: 17rem;
+
+  .colorwheel-wrapper {
+    width: $colorwheel_diameter;
+    height: $colorwheel_diameter;
+    position: relative;
+    user-select: none;
+
+    .colorwheel-svg {
+      position: absolute;
+      z-index: 10;
+    }
+
+    .colorwheel-gradient {
+      height: 100%;
+      width: 100%;
+      background: conic-gradient(
+        from 90deg,
+        rgb(255 0 0),
+        rgb(255 0 255),
+        rgb(0 0 255),
+        rgb(0 255 255),
+        rgb(0 255 0),
+        rgb(255 255 0),
+        rgb(255, 0, 0)
+      );
+    }
+
+    .colorwheel-cursor {
+      position: relative;
+      height: $colorwheel_diameter;
+      width: $colorwheel_diameter;
+      z-index: 11;
+    }
+  }
+
+  .saturation-brightness-picker {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+        0deg,
+        hsla(0deg, 0%, 50%, 0.5) 0%,
+        hsla(0deg, 100%, 50%, 0.5) 100%
+      ),
+      linear-gradient(
+        90deg,
+        hsla(0deg, 0%, 0%, 0.5) 0%,
+        hsla(0deg, 0%, 50%, 0.5) 100%
+      );
+  }
+
+  --color-view-background: white;
+  .color-view {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 1rem;
+    background-color: var(--color-view-background);
+    border: solid $border_width var(--bs-dark);
+  }
+}
