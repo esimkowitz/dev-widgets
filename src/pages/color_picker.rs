@@ -59,6 +59,9 @@ fn ColorWheel(cx: Scope) -> Element {
             onmouseup: move |_| {
                 tracking_state.set(false);
             },
+            onmouseleave: move |_| {
+                tracking_state.set(false);
+            },
             onmousemove: move |event| {
                 if *tracking_state.get() {
                     process_mouse_event(event);
