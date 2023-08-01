@@ -16,7 +16,7 @@ div.color-picker {
         position: absolute;
         z-index: 10;
       }
-  
+
       .colorwheel-gradient {
         height: 100%;
         width: 100%;
@@ -31,7 +31,7 @@ div.color-picker {
           rgb(255, 0, 0)
         );
       }
-  
+
       .colorwheel-cursor {
         position: relative;
         height: $colorwheel_diameter;
@@ -39,8 +39,6 @@ div.color-picker {
         z-index: 11;
       }
     }
-
-    
   }
 
   .saturation-brightness-wrapper {
@@ -64,7 +62,7 @@ div.color-picker {
       position: absolute;
     }
   }
-  
+
   --color-view-background: white;
   .color-view {
     height: 5rem;
