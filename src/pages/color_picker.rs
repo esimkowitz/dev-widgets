@@ -2,10 +2,10 @@
 use color_processing::Color;
 use dioxus::{
     html::geometry::{
-        euclid::{Point2D, Rect},
+        euclid::{default, Point2D, Rect},
         PageSpace,
     },
-    prelude::*,
+    prelude::{SvgAttributes, *},
 };
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
@@ -24,15 +24,18 @@ const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 
 pub fn ColorPicker(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ColorPickerState {
-        color: Box::new(Color::new_rgb(255, 0, 0)),
+        hue: 0.0,
+        saturation: 1.0,
+        brightness: 1.0,
+        alpha: 1.0,
     });
 
     cx.render(rsx! {
         div {
             class: "color-picker",
             ColorWheel {}
-            ColorView {}
             SaturationBrightnessBox {}
+            ColorView {}
         }
     })
 }
@@ -45,40 +48,48 @@ fn ColorWheel(cx: Scope) -> Element {
     let process_mouse_event = move |event: Event<MouseData>| {
         let cursor_coordinates = event.data.page_coordinates();
         let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-        color_state.write().update_hue(cursor_position_to_hue(cursor_coordinates, center_coordinates));
+        color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
 
     cx.render(rsx! {
         div {
             class: "colorwheel-wrapper",
-            onmounted: move |cx| {
-                to_owned![dimensions];
-                async move {
-                    if let Ok(rect) = cx.get_client_rect().await {
-                        dimensions.set(rect);
+            div {
+                class: "colorwheel",
+                onmounted: move |cx| {
+                    to_owned![dimensions];
+                    async move {
+                        if let Ok(rect) = cx.get_client_rect().await {
+                            dimensions.set(rect);
+                        }
                     }
-                }
-            },
-            onmousedown: move |_| {
-                tracking_state.set(true);
-            },
-            onmouseup: move |_| {
-                tracking_state.set(false);
-            },
-            onmouseleave: move |_| {
-                tracking_state.set(false);
-            },
-            onmousemove: move |event| {
-                if *tracking_state.get() {
+                },
+                onmousedown: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(true);
+                },
+                onmouseup: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(false);
+                },
+                onmouseleave: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(false);
+                },
+                onmousemove: move |event| {
+                    event.stop_propagation();
+                    if *tracking_state.get() {
+                        process_mouse_event(event);
+                    }
+                },
+                onclick: move |event| {
+                    event.stop_propagation();
                     process_mouse_event(event);
+                },
+                ColorWheelSvg {}
+                ColorWheelCursorSvg {
+                    hue: color_state.read().hue,
                 }
-            },
-            onclick: move |event| {
-                process_mouse_event(event);
-            },
-            ColorWheelSvg {}
-            ColorWheelCursorSvg {
-                hue: color_state.read().hue(),
             }
         }
     })
@@ -130,28 +141,71 @@ fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
 }
 
 fn SaturationBrightnessBox(cx: Scope) -> Element {
-    let color_state = use_shared_state::<Color>(cx).unwrap();
+    let color_state = use_shared_state::<ColorPickerState>(cx).unwrap();
+    let tracking_state = use_state(cx, || false);
     let dimensions = use_ref(cx, Rect::zero);
+
+    let process_mouse_event = move |event: Event<MouseData>| {
+        let cursor_coordinates = event.data.element_coordinates();
+        log::trace!("cursor_coordinates: {:?}", cursor_coordinates);
+        log::trace!(
+            "dimensions_min: {:?}, dimensions_max: {:?}, dimensions_size: {:?}",
+            dimensions.read().min(),
+            dimensions.read().max(),
+            dimensions.read().size
+        );
+        let sv_scale = default::Scale::new(dimensions.read().size.width / 100.0);
+        let point_sv = cursor_coordinates.cast_unit() / sv_scale;
+        log::trace!("point_sv: {:?}", point_sv);
+        color_state.write().saturation = x_axis_to_saturation(point_sv.x);
+        color_state.write().brightness = y_axis_to_brightness(point_sv.y);
+    };
+
     cx.render(rsx! {
         div {
-            class: "saturation-brightness-box",
-            onmounted: move |cx| {
-                to_owned![dimensions];
-                async move {
-                    if let Ok(rect) = cx.get_client_rect().await {
-                        dimensions.set(rect);
-                    }
-                }
-            },
+            class: "saturation-brightness-wrapper",
             div {
-                class: "saturation-brightness-gradient",
-                style: "background-color: hsl({color_state.read().hue()}deg, 100%, 50%);"
-            }
-            CursorPrimitiveSvg {
-                class: "saturation-brightness-cursor",
-                fill: "{color_state.read().color.to_css_string()}",
-                x: color_state.read().color.,
-                y: color_state.read().lightness,
+                class: "saturation-brightness-box",
+                onmounted: move |cx| {
+                    to_owned![dimensions];
+                    async move {
+                        if let Ok(rect) = cx.get_client_rect().await {
+                            dimensions.set(rect);
+                        }
+                    }
+                },
+                onmousedown: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(true);
+                },
+                onmouseup: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(false);
+                },
+                onmouseleave: move |event| {
+                    event.stop_propagation();
+                    tracking_state.set(false);
+                },
+                onmousemove: move |event| {
+                    event.stop_propagation();
+                    if *tracking_state.get() {
+                        process_mouse_event(event);
+                    }
+                },
+                onclick: move |event| {
+                    event.stop_propagation();
+                    process_mouse_event(event);
+                },
+                div {
+                    class: "saturation-brightness-gradient",
+                    style: "background-color: hsl({color_state.read().hue}deg, 100%, 50%);"
+                }
+                CursorPrimitiveSvg {
+                    class: "saturation-brightness-cursor",
+                    fill: "{color_state.read().get_rgb_string()}",
+                    x: saturation_to_x_axis(color_state.read().saturation),
+                    y: brightness_to_y_axis(color_state.read().brightness),
+                }
             }
         }
     })
@@ -216,29 +270,29 @@ fn CursorPrimitiveSvg<'a>(
 }
 
 fn ColorView(cx: Scope) -> Element {
-    let color_state = use_shared_state::<Color>(cx).unwrap();
-
-    let color = color_state.read();
+    let color_state = use_shared_state::<ColorPickerState>(cx).unwrap();
     cx.render(rsx! {
         div {
             class: "color-view",
-            style: "--color-view-background: hsl({color.hue}deg, {color.saturation}%, {color.lightness}%);"
+            style: "--color-view-background: {color_state.read().get_rgb_string()};"
         }
     })
 }
 
 struct ColorPickerState {
-    color: Box<Color>,
+    hue: f64,
+    saturation: f64,
+    brightness: f64,
+    alpha: f64,
 }
 
 impl ColorPickerState {
-    fn update_hue(&mut self, hue: f64) {
-        let (_, saturation, luminance, alpha) = self.color.get_hsla();
-        *self.color = Color::new_hsla(hue, saturation, luminance, alpha);
+    fn get_color(&self) -> Color {
+        Color::new_hsva(self.hue, self.saturation, self.brightness, self.alpha)
     }
 
-    fn hue(&self) -> f64 {
-        self.color.get_hsla().0
+    fn get_rgb_string(&self) -> String {
+        self.get_color().to_rgb_string()
     }
 }
 
@@ -260,4 +314,20 @@ fn cursor_position_to_hue(
 
 fn hue_to_css_rotation(hue: f64) -> f64 {
     (450f64 - hue).abs() % 360f64
+}
+
+fn saturation_to_x_axis(saturation: f64) -> f64 {
+    saturation * 100f64
+}
+
+fn brightness_to_y_axis(brightness: f64) -> f64 {
+    100f64 - (brightness * 100f64)
+}
+
+fn x_axis_to_saturation(x: f64) -> f64 {
+    x / 100f64
+}
+
+fn y_axis_to_brightness(y: f64) -> f64 {
+    (100f64 - y) / 100f64
 }

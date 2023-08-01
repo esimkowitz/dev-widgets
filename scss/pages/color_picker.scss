@@ -4,40 +4,55 @@ div.color-picker {
   .colorwheel-wrapper {
     width: $colorwheel_diameter;
     height: $colorwheel_diameter;
-    position: relative;
-    user-select: none;
 
-    .colorwheel-svg {
-      position: absolute;
-      z-index: 10;
-    }
-
-    .colorwheel-gradient {
+    .colorwheel {
       height: 100%;
       width: 100%;
-      background: conic-gradient(
-        from 90deg,
-        rgb(255 0 0),
-        rgb(255 0 255),
-        rgb(0 0 255),
-        rgb(0 255 255),
-        rgb(0 255 0),
-        rgb(255 255 0),
-        rgb(255, 0, 0)
-      );
+      position: relative;
+      user-select: none;
+      display: block;
+
+      .colorwheel-svg {
+        position: absolute;
+        z-index: 10;
+      }
+  
+      .colorwheel-gradient {
+        height: 100%;
+        width: 100%;
+        background: conic-gradient(
+          from 90deg,
+          rgb(255 0 0),
+          rgb(255 0 255),
+          rgb(0 0 255),
+          rgb(0 255 255),
+          rgb(0 255 0),
+          rgb(255 255 0),
+          rgb(255, 0, 0)
+        );
+      }
+  
+      .colorwheel-cursor {
+        position: relative;
+        height: $colorwheel_diameter;
+        width: $colorwheel_diameter;
+        z-index: 11;
+      }
     }
 
-    .colorwheel-cursor {
-      position: relative;
-      height: $colorwheel_diameter;
-      width: $colorwheel_diameter;
-      z-index: 11;
-    }
+    
   }
-  .saturation-brightness-box {
-    position: relative;
+
+  .saturation-brightness-wrapper {
+    display: block;
     height: $colorwheel_diameter;
     width: $colorwheel_diameter;
+  }
+
+  .saturation-brightness-box {
+    position: relative;
+    height: 100%;
+    width: 100%;
     .saturation-brightness-gradient {
       position: absolute;
       height: 100%;
