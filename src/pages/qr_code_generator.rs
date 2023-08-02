@@ -36,7 +36,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
         Err(_) => "".to_string(),
     };
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "qr-code-generator",
             SelectForm::<Ecc> {
@@ -65,7 +65,7 @@ pub fn qr_code_generator(cx: Scope) -> Element {
                 src: "data:image/svg+xml;base64,{qr_code_result}"
             }
         }
-    })
+    }
 }
 
 #[derive(

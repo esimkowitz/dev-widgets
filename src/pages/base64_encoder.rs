@@ -22,7 +22,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
         encoded_value: String::new(),
         decoded_value: String::new(),
     });
-    cx.render(rsx! {
+    render! {
         div {
             class: "base64-encoder",
             encoder_input {
@@ -32,7 +32,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
                 direction: Direction::Decode
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -45,7 +45,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     };
 
     const NOT_STRING: &str = "Not String";
-    cx.render(rsx! {
+    render! {
         TextAreaForm {
             label: match direction {
                 Direction::Encode => "Text",
@@ -74,7 +74,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                 };
             }
         }
-    })
+    }
 }
 
 struct EncoderValue {

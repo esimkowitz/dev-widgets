@@ -27,7 +27,7 @@ pub fn hash_generator(cx: Scope) -> Element {
 
     let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "number-base-converter",
             SwitchInput {
@@ -58,7 +58,7 @@ pub fn hash_generator(cx: Scope) -> Element {
                 algorithm: HashingAlgorithm::SHA512,
             }
         }
-    })
+    }
 }
 
 #[allow(non_snake_case)]
@@ -76,13 +76,13 @@ fn HashField(cx: Scope, algorithm: HashingAlgorithm) -> Element {
         hash_generator_state_cur.uppercase,
     );
 
-    cx.render(rsx! {
+    render! {
         TextInput {
             label: "{algorithm}",
             value: "{hashed_value}",
             readonly: true,
         }
-    })
+    }
 }
 
 fn select_hasher(algorithm: HashingAlgorithm) -> Box<dyn DynDigest> {

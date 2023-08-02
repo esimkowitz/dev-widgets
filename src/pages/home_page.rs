@@ -19,7 +19,7 @@ const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
 };
 
 pub fn HomePage(cx: Scope) -> Element {
-    cx.render(rsx! {
+    render! {
         div {
             class: "home-page",
             for widget_type in WIDGETS.keys() {
@@ -49,5 +49,5 @@ pub fn HomePage(cx: Scope) -> Element {
                 }
             }
         }
-    })
+    }
 }

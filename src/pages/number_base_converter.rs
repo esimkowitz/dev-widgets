@@ -23,7 +23,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
 
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "number-base-converter",
             SwitchInput {
@@ -46,7 +46,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
                 base: NumberBase::Binary
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -54,7 +54,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         TextInput {
             label: "{base}",
             value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
@@ -69,7 +69,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                 }.unwrap_or(0);
             }
         }
-    })
+    }
 }
 
 fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {

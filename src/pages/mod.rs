@@ -49,11 +49,11 @@ pub struct WidgetIcon<T: IconShape + Copy> {
 
 impl<T: IconShape + Copy> WidgetIcon<T> {
     pub fn icon<'a>(&'a self, cx: Scope<'a>) -> Element<'a> {
-        cx.render(rsx! {
+        render! {
             Icon::<T> {
                 class: "icon",
                 icon: self.icon,
             }
-        })
+        }
     }
 }

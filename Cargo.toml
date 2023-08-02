@@ -15,9 +15,9 @@ zip-extract = "0.1.2"
 base64ct = { version = "1.6.0", features = ["alloc"] }
 cidr = "0.2.2"
 digest = "0.10.7"
-dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "35995f8577954a83bab2f3b1242bce33d12d3593", features = ["bootstrap"] }
-dioxus-router = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus = "0.4.0"
+dioxus-free-icons = { git = "https://github.com/esimkowitz/dioxus-free-icons.git", rev = "3622f52b8781e8a095ba25f8a42d845c537dba03", features = ["bootstrap"] }
+dioxus-router = "0.4.0"
 md-5 = "0.10.5"
 num-traits = "0.2.15"
 phf = { version = "0.11.1", features = ["macros"] }
@@ -30,16 +30,13 @@ uuid = { version = "1.4.0", features = ["v4", "fast-rng"] }
 time-tz = { version = "2.0.0", features = ["db", "system"] }
 log = { version = "0.4.19", features = ["std"] }
 
-[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
-dioxus-hot-reload = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
-
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab"  }
+dioxus-desktop = "0.4.0"
 getrandom = "0.2.10"
 time = "0.3.23"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git", rev = "a75223cd8895ca6733164ddf03de314c91c1dbab" }
+dioxus-web = "0.4.0"
 getrandom = { version= "0.2.10", features = ["js"] }
 time = { version = "0.3.23", features = ["wasm-bindgen"]}
 wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }

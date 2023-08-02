@@ -67,7 +67,7 @@ pub fn cidr_decoder(cx: Scope) -> Element {
     });
 
     let show_error_state = use_state(cx, || false);
-    cx.render(rsx! {
+    render! {
         div {
             class: "cidr-decoder",
             TextInput {
@@ -101,5 +101,5 @@ pub fn cidr_decoder(cx: Scope) -> Element {
                 value: "{cidr_description}",
             }
         }
-    })
+    }
 }

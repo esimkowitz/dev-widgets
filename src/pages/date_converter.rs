@@ -31,7 +31,7 @@ pub fn date_converter(cx: Scope) -> Element {
     let local_datetime = date_state.with(|date_state| date_state.local_datetime());
     let unix_time = date_state.with(|date_state| date_state.time_utc.unix_timestamp());
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "date-converter",
             SelectForm::<DcTimeZone> {
@@ -138,7 +138,7 @@ pub fn date_converter(cx: Scope) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 struct DateConverterState {

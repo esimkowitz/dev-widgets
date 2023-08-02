@@ -25,7 +25,7 @@ pub fn uuid_generator(cx: Scope) -> Element {
     let uuids_state = use_ref(cx, || Vec::<String>::new());
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
-    cx.render(rsx! {
+    render! {
         div {
             class: "uuid-generator",
             div {
@@ -92,5 +92,5 @@ pub fn uuid_generator(cx: Scope) -> Element {
                 readonly: true,
             }
         }
-    })
+    }
 }

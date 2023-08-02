@@ -11,7 +11,7 @@ use crate::pages::home_page::HOME_PAGE_WIDGET_ENTRY;
 use crate::pages::{ WidgetEntry, WIDGETS };
 
 pub fn App(cx: Scope) -> Element {
-    cx.render(rsx! {
+    render! {
         div {
             class: "container-fluid",
             Router {
@@ -40,11 +40,11 @@ pub fn App(cx: Scope) -> Element {
                 Redirect { from: "", to: HOME_PAGE_WIDGET_ENTRY.path }
             }
         }
-    })
+    }
 }
 
 fn Sidebar(cx: Scope) -> Element {
-    cx.render(rsx! {
+    render! {
         div {
             class: "sidebar",
             div {
@@ -75,12 +75,12 @@ fn Sidebar(cx: Scope) -> Element {
                 class: "vr"
             }
         }
-    })
+    }
 }
 
 #[inline_props]
 fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Element {
-    cx.render(rsx! {
+    render! {
         h3 {
             class: "widget-title",
             *title
@@ -89,7 +89,7 @@ fn WidgetView<'a>(cx: Scope<'a>, children: Element<'a>, title: &'a str) -> Eleme
             class: "widget-body",
             children
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -102,12 +102,12 @@ fn SidebarListItem<'a>(cx: Scope<'a>, widget_entry: WidgetEntry, icon: Element<'
         ""
     };
 
-    cx.render(rsx! {
+    render! {
         Link {
             class: "btn {active_str}",
             to: widget_entry.path,
             icon
             widget_entry.short_title
         }
-    })
+    }
 }
