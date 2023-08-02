@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use dioxus_router::prelude::*;
 use dioxus_free_icons::{Icon, IconShape};
 use phf::phf_ordered_map;
 
@@ -32,6 +33,11 @@ pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
         hash_generator::WIDGET_ENTRY,
     ],
 };
+
+#[derive(Routable, Clone)]
+enum Route {
+    home_page::HomePage {},
+}
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub struct WidgetEntry {

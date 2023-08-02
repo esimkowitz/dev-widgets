@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use digest::DynDigest;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsFingerprint;
@@ -11,7 +12,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Hash",
     description: "Generate cryptographic hashes of strings",
     path: "/hash-generator",
-    function: hash_generator,
+    function: HashGenerator,
     icon: move |cx| ICON.icon(cx),
 };
 
@@ -19,7 +20,7 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
     icon: BsFingerprint,
 };
 
-pub fn hash_generator(cx: Scope) -> Element {
+pub fn HashGenerator(cx: Scope) -> Element {
     use_shared_state_provider(cx, || HashGeneratorState {
         value: "".to_string(),
         uppercase: false,
@@ -61,7 +62,6 @@ pub fn hash_generator(cx: Scope) -> Element {
     }
 }
 
-#[allow(non_snake_case)]
 #[inline_props]
 fn HashField(cx: Scope, algorithm: HashingAlgorithm) -> Element {
     let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();

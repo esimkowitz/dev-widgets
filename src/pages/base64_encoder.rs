@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
@@ -11,13 +12,13 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Base64",
     description: "Encode and decode base64 strings",
     path: "/base64-encoder",
-    function: base64_encoder,
+    function: Base64Encoder,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
-pub fn base64_encoder(cx: Scope) -> Element {
+pub fn Base64Encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),

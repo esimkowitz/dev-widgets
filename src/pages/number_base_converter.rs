@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
@@ -11,13 +12,13 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
     path: "/number-base-converter",
-    function: number_base_converter,
+    function: NumberBaseConverter,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
-pub fn number_base_converter(cx: Scope) -> Element {
+pub fn NumberBaseConverter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     use_shared_state_provider(cx, || FormatNumberState(false));
 

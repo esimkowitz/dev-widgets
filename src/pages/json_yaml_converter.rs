@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsFileText;
 
@@ -8,13 +9,13 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "JSON <> YAML",
     description: "Convert between JSON and YAML file formats",
     path: "/json-yaml-converter",
-    function: json_yaml_converter,
+    function: JsonYamlConverter,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsFileText> = WidgetIcon { icon: BsFileText };
 
-pub fn json_yaml_converter(cx: Scope) -> Element {
+pub fn JsonYamlConverter(cx: Scope) -> Element {
     render! {
         div {
             class: "json-yaml-converter"

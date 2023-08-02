@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use std::{fmt::Display, str::FromStr};
 
 use dioxus::prelude::*;
@@ -16,13 +17,13 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "Date",
     description: "Convert dates between formats",
     path: "/date-converter",
-    function: date_converter,
+    function: DateConverter,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
-pub fn date_converter(cx: Scope) -> Element {
+pub fn DateConverter(cx: Scope) -> Element {
     let date_state = use_ref(cx, || DateConverterState {
         time_zone: DcTimeZone::default(),
         time_utc: OffsetDateTime::now_utc(),

@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
@@ -15,13 +16,13 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     short_title: "QR Code",
     description: "Generate QR codes from text",
     path: "/qr-code-generator",
-    function: qr_code_generator,
+    function: QrCodeGenerator,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
-pub fn qr_code_generator(cx: Scope) -> Element {
+pub fn QrCodeGenerator(cx: Scope) -> Element {
     let qr_code_value = use_state(cx, || "".to_string());
     let qr_code_error_correction = use_state(cx, Ecc::default);
 
