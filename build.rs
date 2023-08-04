@@ -2,7 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::Write;
 use std::panic;
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 fn main() {
     // Tell Cargo to rerun the build script if it changes.
@@ -52,9 +52,10 @@ fn main() {
             ["dist", "js", bootstrap_js_filename].iter().collect();
         let bootstrap_js_origin_path = bootstrap_extract_target_dir.join(bootstrap_js_origin_path);
 
-        let bootstrap_js_target_path: PathBuf = [cargo_manifest_dir, "public", "js", bootstrap_js_filename]
-            .iter()
-            .collect();
+        let bootstrap_js_target_path: PathBuf =
+            [cargo_manifest_dir, "public", "js", bootstrap_js_filename]
+                .iter()
+                .collect();
 
         // Create js path if it does not already exist
         create_dir_all(&bootstrap_js_target_path);
@@ -69,8 +70,9 @@ fn main() {
     {
         let grass_input_path: PathBuf = [cargo_manifest_dir, "scss", "main.scss"].iter().collect();
 
-        let grass_output_path: PathBuf =
-            [cargo_manifest_dir, "public", "style", "style.css"].iter().collect();
+        let grass_output_path: PathBuf = [cargo_manifest_dir, "public", "style", "style.css"]
+            .iter()
+            .collect();
 
         // Create grass output path if it does not already exist
         create_dir_all(&grass_output_path);

@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 use dioxus_free_icons::{Icon, IconShape};
-use strum_macros::EnumIter;
+use dioxus_router::prelude::*;
 use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
 pub mod base64_encoder;
 pub mod cidr_decoder;
@@ -11,22 +11,22 @@ pub mod date_converter;
 pub mod hash_generator;
 pub mod home_page;
 pub mod json_yaml_converter;
+pub mod layout;
 pub mod number_base_converter;
 pub mod qr_code_generator;
 pub mod uuid_generator;
-pub mod layout;
 
-use home_page::HomePage;
-use number_base_converter::NumberBaseConverter;
-use uuid_generator::UuidGenerator;
-use qr_code_generator::QrCodeGenerator;
-use hash_generator::HashGenerator;
-use date_converter::DateConverter;
-use color_picker::ColorPicker;
-use cidr_decoder::CidrDecoder;
 use base64_encoder::Base64Encoder;
+use cidr_decoder::CidrDecoder;
+use color_picker::ColorPicker;
+use date_converter::DateConverter;
+use hash_generator::HashGenerator;
+use home_page::HomePage;
 use json_yaml_converter::JsonYamlConverter;
 use layout::{Container, WidgetView};
+use number_base_converter::NumberBaseConverter;
+use qr_code_generator::QrCodeGenerator;
+use uuid_generator::UuidGenerator;
 
 #[rustfmt::skip]
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
@@ -36,19 +36,19 @@ pub enum Route {
             #[nest("/encoder-decoder")]
                 #[route("/")]
                 EncoderDecoder {},
-                #[route("/base64-encoder")]
+                #[route("/base64")]
                 Base64Encoder {},
-                #[route("/cidr-decoder")]
+                #[route("/cidr")]
                 CidrDecoder {},
             #[end_nest]
             #[nest("/converter")]
                 #[route("/")]
                 Converter {},
-                #[route("/number-base-converter")]
+                #[route("/number-base")]
                 NumberBaseConverter {},
-                #[route("/date-converter")]
+                #[route("/date")]
                 DateConverter {},
-                #[route("/json-yaml-converter")]
+                #[route("/json-yaml")]
                 JsonYamlConverter {},
             #[end_nest]
             #[nest("/media")]
@@ -60,11 +60,11 @@ pub enum Route {
             #[nest("/generator")]
                 #[route("/")]
                 Generator {},
-                #[route("/qr-code-generator")]
+                #[route("/qr-code")]
                 QrCodeGenerator {},
-                #[route("/uuid-generator")]
+                #[route("/uuid")]
                 UuidGenerator {},
-                #[route("/hash-generator")]
+                #[route("/hash")]
                 HashGenerator {},
             #[end_nest]
             #[route("/home")]
@@ -123,7 +123,7 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
 }
 
 impl Route {
-    pub fn get_widget_entry(&self) -> Option<&WidgetEntry> {
+    pub fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
         match self {
             Self::Base64Encoder { .. } => Some(&base64_encoder::WIDGET_ENTRY),
             Self::CidrDecoder { .. } => Some(&cidr_decoder::WIDGET_ENTRY),
@@ -138,7 +138,7 @@ impl Route {
         }
     }
 
-    pub fn get_widget_type_string(&self) -> Option<&'static str>{
+    pub fn get_widget_type_string(&self) -> Option<&'static str> {
         match self {
             Self::EncoderDecoder { .. } => Some("Encoder/Decoder"),
             Self::Converter { .. } => Some("Converter"),
@@ -149,11 +149,15 @@ impl Route {
     }
 
     pub fn get_widget_types() -> Vec<Self> {
-        Self::iter().filter(|route| route.get_widget_type_string().is_some()).collect()
+        Self::iter()
+            .filter(|route| route.get_widget_type_string().is_some())
+            .collect()
     }
 
     pub fn get_widget_routes_for_type(widget_type: Self) -> Vec<Self> {
-        Self::iter().filter(|route| route.is_child_of(&widget_type)).collect()
+        Self::iter()
+            .filter(|route| route.is_child_of(&widget_type))
+            .collect()
     }
 }
 

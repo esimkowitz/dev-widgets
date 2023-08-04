@@ -1,4 +1,3 @@
-
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -57,14 +56,15 @@ fn Sidebar(cx: Scope) -> Element {
 }
 
 #[inline_props]
-fn SidebarListItem<'a>(cx: Scope<'a>, widget_route: Route, widget_entry_title: &'a str, icon: Element<'a>) -> Element<'a> {
+fn SidebarListItem<'a>(
+    cx: Scope<'a>,
+    widget_route: Route,
+    widget_entry_title: &'a str,
+    icon: Element<'a>,
+) -> Element<'a> {
     let route = use_route::<Route>(cx).unwrap();
 
-    let active_str = if widget_route == &route {
-        "active"
-    } else {
-        ""
-    };
+    let active_str = if widget_route == &route { "active" } else { "" };
 
     render! {
         Link {
@@ -75,7 +75,6 @@ fn SidebarListItem<'a>(cx: Scope<'a>, widget_route: Route, widget_entry_title: &
         }
     }
 }
-
 
 #[inline_props]
 pub fn WidgetView(cx: Scope) -> Element {
