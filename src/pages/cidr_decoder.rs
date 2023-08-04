@@ -18,8 +18,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "CIDR Decoder",
     short_title: "CIDR",
     description: "Decode Classless Inter-Domain Routing (CIDR) notation to IP address range",
-    path: "/cidr-decoder",
-    function: CidrDecoder,
     icon: move |cx| ICON.icon(cx),
 };
 

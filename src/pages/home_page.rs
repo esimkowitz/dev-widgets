@@ -10,8 +10,6 @@ pub static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Home",
     short_title: "Home",
     description: "Home page",
-    path: "/home",
-    function: HomePage,
     icon: |cx| HOME_ICON.icon(cx),
 };
 

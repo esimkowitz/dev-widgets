@@ -11,8 +11,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
     short_title: "Base64",
     description: "Encode and decode base64 strings",
-    path: "/base64-encoder",
-    function: Base64Encoder,
     icon: move |cx| ICON.icon(cx),
 };
 

@@ -11,8 +11,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
     short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
-    path: "/number-base-converter",
-    function: NumberBaseConverter,
     icon: move |cx| ICON.icon(cx),
 };
 

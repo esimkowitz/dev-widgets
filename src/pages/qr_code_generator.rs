@@ -15,8 +15,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "QR Code Generator",
     short_title: "QR Code",
     description: "Generate QR codes from text",
-    path: "/qr-code-generator",
-    function: QrCodeGenerator,
     icon: move |cx| ICON.icon(cx),
 };
 

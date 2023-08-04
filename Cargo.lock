@@ -728,7 +728,6 @@ dependencies = [
  "log",
  "md-5",
  "num-traits",
- "phf 0.11.1",
  "qrcode-generator",
  "sha1",
  "sha2",
@@ -2483,7 +2482,6 @@ version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "928c6535de93548188ef63bb7c4036bd415cd8f36ad25af44b9789b2ee72a48c"
 dependencies = [
- "phf_macros 0.11.1",
  "phf_shared 0.11.1",
 ]
 
@@ -2560,19 +2558,6 @@ dependencies = [
  "phf_generator 0.10.0",
  "phf_shared 0.10.0",
  "proc-macro-hack",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "phf_macros"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92aacdc5f16768709a569e913f7451034034178b05bdc8acda226659a3dccc66"
-dependencies = [
- "phf_generator 0.11.1",
- "phf_shared 0.11.1",
  "proc-macro2",
  "quote",
  "syn 1.0.109",

@@ -11,8 +11,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Hash Generator",
     short_title: "Hash",
     description: "Generate cryptographic hashes of strings",
-    path: "/hash-generator",
-    function: HashGenerator,
     icon: move |cx| ICON.icon(cx),
 };
 

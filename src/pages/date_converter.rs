@@ -16,8 +16,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Date Converter",
     short_title: "Date",
     description: "Convert dates between formats",
-    path: "/date-converter",
-    function: DateConverter,
     icon: move |cx| ICON.icon(cx),
 };
 

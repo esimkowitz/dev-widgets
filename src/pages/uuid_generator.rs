@@ -11,8 +11,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "UUID/GUID Generator",
     short_title: "UUID",
     description: "Generate unique identifiers",
-    path: "/uuid-generator",
-    function: UuidGenerator,
     icon: move |cx| ICON.icon(cx),
 };
 
