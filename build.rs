@@ -1,6 +1,7 @@
 use std::env;
 use std::fs::File;
 use std::io::Write;
+use std::panic;
 use std::path::{PathBuf, Path};
 
 fn main() {
@@ -13,7 +14,7 @@ fn main() {
     let cargo_manifest_dir = cargo_manifest_dir.as_str();
 
     // Install Bootstrap
-    {
+    let bs_fetch_result = panic::catch_unwind(|| {
         // Download Bootstrap archive
         let mut bootstrap_zip = Vec::new();
         let mut curl_handle = curl::easy::Easy::new();
@@ -58,6 +59,10 @@ fn main() {
         // Create js path if it does not already exist
         create_dir_all(&bootstrap_js_target_path);
         std::fs::copy(bootstrap_js_origin_path, bootstrap_js_target_path).unwrap();
+    });
+
+    if let Err(err) = bs_fetch_result {
+        println!("{:?}", err)
     }
 
     // Compile Sass
