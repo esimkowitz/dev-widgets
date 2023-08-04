@@ -1,9 +1,10 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
+use dioxus_router::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHouseDoorFill;
-use dioxus_router::Link;
+use strum::IntoEnumIterator;
 
-use crate::pages::{WidgetEntry, WidgetIcon, WIDGETS};
+use crate::pages::{Route, WidgetEntry, WidgetIcon};
 
 pub static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Home",
@@ -22,27 +23,29 @@ pub fn HomePage(cx: Scope) -> Element {
     render! {
         div {
             class: "home-page",
-            for widget_type in WIDGETS.keys() {
-                for widget_entry in WIDGETS.get(widget_type).unwrap() {
-                    div {
-                        class: "card",
+            for route in Route::iter() {
+                if let Some(widget_entry) = route.clone().get_widget_entry() {
+                    rsx! {
                         div {
-                            class: "card-img-top",
-                            (widget_entry.icon)(cx)
-                        }
-                        div {
-                            class: "card-body",
+                            class: "card",
                             div {
-                                class: "card-title",
-                                widget_entry.title
+                                class: "card-img-top",
+                                (widget_entry.icon)(cx)
                             }
                             div {
-                                class: "card-text",
-                                widget_entry.description
-                            }
-                            Link {
-                                class: "stretched-link",
-                                to: widget_entry.path
+                                class: "card-body",
+                                div {
+                                    class: "card-title",
+                                    widget_entry.title
+                                }
+                                div {
+                                    class: "card-text",
+                                    widget_entry.description
+                                }
+                                Link {
+                                    class: "stretched-link",
+                                    to: route
+                                }
                             }
                         }
                     }
