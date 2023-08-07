@@ -4,8 +4,7 @@ use dioxus_router::prelude::*;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
-pub mod base64_encoder;
-pub mod cidr_decoder;
+pub mod route_trait;
 pub mod color_picker;
 pub mod date_converter;
 pub mod hash_generator;
@@ -15,9 +14,8 @@ pub mod layout;
 pub mod number_base_converter;
 pub mod qr_code_generator;
 pub mod uuid_generator;
+pub mod encoder_decoder;
 
-use base64_encoder::Base64Encoder;
-use cidr_decoder::CidrDecoder;
 use color_picker::ColorPicker;
 use date_converter::DateConverter;
 use hash_generator::HashGenerator;
@@ -27,19 +25,17 @@ use layout::{Container, WidgetView};
 use number_base_converter::NumberBaseConverter;
 use qr_code_generator::QrCodeGenerator;
 use uuid_generator::UuidGenerator;
+use encoder_decoder::EncoderDecoderRoute;
 
 #[rustfmt::skip]
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
 pub enum Route {
     #[layout(Container)]
         #[layout(WidgetView)]
-            #[nest("/encoder-decoder")]
-                #[route("/")]
-                EncoderDecoder {},
-                #[route("/base64")]
-                Base64Encoder {},
-                #[route("/cidr")]
-                CidrDecoder {},
+            #[child("/encoder-decoder")]
+            EncoderDecoder {
+                child: EncoderDecoderRoute,
+            },
             #[end_nest]
             #[nest("/converter")]
                 #[route("/")]
@@ -76,14 +72,6 @@ pub enum Route {
     PageNotFound {
         route: Vec<String>,
     },
-}
-
-fn EncoderDecoder(cx: Scope) -> Element {
-    render! {
-        div {
-            class: "encoder-decoder"
-        }
-    }
 }
 
 fn Converter(cx: Scope) -> Element {
@@ -125,8 +113,6 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
 impl Route {
     pub fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
         match self {
-            Self::Base64Encoder { .. } => Some(&base64_encoder::WIDGET_ENTRY),
-            Self::CidrDecoder { .. } => Some(&cidr_decoder::WIDGET_ENTRY),
             Self::NumberBaseConverter { .. } => Some(&number_base_converter::WIDGET_ENTRY),
             Self::DateConverter { .. } => Some(&date_converter::WIDGET_ENTRY),
             Self::JsonYamlConverter { .. } => Some(&json_yaml_converter::WIDGET_ENTRY),
