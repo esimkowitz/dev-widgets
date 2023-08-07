@@ -22,27 +22,29 @@ pub fn HomePage(cx: Scope) -> Element {
         div {
             class: "home-page",
             for route in Route::iter() {
-                if let Some(widget_entry) = route.clone().get_widget_entry() {
-                    rsx! {
-                        div {
-                            class: "card",
+                for widget_route in route.get_widgets() {
+                    if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
+                        rsx! {
                             div {
-                                class: "card-img-top",
-                                (widget_entry.icon)(cx)
-                            }
-                            div {
-                                class: "card-body",
+                                class: "card",
                                 div {
-                                    class: "card-title",
-                                    widget_entry.title
+                                    class: "card-img-top",
+                                    (widget_entry.icon)(cx)
                                 }
                                 div {
-                                    class: "card-text",
-                                    widget_entry.description
-                                }
-                                Link {
-                                    class: "stretched-link",
-                                    to: route
+                                    class: "card-body",
+                                    div {
+                                        class: "card-title",
+                                        widget_entry.title
+                                    }
+                                    div {
+                                        class: "card-text",
+                                        widget_entry.description
+                                    }
+                                    Link {
+                                        class: "stretched-link",
+                                        to: widget_route
+                                    }
                                 }
                             }
                         }

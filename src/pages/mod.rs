@@ -5,27 +5,21 @@ use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub mod route_trait;
-pub mod color_picker;
-pub mod date_converter;
-pub mod hash_generator;
+pub mod media;
+pub mod generator;
+pub mod converter;
 pub mod home_page;
-pub mod json_yaml_converter;
 pub mod layout;
-pub mod number_base_converter;
-pub mod qr_code_generator;
-pub mod uuid_generator;
 pub mod encoder_decoder;
 
-use color_picker::ColorPicker;
-use date_converter::DateConverter;
-use hash_generator::HashGenerator;
 use home_page::HomePage;
-use json_yaml_converter::JsonYamlConverter;
 use layout::{Container, WidgetView};
-use number_base_converter::NumberBaseConverter;
-use qr_code_generator::QrCodeGenerator;
-use uuid_generator::UuidGenerator;
+use generator::GeneratorRoute;
+use converter::ConverterRoute;
 use encoder_decoder::EncoderDecoderRoute;
+use media::MediaRoute;
+
+use self::route_trait::WidgetRoute;
 
 #[rustfmt::skip]
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
@@ -36,33 +30,18 @@ pub enum Route {
             EncoderDecoder {
                 child: EncoderDecoderRoute,
             },
-            #[end_nest]
-            #[nest("/converter")]
-                #[route("/")]
-                Converter {},
-                #[route("/number-base")]
-                NumberBaseConverter {},
-                #[route("/date")]
-                DateConverter {},
-                #[route("/json-yaml")]
-                JsonYamlConverter {},
-            #[end_nest]
-            #[nest("/media")]
-                #[route("/")]
-                Media {},
-                #[route("/color-picker")]
-                ColorPicker {},
-            #[end_nest]
-            #[nest("/generator")]
-                #[route("/")]
-                Generator {},
-                #[route("/qr-code")]
-                QrCodeGenerator {},
-                #[route("/uuid")]
-                UuidGenerator {},
-                #[route("/hash")]
-                HashGenerator {},
-            #[end_nest]
+            #[child("/media")]
+            Media {
+                child: MediaRoute,
+            },
+            #[child("/converter")]
+            Converter {
+                child: ConverterRoute,
+            },
+            #[child("/generator")]
+            Generator {
+                child: GeneratorRoute,
+            },
             #[route("/home")]
             HomePage {},
         #[end_layout]
@@ -72,30 +51,6 @@ pub enum Route {
     PageNotFound {
         route: Vec<String>,
     },
-}
-
-fn Converter(cx: Scope) -> Element {
-    render! {
-        div {
-            class: "converter"
-        }
-    }
-}
-
-fn Media(cx: Scope) -> Element {
-    render! {
-        div {
-            class: "media"
-        }
-    }
-}
-
-fn Generator(cx: Scope) -> Element {
-    render! {
-        div {
-            class: "generator"
-        }
-    }
 }
 
 #[inline_props]
@@ -113,37 +68,32 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
 impl Route {
     pub fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
         match self {
-            Self::NumberBaseConverter { .. } => Some(&number_base_converter::WIDGET_ENTRY),
-            Self::DateConverter { .. } => Some(&date_converter::WIDGET_ENTRY),
-            Self::JsonYamlConverter { .. } => Some(&json_yaml_converter::WIDGET_ENTRY),
-            Self::ColorPicker { .. } => Some(&color_picker::WIDGET_ENTRY),
-            Self::QrCodeGenerator { .. } => Some(&qr_code_generator::WIDGET_ENTRY),
-            Self::UuidGenerator { .. } => Some(&uuid_generator::WIDGET_ENTRY),
-            Self::HashGenerator { .. } => Some(&hash_generator::WIDGET_ENTRY),
+            Self::EncoderDecoder { child } => child.get_widget_entry(),
+            Self::Converter { child } => child.get_widget_entry(),
+            Self::Media { child } => child.get_widget_entry(),
+            Self::Generator { child } => child.get_widget_entry(),
             _ => None,
         }
     }
 
     pub fn get_widget_type_string(&self) -> Option<&'static str> {
         match self {
-            Self::EncoderDecoder { .. } => Some("Encoder/Decoder"),
-            Self::Converter { .. } => Some("Converter"),
-            Self::Media { .. } => Some("Media"),
-            Self::Generator { .. } => Some("Generator"),
+            Self::EncoderDecoder { .. } => Some(EncoderDecoderRoute::get_widget_type_string()),
+            Self::Converter { .. } => Some(ConverterRoute::get_widget_type_string()),
+            Self::Media { .. } => Some(MediaRoute::get_widget_type_string()),
+            Self::Generator { .. } => Some(GeneratorRoute::get_widget_type_string()),
             _ => None,
         }
     }
 
-    pub fn get_widget_types() -> Vec<Self> {
-        Self::iter()
-            .filter(|route| route.get_widget_type_string().is_some())
-            .collect()
-    }
-
-    pub fn get_widget_routes_for_type(widget_type: Self) -> Vec<Self> {
-        Self::iter()
-            .filter(|route| route.is_child_of(&widget_type))
-            .collect()
+    pub fn get_widgets(&self) -> Vec<Self> {
+        match self {
+            Self::EncoderDecoder { .. } => EncoderDecoderRoute::get_widget_routes(),
+            Self::Converter { .. } => ConverterRoute::get_widget_routes(),
+            Self::Media { .. } => MediaRoute::get_widget_routes(),
+            Self::Generator { .. } => GeneratorRoute::get_widget_routes(),
+            _ => vec![],
+        }
     }
 }
 

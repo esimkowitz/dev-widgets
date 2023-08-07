@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
+use strum::IntoEnumIterator;
 
 use crate::components;
 use crate::pages::home_page::HOME_PAGE_WIDGET_ENTRY;
@@ -28,18 +29,22 @@ fn Sidebar(cx: Scope) -> Element {
                         widget_entry_title: HOME_PAGE_WIDGET_ENTRY.short_title,
                         icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
                     }
-                    for widget_type_route in Route::get_widget_types() {
+                    for widget_type_route in Route::iter() {
                         log::info!("widget_type_route: {:?}", widget_type_route)
-                        components::accordion::Accordion {
-                            title: "{widget_type_route.get_widget_type_string().unwrap()}",
-                            is_open: true,
-                            for widget_route in Route::get_widget_routes_for_type(widget_type_route) {
-                                if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
-                                    rsx! {
-                                        SidebarListItem {
-                                            widget_route: widget_route,
-                                            widget_entry_title: widget_entry.short_title,
-                                            icon: (widget_entry.icon)(cx)
+                        if let Some(widget_type_string) = widget_type_route.get_widget_type_string() {
+                            rsx! {
+                                components::accordion::Accordion {
+                                    title: "{widget_type_string}",
+                                    is_open: true,
+                                    for widget_route in widget_type_route.get_widgets() {
+                                        if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
+                                            rsx! {
+                                                SidebarListItem {
+                                                    widget_route: widget_route,
+                                                    widget_entry_title: widget_entry.short_title,
+                                                    icon: (widget_entry.icon)(cx)
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -3,8 +3,14 @@ use strum::IntoEnumIterator;
 
 use super::WidgetEntry;
 
-pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone + 'static {
-    fn get_widgets() -> Vec<Self>;
+pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
+    fn get_widget_routes() -> Vec<super::Route>;
+
+    fn get_widgets() -> Vec<Self> {
+        Self::iter()
+            .filter(|route| route.get_widget_entry().is_some())
+            .collect()
+    }
 
     fn get_widget_title_string(&self) -> Option<&'static str> {
         Some(self.get_widget_entry()?.title)

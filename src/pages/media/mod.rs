@@ -2,55 +2,50 @@ use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 use strum_macros::EnumIter;
 
-pub mod base64_encoder;
-pub mod cidr_decoder;
+pub mod color_picker;
 
 use crate::pages::{route_trait::WidgetRoute, Route, WidgetEntry};
-use base64_encoder::Base64Encoder;
-use cidr_decoder::CidrDecoder;
+use color_picker::ColorPicker;
 
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
-pub enum EncoderDecoderRoute {
+pub enum MediaRoute {
     #[route("/")]
     Index {},
-    #[route("/base64")]
-    Base64Encoder {},
-    #[route("/cidr")]
-    CidrDecoder {},
+    #[route("/color-picker")]
+    ColorPicker {},
 }
 
 fn Index(cx: Scope) -> Element {
     render! {
         div {
-            class: "encoder-decoder"
+            class: "media",
         }
     }
 }
 
-impl WidgetRoute for EncoderDecoderRoute {
+impl WidgetRoute for MediaRoute {
     fn get_widget_routes() -> Vec<Route> {
         Self::get_widgets()
             .iter()
-            .map(|widget| Route::EncoderDecoder {
+            .map(|widget| Route::Media {
                 child: widget.clone(),
             })
             .collect()
     }
 
     fn get_widget_type_string() -> &'static str {
-        "Encoder/Decoder"
+        "Media"
     }
 
     fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
         match self {
-            Self::Base64Encoder { .. } => Some(&base64_encoder::WIDGET_ENTRY),
-            Self::CidrDecoder { .. } => Some(&cidr_decoder::WIDGET_ENTRY),
+            Self::ColorPicker { .. } => Some(&color_picker::WIDGET_ENTRY),
             _ => None,
         }
     }
 }
 
-impl Default for EncoderDecoderRoute {
+impl Default for MediaRoute {
     fn default() -> Self {
         Self::Index {}
     }
