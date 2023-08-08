@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use dioxus::{html::{geometry::{euclid::{Rect, Point2D}, PageSpace}, radialGradient}, prelude::*};
+use dioxus::{html::geometry::{euclid::{Rect, Point2D}, PageSpace}, prelude::*};
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 
 use crate::pages::{WidgetEntry, WidgetIcon};
@@ -8,8 +8,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",
     short_title: "Color Picker",
     description: "Pick a color and get its output in different formats",
-    path: "/color-picker",
-    function: ColorPicker,
     icon: move |cx| ICON.icon(cx),
 };
 
@@ -22,13 +20,13 @@ pub fn ColorPicker(cx: Scope) -> Element {
         lightness: 50f64,
     });
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "color-picker",
             ColorWheel {}
             ColorView {}
         }
-    })
+    }
 }
 
 fn ColorWheel(cx: Scope) -> Element {
@@ -42,7 +40,7 @@ fn ColorWheel(cx: Scope) -> Element {
         color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
     
-    cx.render(rsx! {
+    render! {
         div {
             class: "colorwheel-wrapper",
             onmounted: move |cx| {
@@ -75,11 +73,11 @@ fn ColorWheel(cx: Scope) -> Element {
                 hue: color_state.read().hue,
             }
         }
-    })
+    }
 }
 
 fn ColorWheelSvg(cx: Scope) -> Element {
-    cx.render(rsx! {
+    render! {
         svg {
             view_box: "0 0 100 100",
             class: "colorwheel-svg",
@@ -109,12 +107,12 @@ fn ColorWheelSvg(cx: Scope) -> Element {
                 }
             },
         }
-    })
+    }
 }
 
 #[inline_props]
 fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
-    cx.render(rsx! {
+    render! {
         svg {
             view_box: "0 0 100 100",
             class: "colorwheel-cursor",
@@ -160,19 +158,19 @@ fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 fn ColorView(cx: Scope) -> Element {
     let color_state = use_shared_state::<Color>(cx).unwrap();
 
     let color = color_state.read();
-    cx.render(rsx! {
+    render! {
         div {
             class: "color-view",
             style: "--color-view-background: hsl({color.hue}deg, {color.saturation}%, {color.lightness}%);"
         }
-    })
+    }
 }
 
 struct Color {

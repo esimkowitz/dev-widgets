@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHash;
@@ -10,19 +11,17 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
     short_title: "Base64",
     description: "Encode and decode base64 strings",
-    path: "/base64-encoder",
-    function: base64_encoder,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
-pub fn base64_encoder(cx: Scope) -> Element {
+pub fn Base64Encoder(cx: Scope) -> Element {
     use_shared_state_provider(cx, || EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
     });
-    cx.render(rsx! {
+    render! {
         div {
             class: "base64-encoder",
             encoder_input {
@@ -32,7 +31,7 @@ pub fn base64_encoder(cx: Scope) -> Element {
                 direction: Direction::Decode
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -45,7 +44,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     };
 
     const NOT_STRING: &str = "Not String";
-    cx.render(rsx! {
+    render! {
         TextAreaForm {
             label: match direction {
                 Direction::Encode => "Text",
@@ -74,7 +73,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
                 };
             }
         }
-    })
+    }
 }
 
 struct EncoderValue {

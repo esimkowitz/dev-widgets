@@ -24,7 +24,7 @@ pub trait SelectFormEnum:
 }
 
 pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) -> Element<'a> {
-    cx.render(rsx! {
+    render! {
         div {
             class: "select-form",
             select {
@@ -46,7 +46,7 @@ pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) 
                 "{cx.props.label}"
             }
         }
-    })
+    }
 }
 
 #[derive(Props)]
@@ -63,7 +63,7 @@ pub fn SwitchInput<'a>(
     checked: bool,
     oninput: EventHandler<'a, bool>,
 ) -> Element<'a> {
-    cx.render(rsx! {
+    render! {
         div {
             class: "switch-input",
             input {
@@ -81,7 +81,7 @@ pub fn SwitchInput<'a>(
                 "{label}"
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -95,7 +95,7 @@ pub fn TextAreaForm<'a>(
     onchange: Option<EventHandler<'a, Event<FormData>>>,
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
-    cx.render(rsx! {
+    render! {
         div {
             class: "textarea-form {class.unwrap_or_default()}",
             id: "{label}",
@@ -114,7 +114,7 @@ pub fn TextAreaForm<'a>(
                 *label
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -128,7 +128,7 @@ pub fn TextInput<'a>(
 ) -> Element<'a> {
     let readonly = readonly.unwrap_or(false);
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "text-input",
             div {
@@ -155,7 +155,7 @@ pub fn TextInput<'a>(
                 }
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -166,7 +166,7 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
     label: &'a str,
     onchange: EventHandler<'a, T>,
 ) -> Element<'a> {
-    cx.render(rsx! {
+    render! {
         div {
             class: "number-input {class.unwrap_or_default()}",
             div {
@@ -213,5 +213,5 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
                 }
             }
         }
-    })
+    }
 }

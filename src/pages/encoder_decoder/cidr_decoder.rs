@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use std::{
     net::{IpAddr, Ipv4Addr, Ipv6Addr},
     str::FromStr,
@@ -17,14 +18,12 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "CIDR Decoder",
     short_title: "CIDR",
     description: "Decode Classless Inter-Domain Routing (CIDR) notation to IP address range",
-    path: "/cidr-decoder",
-    function: cidr_decoder,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsEthernet> = WidgetIcon { icon: BsEthernet };
 
-pub fn cidr_decoder(cx: Scope) -> Element {
+pub fn CidrDecoder(cx: Scope) -> Element {
     let cidr_ref = use_ref(cx, || {
         IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap()
     });
@@ -67,7 +66,7 @@ pub fn cidr_decoder(cx: Scope) -> Element {
     });
 
     let show_error_state = use_state(cx, || false);
-    cx.render(rsx! {
+    render! {
         div {
             class: "cidr-decoder",
             TextInput {
@@ -101,5 +100,5 @@ pub fn cidr_decoder(cx: Scope) -> Element {
                 value: "{cidr_description}",
             }
         }
-    })
+    }
 }

@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::Bs123;
 use std::fmt;
@@ -10,20 +11,18 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
     short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
-    path: "/number-base-converter",
-    function: number_base_converter,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
-pub fn number_base_converter(cx: Scope) -> Element {
+pub fn NumberBaseConverter(cx: Scope) -> Element {
     use_shared_state_provider(cx, || ConverterValue(0));
     use_shared_state_provider(cx, || FormatNumberState(false));
 
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "number-base-converter",
             SwitchInput {
@@ -46,7 +45,7 @@ pub fn number_base_converter(cx: Scope) -> Element {
                 base: NumberBase::Binary
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -54,7 +53,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
     let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
     let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         TextInput {
             label: "{base}",
             value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
@@ -69,7 +68,7 @@ fn converter_input(cx: Scope, base: NumberBase) -> Element {
                 }.unwrap_or(0);
             }
         }
-    })
+    }
 }
 
 fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {

@@ -20,7 +20,7 @@ pub fn Accordion<'a>(
     } else {
         "accordion-collapse collapse show"
     };
-    cx.render(rsx! {
+    render! {
         div {
             class: "accordion-item",
             h3 {
@@ -43,5 +43,5 @@ pub fn Accordion<'a>(
                 }
             }
         }
-    })
+    }
 }

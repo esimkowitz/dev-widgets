@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use digest::DynDigest;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsFingerprint;
@@ -10,8 +11,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Hash Generator",
     short_title: "Hash",
     description: "Generate cryptographic hashes of strings",
-    path: "/hash-generator",
-    function: hash_generator,
     icon: move |cx| ICON.icon(cx),
 };
 
@@ -19,7 +18,7 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
     icon: BsFingerprint,
 };
 
-pub fn hash_generator(cx: Scope) -> Element {
+pub fn HashGenerator(cx: Scope) -> Element {
     use_shared_state_provider(cx, || HashGeneratorState {
         value: "".to_string(),
         uppercase: false,
@@ -27,7 +26,7 @@ pub fn hash_generator(cx: Scope) -> Element {
 
     let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "number-base-converter",
             SwitchInput {
@@ -58,10 +57,9 @@ pub fn hash_generator(cx: Scope) -> Element {
                 algorithm: HashingAlgorithm::SHA512,
             }
         }
-    })
+    }
 }
 
-#[allow(non_snake_case)]
 #[inline_props]
 fn HashField(cx: Scope, algorithm: HashingAlgorithm) -> Element {
     let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();
@@ -76,13 +74,13 @@ fn HashField(cx: Scope, algorithm: HashingAlgorithm) -> Element {
         hash_generator_state_cur.uppercase,
     );
 
-    cx.render(rsx! {
+    render! {
         TextInput {
             label: "{algorithm}",
             value: "{hashed_value}",
             readonly: true,
         }
-    })
+    }
 }
 
 fn select_hasher(algorithm: HashingAlgorithm) -> Box<dyn DynDigest> {

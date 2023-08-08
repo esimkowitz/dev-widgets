@@ -11,13 +11,13 @@ pub fn init_app(root: Component) {
                 <!DOCTYPE html>
                 <html data-bs-theme="light">
                     <head>
-                        <link rel="stylesheet" href="public/style/style.css">
+                        <link rel="stylesheet" href="style/style.css">
                         <meta name="viewport" content="width=device-width, initial-scale=1">
                     </head>
                     <body>
                         <div id="main"></div>
-                        <script type="text/javascript" src="public/js/darkmode.js"></script>
-                        <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+                        <script type="text/javascript" src="js/darkmode.js"></script>
+                        <script type="text/javascript" src="js/bootstrap.min.js"></script>
                     </body>
                 </html>
             "#
