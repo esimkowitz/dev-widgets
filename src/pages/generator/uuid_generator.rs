@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsGlobe2;
 
@@ -10,14 +11,12 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "UUID/GUID Generator",
     short_title: "UUID",
     description: "Generate unique identifiers",
-    path: "/uuid-generator",
-    function: uuid_generator,
     icon: move |cx| ICON.icon(cx),
 };
 
 const ICON: WidgetIcon<BsGlobe2> = WidgetIcon { icon: BsGlobe2 };
 
-pub fn uuid_generator(cx: Scope) -> Element {
+pub fn UuidGenerator(cx: Scope) -> Element {
     let hyphens_state = use_state(cx, || true);
     let uppercase_state = use_state(cx, || true);
     let num_uuids_state = use_state(cx, || 1);
@@ -25,7 +24,7 @@ pub fn uuid_generator(cx: Scope) -> Element {
     let uuids_state = use_ref(cx, || Vec::<String>::new());
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
-    cx.render(rsx! {
+    render! {
         div {
             class: "uuid-generator",
             div {
@@ -92,5 +91,5 @@ pub fn uuid_generator(cx: Scope) -> Element {
                 readonly: true,
             }
         }
-    })
+    }
 }

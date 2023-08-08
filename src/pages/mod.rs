@@ -1,45 +1,130 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::{Icon, IconShape};
-use phf::phf_ordered_map;
+use dioxus_router::prelude::*;
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
-pub mod base64_encoder;
-pub mod cidr_decoder;
-pub mod color_picker;
-pub mod date_converter;
-pub mod hash_generator;
+pub mod converter;
+pub mod encoder_decoder;
+pub mod generator;
 pub mod home_page;
-pub mod json_yaml_converter;
-pub mod number_base_converter;
-pub mod qr_code_generator;
-pub mod uuid_generator;
+pub mod layout;
+pub mod media;
 
-pub static WIDGETS: phf::OrderedMap<&str, &[WidgetEntry]> = phf_ordered_map! {
-    "Encoder/Decoder" => &[
-        base64_encoder::WIDGET_ENTRY,
-        cidr_decoder::WIDGET_ENTRY,
-    ],
-    "Converter" => &[
-        number_base_converter::WIDGET_ENTRY,
-        date_converter::WIDGET_ENTRY,
-        json_yaml_converter::WIDGET_ENTRY,
-    ],
-    "Media" => &[
-        color_picker::WIDGET_ENTRY,
-    ],
-    "Generator" => &[
-        qr_code_generator::WIDGET_ENTRY,
-        uuid_generator::WIDGET_ENTRY,
-        hash_generator::WIDGET_ENTRY,
-    ],
-};
+use converter::ConverterRoute;
+use encoder_decoder::EncoderDecoderRoute;
+use generator::GeneratorRoute;
+use home_page::HomePage;
+use layout::{Container, WidgetView};
+use media::MediaRoute;
+
+#[rustfmt::skip]
+#[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
+pub enum Route {
+    #[layout(Container)]
+        #[layout(WidgetView)]
+            #[child("/encoder-decoder")]
+            EncoderDecoder {
+                child: EncoderDecoderRoute,
+            },
+            #[child("/media")]
+            Media {
+                child: MediaRoute,
+            },
+            #[child("/converter")]
+            Converter {
+                child: ConverterRoute,
+            },
+            #[child("/generator")]
+            Generator {
+                child: GeneratorRoute,
+            },
+            #[route("/home")]
+            HomePage {},
+        #[end_layout]
+    #[end_layout]
+    #[redirect("/", || Route::HomePage {})]
+    #[route("/:..route")]
+    PageNotFound {
+        route: Vec<String>,
+    },
+}
+
+#[inline_props]
+fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
+    render! {
+        h1 { "Page not found" }
+        p { "We are terribly sorry, but the page you requested doesn't exist." }
+        pre {
+            color: "red",
+            "log:\nattemped to navigate to: {route:?}"
+        }
+    }
+}
+
+impl Route {
+    pub fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
+        match self {
+            Self::EncoderDecoder { child } => child.get_widget_entry(),
+            Self::Converter { child } => child.get_widget_entry(),
+            Self::Media { child } => child.get_widget_entry(),
+            Self::Generator { child } => child.get_widget_entry(),
+            _ => None,
+        }
+    }
+
+    pub fn get_widget_type_string(&self) -> Option<&'static str> {
+        match self {
+            Self::EncoderDecoder { .. } => Some(EncoderDecoderRoute::get_widget_type_string()),
+            Self::Converter { .. } => Some(ConverterRoute::get_widget_type_string()),
+            Self::Media { .. } => Some(MediaRoute::get_widget_type_string()),
+            Self::Generator { .. } => Some(GeneratorRoute::get_widget_type_string()),
+            _ => None,
+        }
+    }
+
+    pub fn get_widgets(&self) -> Vec<Self> {
+        match self {
+            Self::EncoderDecoder { .. } => EncoderDecoderRoute::get_widget_routes(),
+            Self::Converter { .. } => ConverterRoute::get_widget_routes(),
+            Self::Media { .. } => MediaRoute::get_widget_routes(),
+            Self::Generator { .. } => GeneratorRoute::get_widget_routes(),
+            _ => vec![],
+        }
+    }
+}
+
+pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
+    fn get_widget_routes() -> Vec<Route>;
+
+    fn get_widgets() -> Vec<Self> {
+        Self::iter()
+            .filter(|route| route.get_widget_entry().is_some())
+            .collect()
+    }
+
+    fn get_widget_title_string(&self) -> Option<&'static str> {
+        Some(self.get_widget_entry()?.title)
+    }
+
+    fn get_widget_short_title_string(&self) -> Option<&'static str> {
+        Some(self.get_widget_entry()?.short_title)
+    }
+
+    fn get_widget_description_string(&self) -> Option<&'static str> {
+        Some(self.get_widget_entry()?.description)
+    }
+
+    fn get_widget_type_string() -> &'static str;
+
+    fn get_widget_entry(&self) -> Option<&'static WidgetEntry>;
+}
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub struct WidgetEntry {
     pub title: &'static str,
     pub short_title: &'static str,
     pub description: &'static str,
-    pub path: &'static str,
-    pub function: fn(cx: Scope) -> Element,
     pub icon: fn(cx: Scope) -> Element,
 }
 
@@ -49,11 +134,11 @@ pub struct WidgetIcon<T: IconShape + Copy> {
 
 impl<T: IconShape + Copy> WidgetIcon<T> {
     pub fn icon<'a>(&'a self, cx: Scope<'a>) -> Element<'a> {
-        cx.render(rsx! {
+        render! {
             Icon::<T> {
                 class: "icon",
                 icon: self.icon,
             }
-        })
+        }
     }
 }

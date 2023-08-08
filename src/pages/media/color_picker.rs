@@ -15,8 +15,6 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",
     short_title: "Color Picker",
     description: "Pick a color and get its output in different formats",
-    path: "/color-picker",
-    function: ColorPicker,
     icon: move |cx| ICON.icon(cx),
 };
 
@@ -30,14 +28,14 @@ pub fn ColorPicker(cx: Scope) -> Element {
         alpha: 1.0,
     });
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "color-picker",
             ColorWheel {}
             SaturationBrightnessBox {}
             ColorView {}
         }
-    })
+    }
 }
 
 fn ColorWheel(cx: Scope) -> Element {
@@ -51,7 +49,7 @@ fn ColorWheel(cx: Scope) -> Element {
         color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "colorwheel-wrapper",
             div {
@@ -92,11 +90,11 @@ fn ColorWheel(cx: Scope) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 fn ColorWheelSvg(cx: Scope) -> Element {
-    cx.render(rsx! {
+    render! {
         svg {
             view_box: "0 0 100 100",
             class: "colorwheel-svg",
@@ -126,18 +124,18 @@ fn ColorWheelSvg(cx: Scope) -> Element {
                 }
             },
         }
-    })
+    }
 }
 
 #[inline_props]
 fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
-    cx.render(rsx! {
+    render! {
         CursorPrimitiveSvg {
             class: "colorwheel-cursor",
             fill: "hsl({hue}deg, 100%, 50%)",
             transform: "rotate({hue_to_css_rotation(*hue)} 50 50)",
         }
-    })
+    }
 }
 
 fn SaturationBrightnessBox(cx: Scope) -> Element {
@@ -161,7 +159,7 @@ fn SaturationBrightnessBox(cx: Scope) -> Element {
         color_state.write().brightness = y_axis_to_brightness(point_sv.y);
     };
 
-    cx.render(rsx! {
+    render! {
         div {
             class: "saturation-brightness-wrapper",
             div {
@@ -208,7 +206,7 @@ fn SaturationBrightnessBox(cx: Scope) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 #[inline_props]
@@ -220,7 +218,7 @@ fn CursorPrimitiveSvg<'a>(
     fill: &'a str,
     transform: Option<&'a str>,
 ) -> Element<'a> {
-    cx.render(rsx! {
+    render! {
         svg {
             view_box: "0 0 100 100",
             class: "{class.unwrap_or(\"\")}",
@@ -266,17 +264,17 @@ fn CursorPrimitiveSvg<'a>(
                 }
             }
         }
-    })
+    }
 }
 
 fn ColorView(cx: Scope) -> Element {
     let color_state = use_shared_state::<ColorPickerState>(cx).unwrap();
-    cx.render(rsx! {
+    render! {
         div {
             class: "color-view",
             style: "--color-view-background: {color_state.read().get_rgb_string()};"
         }
-    })
+    }
 }
 
 struct ColorPickerState {
