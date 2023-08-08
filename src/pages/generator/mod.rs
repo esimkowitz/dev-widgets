@@ -6,7 +6,7 @@ pub mod hash_generator;
 pub mod qr_code_generator;
 pub mod uuid_generator;
 
-use crate::pages::{route_trait::WidgetRoute, Route, WidgetEntry};
+use crate::pages::{Route, WidgetEntry, WidgetRoute};
 use hash_generator::HashGenerator;
 use qr_code_generator::QrCodeGenerator;
 use uuid_generator::UuidGenerator;

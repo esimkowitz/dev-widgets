@@ -6,7 +6,7 @@ pub mod date_converter;
 pub mod json_yaml_converter;
 pub mod number_base_converter;
 
-use crate::pages::{route_trait::WidgetRoute, Route, WidgetEntry};
+use crate::pages::{Route, WidgetEntry, WidgetRoute};
 use date_converter::DateConverter;
 use json_yaml_converter::JsonYamlConverter;
 use number_base_converter::NumberBaseConverter;

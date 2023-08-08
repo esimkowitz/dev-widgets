@@ -30,7 +30,6 @@ fn Sidebar(cx: Scope) -> Element {
                         icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
                     }
                     for widget_type_route in Route::iter() {
-                        log::info!("widget_type_route: {:?}", widget_type_route)
                         if let Some(widget_type_string) = widget_type_route.get_widget_type_string() {
                             rsx! {
                                 components::accordion::Accordion {

@@ -4,7 +4,7 @@ use strum_macros::EnumIter;
 
 pub mod color_picker;
 
-use crate::pages::{route_trait::WidgetRoute, Route, WidgetEntry};
+use crate::pages::{Route, WidgetEntry, WidgetRoute};
 use color_picker::ColorPicker;
 
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]

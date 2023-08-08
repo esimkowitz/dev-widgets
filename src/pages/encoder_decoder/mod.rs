@@ -5,7 +5,7 @@ use strum_macros::EnumIter;
 pub mod base64_encoder;
 pub mod cidr_decoder;
 
-use crate::pages::{route_trait::WidgetRoute, Route, WidgetEntry};
+use crate::pages::{Route, WidgetEntry, WidgetRoute};
 use base64_encoder::Base64Encoder;
 use cidr_decoder::CidrDecoder;
 
