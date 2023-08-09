@@ -37,8 +37,8 @@ time = "0.3.23"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 dioxus-web = "0.4.0"
-getrandom = { version= "0.2.10", features = ["js"] }
-time = { version = "0.3.23", features = ["wasm-bindgen"]}
+getrandom = { version = "0.2.10", features = ["js"] }
+time = { version = "0.3.23", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
 

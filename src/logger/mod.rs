@@ -1,3 +1,4 @@
+#[cfg(not(target_family = "wasm"))]
 use log::*;
 
 #[cfg(not(target_family = "wasm"))]
