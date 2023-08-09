@@ -1,7 +1,7 @@
 [application]
 
 # dioxus project name
-name = "dev-widgets"
+name = "Dev Widgets"
 
 # default platfrom
 # you can also use `dioxus serve/build --platform XXX` to use other platform
@@ -21,7 +21,7 @@ title = "Dev Widgets"
 
 [web.watcher]
 
-watch_path = ["src","scss","index.html"]
+watch_path = ["src", "scss", "index.html"]
 reload_html = true
 index_on_404 = true
 
@@ -41,3 +41,11 @@ script = []
 script = []
 
 [application.tools]
+
+[bundle]
+identifier = "com.esimkowitz.devwidgets"
+publisher = "Evan Simkowitz"
+resources = ["public/**/*"]
+copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
+category = "Developer Tool"
+short_description = "A set of helpful widgets written in Rust."

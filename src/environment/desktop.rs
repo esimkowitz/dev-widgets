@@ -8,19 +8,18 @@ pub fn init_app(root: Component) {
     // Configure dioxus-desktop Tauri window
     let config_builder = DesktopConfig::default().with_custom_index(
         r#"
-                <!DOCTYPE html>
-                <html data-bs-theme="light">
-                    <head>
-                        <link rel="stylesheet" href="style/style.css">
-                        <meta name="viewport" content="width=device-width, initial-scale=1">
-                    </head>
-                    <body>
-                        <div id="main"></div>
-                        <script type="text/javascript" src="js/darkmode.js"></script>
-                        <script type="text/javascript" src="js/bootstrap.min.js"></script>
-                    </body>
-                </html>
-            "#
+            <!DOCTYPE html>
+            <html data-bs-theme="light">
+                <head>
+                    <link rel="stylesheet" href="style/style.css">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                </head>
+                <body>
+                    <div id="main"></div>
+                    <script type="text/javascript" src="js/darkmode.js"></script>
+                </body>
+            </html>
+        "#
         .to_string(),
     );
 
