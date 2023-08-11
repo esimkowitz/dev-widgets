@@ -1,8 +1,11 @@
 use dioxus::prelude::Component;
 use dioxus_desktop::{
-    tao::menu::{MenuBar, MenuItem},
-    Config as DesktopConfig, WindowBuilder,
+    Config as DesktopConfig, 
+    WindowBuilder,
 };
+
+#[cfg(target_os = "macos")]
+use dioxus_desktop::tao::menu::{MenuBar, MenuItem};
 
 pub fn init_app(root: Component) {
     // Configure dioxus-desktop Tauri window
