@@ -14,11 +14,10 @@ jobs:
       
       # Install toolchain
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1.0.6
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: stable
-          target: wasm32-unknown-unknown
+          targets: wasm32-unknown-unknown
       - name: Configure Cargo cache
         uses: Swatinem/rust-cache@v2
       - name: Install Trunk
