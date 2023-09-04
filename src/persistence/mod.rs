@@ -1,7 +1,7 @@
-use lazy_static::lazy_static;
-use dioxus::prelude::*;
 use bevy_pkv::PkvStore;
-use serde::{Serialize, de::DeserializeOwned};
+use dioxus::prelude::*;
+use lazy_static::lazy_static;
+use serde::{de::DeserializeOwned, Serialize};
 use std::sync::Mutex;
 
 lazy_static! {
@@ -19,7 +19,12 @@ pub fn use_persistent<T: Serialize + DeserializeOwned + Default + 'static>(
     let state = use_ref(cx, move || {
         // This closure will run when the hook is created
         let key = key.to_string();
-        let value = PKV_STORE.lock().unwrap().get(key.clone()).ok().unwrap_or_else(init);
+        let value = PKV_STORE
+            .lock()
+            .unwrap()
+            .get(key.clone())
+            .ok()
+            .unwrap_or_else(init);
         StorageEntry { key, value }
     });
 
@@ -50,7 +55,11 @@ impl<T: Serialize + DeserializeOwned + Clone + 'static> UsePersistent<T> {
     pub fn set(&self, value: T) {
         let mut inner = self.inner.write();
         // Write the new value to local storage
-        PKV_STORE.lock().unwrap().set(inner.key.clone(), &value).unwrap();
+        PKV_STORE
+            .lock()
+            .unwrap()
+            .set(inner.key.clone(), &value)
+            .unwrap();
         inner.value = value;
     }
 }

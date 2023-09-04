@@ -1,11 +1,13 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::Bs123;
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::components::inputs::{SwitchInput, TextInput};
 use crate::pages::{WidgetEntry, WidgetIcon};
-use crate::persistence::use_persistent;
+use crate::persistence::{use_persistent, UsePersistent};
 use crate::utils::{add_number_delimiters, sanitize_string};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -18,52 +20,59 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn NumberBaseConverter(cx: Scope) -> Element {
-    let format_number_state = use_persistent(cx, "format-number-state", || false);
+    let number_base_state = use_persistent(cx, "format-number-state", || NumberBaseState {
+        value: 0,
+        format_number: false,
+    });
+
+    let cur_state = number_base_state.get();
 
     render! {
         div {
             class: "number-base-converter",
             SwitchInput {
                 label: "Format Numbers",
-                checked: format_number_state.get(),
+                checked: cur_state.format_number,
                 oninput: move |is_enabled| {
-                    format_number_state.set(is_enabled);
+                    number_base_state.set(NumberBaseState { value: cur_state.value, format_number: is_enabled });
                 }
             }
             converter_input {
-                base: NumberBase::Decimal
+                base: NumberBase::Decimal,
+                state: number_base_state,
             }
             converter_input {
-                base: NumberBase::Hexadecimal
+                base: NumberBase::Hexadecimal,
+                state: number_base_state,
             }
             converter_input {
-                base: NumberBase::Octal
+                base: NumberBase::Octal,
+                state: number_base_state,
             }
             converter_input {
-                base: NumberBase::Binary
+                base: NumberBase::Binary,
+                state: number_base_state,
             }
         }
     }
 }
 
 #[inline_props]
-fn converter_input(cx: Scope, base: NumberBase) -> Element {
-    let value_context = use_persistent(cx, "converter-value", || 0);
-    let format_number_state = use_persistent(cx, "format-number-state", || false);
-
+fn converter_input(cx: Scope, base: NumberBase, state: &UsePersistent<NumberBaseState>) -> Element {
+    let cur_state = state.get();
     render! {
         TextInput {
             label: "{base}",
-            value: "{format_number(value_context.get(), *base, format_number_state.get())}",
+            value: "{format_number(state.value, *base, state.format_number)}",
             oninput: move |event: Event<FormData>| {
                 let event_value = event.value.clone();
                 let event_value = sanitize_string(event_value);
-                value_context.set(match base {
+                state.set(NumberBaseState { value: match base {
                     NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
                     NumberBase::Decimal => event_value.parse::<i64>(),
                     NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
-                }.unwrap_or(0));
+                }.unwrap_or(0), format_number: cur_state.format_number });
             }
         }
     }
@@ -102,10 +111,11 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
     }
 }
 
-
-struct ConverterValue(i64);
-
-struct FormatNumberState(bool);
+#[derive(PartialEq, Debug, Clone, Copy, Serialize, Deserialize, Default)]
+struct NumberBaseState {
+    value: i64,
+    format_number: bool,
+}
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 enum NumberBase {
