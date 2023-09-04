@@ -11,7 +11,7 @@ fn main() {
     if cfg!(debug_assertions) {
         #[cfg(not(target_family = "wasm"))]
         env::set_var("RUST_BACKTRACE", "1");
-        log_level = log::Level::Info;
+        log_level = log::Level::Trace;
     }
 
     logger::init(log_level);

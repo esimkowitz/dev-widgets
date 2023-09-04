@@ -43,17 +43,42 @@ fn ColorWheel(cx: Scope) -> Element {
     let dimensions = use_ref(cx, Rect::zero);
     let tracking_state = use_state(cx, || false);
 
-    let process_mouse_event = move |event: Event<MouseData>| {
-        let cursor_coordinates = event.data.page_coordinates();
+    let process_pointer_event = move |event: Event<PointerData>| {
         let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
+        let cursor_coordinates = Point2D::<f64, dioxus_html::geometry::PageSpace>::new(event.data.page_x.into(), event.data.page_y.into());
         color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
+
+    let create_eval = use_eval(cx);
+
+    let modify_capture_pointer_ref = use_ref(cx, || {
+        to_owned![create_eval];
+        move |pointer_id: i32, is_capturing: bool| {
+            let eval = create_eval(match is_capturing {
+                true => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("capturing " + pointer_id);
+                    document.getElementById('colorwheel').setPointerCapture(pointer_id);
+                    "#
+                },false => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("releasing " + pointer_id);
+                    document.getElementById('colorwheel').releasePointerCapture(pointer_id);
+                    "#
+                },
+            }).unwrap();
+            eval.send(pointer_id.into()).unwrap();
+        }
+    });
 
     render! {
         div {
             class: "colorwheel-wrapper",
             div {
                 class: "colorwheel",
+                id: "colorwheel",
                 onmounted: move |cx| {
                     to_owned![dimensions];
                     async move {
@@ -62,27 +87,33 @@ fn ColorWheel(cx: Scope) -> Element {
                         }
                     }
                 },
-                onmousedown: move |event| {
+                onpointerdown: move |event| {
                     event.stop_propagation();
+                    let pointerId = event.data.pointer_id;
+                    log::info!("pointerdown, {}", pointerId);
+                    modify_capture_pointer_ref.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                    process_pointer_event(event);
+                },
+                onpointerup: move |event| {
+                    event.stop_propagation();
+                    let pointerId = event.data.pointer_id;
+                    log::info!("pointerup, {}", pointerId);
+                    modify_capture_pointer_ref.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                },
+                ongotpointercapture: move |_| {
+                    log::info!("gotpointercapture");
                     tracking_state.set(true);
                 },
-                onmouseup: move |event| {
-                    event.stop_propagation();
+                onlostpointercapture: move |_| {
+                    log::info!("lostpointercapture");
                     tracking_state.set(false);
                 },
-                onmouseleave: move |event| {
+                onpointermove: move |event| {
                     event.stop_propagation();
-                    tracking_state.set(false);
-                },
-                onmousemove: move |event| {
-                    event.stop_propagation();
+                    log::info!("pointermove {}", event.data.client_x);
                     if *tracking_state.get() {
-                        process_mouse_event(event);
+                        process_pointer_event(event);
                     }
-                },
-                onclick: move |event| {
-                    event.stop_propagation();
-                    process_mouse_event(event);
                 },
                 ColorWheelSvg {}
                 ColorWheelCursorSvg {
