@@ -5,6 +5,7 @@ use std::fmt;
 
 use crate::components::inputs::{SwitchInput, TextInput};
 use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::persistence::use_persistent;
 use crate::utils::{add_number_delimiters, sanitize_string};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -17,19 +18,16 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn NumberBaseConverter(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || ConverterValue(0));
-    use_shared_state_provider(cx, || FormatNumberState(false));
-
-    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
+    let format_number_state = use_persistent(cx, "format-number-state", || false);
 
     render! {
         div {
             class: "number-base-converter",
             SwitchInput {
                 label: "Format Numbers",
-                checked: format_number_state.read().0,
+                checked: format_number_state.get(),
                 oninput: move |is_enabled| {
-                    format_number_state.write().0 = is_enabled;
+                    format_number_state.set(is_enabled);
                 }
             }
             converter_input {
@@ -50,22 +48,22 @@ pub fn NumberBaseConverter(cx: Scope) -> Element {
 
 #[inline_props]
 fn converter_input(cx: Scope, base: NumberBase) -> Element {
-    let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
-    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
+    let value_context = use_persistent(cx, "converter-value", || 0);
+    let format_number_state = use_persistent(cx, "format-number-state", || false);
 
     render! {
         TextInput {
             label: "{base}",
-            value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
+            value: "{format_number(value_context.get(), *base, format_number_state.get())}",
             oninput: move |event: Event<FormData>| {
                 let event_value = event.value.clone();
                 let event_value = sanitize_string(event_value);
-                value_context.write().0 = match base {
+                value_context.set(match base {
                     NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
                     NumberBase::Decimal => event_value.parse::<i64>(),
                     NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
-                }.unwrap_or(0);
+                }.unwrap_or(0));
             }
         }
     }

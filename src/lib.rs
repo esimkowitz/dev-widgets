@@ -3,6 +3,7 @@ pub mod components;
 pub mod environment;
 pub mod pages;
 pub mod utils;
+pub mod persistence;
 
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;

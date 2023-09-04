@@ -28,6 +28,9 @@ strum_macros = "0.25.2"
 uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }
 time-tz = { version = "2.0.0", features = ["db", "system"] }
 log = { version = "0.4.20", features = ["std"] }
+lazy_static = "1.4.0"
+bevy_pkv = { version = "0.8.0", default-features = false, features = ["redb"] }
+serde = "1.0.188"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus-desktop = "0.4.0"
