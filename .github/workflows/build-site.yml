@@ -23,7 +23,7 @@ jobs:
       - name: Install Dioxus CLI
         uses: taiki-e/install-action@v1
         with:
-          tool: dioxus-cli
+          tool: dioxus-cli@0.4.1
 
       # Build app
       - name: Build Rust and static site
