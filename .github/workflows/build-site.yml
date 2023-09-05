@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
       
       # Install toolchain
       - name: Install Rust Toolchain
