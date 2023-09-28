@@ -18,7 +18,7 @@ digest = "0.10.7"
 dioxus = "0.4.0"
 dioxus-free-icons = { version = "0.7.0", features = ["bootstrap"] }
 dioxus-router = "0.4.0"
-md-5 = "0.10.5"
+md-5 = "0.10.6"
 num-traits = "0.2.16"
 qrcode-generator = "4.1.9"
 sha1 = "0.10.6"
