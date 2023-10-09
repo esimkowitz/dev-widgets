@@ -19,7 +19,7 @@ dioxus = "0.4.0"
 dioxus-free-icons = { version = "0.7.0", features = ["bootstrap"] }
 dioxus-router = "0.4.0"
 md-5 = "0.10.6"
-num-traits = "0.2.16"
+num-traits = "0.2.17"
 qrcode-generator = "4.1.9"
 sha1 = "0.10.6"
 sha2 = "0.10.8"
