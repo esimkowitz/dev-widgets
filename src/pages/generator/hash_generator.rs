@@ -2,7 +2,7 @@
 use digest::DynDigest;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsFingerprint;
-use std::fmt;
+use std::fmt::{self, Write};
 
 use crate::components::inputs::{SwitchInput, TextAreaForm, TextInput};
 use crate::pages::{WidgetEntry, WidgetIcon};
@@ -99,13 +99,17 @@ fn generate_hash(value: String, hasher: &mut dyn DynDigest, uppercase: bool) -> 
     if uppercase {
         hashed_value
             .iter()
-            .map(|byte| format!("{:X}", byte))
-            .collect()
+            .fold(String::new(), |mut output, b| {
+                let _ = write!(output, "{:X}", b);
+                output
+            })
     } else {
         hashed_value
             .iter()
-            .map(|byte| format!("{:x}", byte))
-            .collect()
+            .fold(String::new(), |mut output, b| {
+                let _ = write!(output, "{:x}", b);
+                output
+            })
     }
 }
 
