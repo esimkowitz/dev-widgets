@@ -38,7 +38,7 @@ time = "0.3.30"
 dioxus-web = "0.4.0"
 getrandom = { version = "0.2.10", features = ["js"] }
 time = { version = "0.3.29", features = ["wasm-bindgen"] }
-wasm-bindgen = { version = "0.2.87", features = ["enable-interning"] }
+wasm-bindgen = { version = "0.2.88", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
 
 [package.metadata.bundle]
