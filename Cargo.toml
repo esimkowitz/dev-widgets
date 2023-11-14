@@ -31,7 +31,7 @@ log = { version = "0.4.20", features = ["std"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus-desktop = "0.4.0"
-getrandom = "0.2.10"
+getrandom = "0.2.11"
 time = "0.3.30"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
