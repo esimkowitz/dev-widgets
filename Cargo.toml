@@ -31,12 +31,12 @@ log = { version = "0.4.20", features = ["std"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus-desktop = "0.4.3"
-getrandom = "0.2.11"
+getrandom = "0.2.12"
 time = "0.3.31"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 dioxus-web = "0.4.3"
-getrandom = { version = "0.2.10", features = ["js"] }
+getrandom = { version = "0.2.12", features = ["js"] }
 time = { version = "0.3.31", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.89", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
