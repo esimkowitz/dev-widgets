@@ -15,9 +15,9 @@ zip-extract = "0.1.2"
 base64ct = { version = "1.6.0", features = ["alloc"] }
 cidr = "0.2.2"
 digest = "0.10.7"
-dioxus = "0.4.3"
-dioxus-free-icons = { version = "0.7.0", features = ["bootstrap"] }
-dioxus-router = "0.4.0"
+dioxus = "0.5.1"
+dioxus-free-icons = { version = "0.8.3", features = ["bootstrap"] }
+dioxus-router = "0.5.0"
 md-5 = "0.10.6"
 num-traits = "0.2.17"
 qrcode-generator = "4.1.9"
@@ -30,12 +30,12 @@ time-tz = { version = "2.0.0", features = ["db", "system"] }
 log = { version = "0.4.20", features = ["std"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-dioxus-desktop = "0.4.3"
+dioxus-desktop = "0.5.1"
 getrandom = "0.2.12"
 time = "0.3.31"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-dioxus-web = "0.4.3"
+dioxus-web = "0.5.1"
 getrandom = { version = "0.2.12", features = ["js"] }
 time = { version = "0.3.31", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.90", features = ["enable-interning"] }
@@ -46,7 +46,7 @@ name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
 version = "0.1.0"
 resources = ["public/**/*"]
-copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
+copyright = "Copyright (c) Evan Simkowitz 2024. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]
