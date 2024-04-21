@@ -15,18 +15,18 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "QR Code Generator",
     short_title: "QR Code",
     description: "Generate QR codes from text",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
-pub fn QrCodeGenerator(cx: Scope) -> Element {
-    let qr_code_value = use_state(cx, || "".to_string());
-    let qr_code_error_correction = use_state(cx, Ecc::default);
+pub fn QrCodeGenerator() -> Element {
+    let qr_code_value = use_signal(|| "".to_string());
+    let qr_code_error_correction = use_signal(Ecc::default);
 
     let qr_code_result = qrcode_generator::to_svg_to_string(
-        qr_code_value.get(),
-        qrcode_generator::QrCodeEcc::from(qr_code_error_correction.get()),
+        *qr_code_value.read(),
+        qrcode_generator::QrCodeEcc::from(*qr_code_error_correction.read()),
         1024,
         None::<&str>,
     );
@@ -35,7 +35,8 @@ pub fn QrCodeGenerator(cx: Scope) -> Element {
         Err(_) => "".to_string(),
     };
 
-    render! {
+    // TODO: fix errors
+    rsx! {
         div {
             class: "qr-code-generator",
             SelectForm::<Ecc> {
@@ -68,7 +69,7 @@ pub fn QrCodeGenerator(cx: Scope) -> Element {
 }
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq
 )]
 enum Ecc {
     #[default]
@@ -76,6 +77,12 @@ enum Ecc {
     Medium,
     Quartile,
     High,
+}
+
+impl Into<String> for Ecc {
+    fn into(self) -> String {
+        self.to_string()
+    }
 }
 
 impl SelectFormEnum for Ecc {}

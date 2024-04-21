@@ -50,9 +50,9 @@ pub enum Route {
     },
 }
 
-#[inline_props]
-fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
-    render! {
+#[component]
+fn PageNotFound(route: Vec<String>) -> Element {
+    rsx! {
         h1 { "Page not found" }
         p { "We are terribly sorry, but the page you requested doesn't exist." }
         pre {
@@ -125,7 +125,7 @@ pub struct WidgetEntry {
     pub title: &'static str,
     pub short_title: &'static str,
     pub description: &'static str,
-    pub icon: fn(cx: Scope) -> Element,
+    pub icon: fn() -> Element,
 }
 
 pub struct WidgetIcon<T: IconShape + Copy> {
@@ -133,8 +133,8 @@ pub struct WidgetIcon<T: IconShape + Copy> {
 }
 
 impl<T: IconShape + Copy> WidgetIcon<T> {
-    pub fn icon<'a>(&'a self, cx: Scope<'a>) -> Element<'a> {
-        render! {
+    pub fn icon(self) -> Element {
+        rsx! {
             Icon::<T> {
                 class: "icon",
                 icon: self.icon,

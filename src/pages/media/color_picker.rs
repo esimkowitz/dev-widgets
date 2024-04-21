@@ -8,19 +8,19 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",
     short_title: "Color Picker",
     description: "Pick a color and get its output in different formats",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 
-pub fn ColorPicker(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || Color {
+pub fn ColorPicker() -> Element {
+    use_context_provider(|| Color {
         hue: 0f64,
         saturation: 50f64,
         lightness: 50f64,
     });
 
-    render! {
+    rsx! {
         div {
             class: "color-picker",
             ColorWheel {}
@@ -29,10 +29,10 @@ pub fn ColorPicker(cx: Scope) -> Element {
     }
 }
 
-fn ColorWheel(cx: Scope) -> Element {
-    let color_state = use_shared_state::<Color>(cx).unwrap();
-    let dimensions = use_ref(cx, Rect::zero);
-    let tracking_state = use_state(cx, || false);
+fn ColorWheel() -> Element {
+    let color_state = use_context::<Color>().unwrap();
+    let dimensions = use_signal(Rect::zero);
+    let tracking_state = use_signal(|| false);
 
     let process_mouse_event = move |event: Event<MouseData>| {
         let cursor_coordinates = event.data.page_coordinates();
@@ -40,13 +40,13 @@ fn ColorWheel(cx: Scope) -> Element {
         color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
     
-    render! {
+    rsx! {
         div {
             class: "colorwheel-wrapper",
-            onmounted: move |cx| {
+            onmounted: move || {
                 to_owned![dimensions];
                 async move {
-                    if let Ok(rect) = cx.get_client_rect().await {
+                    if let Ok(rect) = get_client_rect().await {
                         dimensions.set(rect);
                     }
                 }
@@ -70,14 +70,14 @@ fn ColorWheel(cx: Scope) -> Element {
             },
             ColorWheelSvg {}
             ColorWheelCursorSvg {
-                hue: color_state.read().hue,
+                hue: color_state.hue,
             }
         }
     }
 }
 
-fn ColorWheelSvg(cx: Scope) -> Element {
-    render! {
+fn ColorWheelSvg() -> Element {
+    rsx! {
         svg {
             view_box: "0 0 100 100",
             class: "colorwheel-svg",
@@ -110,9 +110,9 @@ fn ColorWheelSvg(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
-    render! {
+#[component]
+fn ColorWheelCursorSvg(hue: f64) -> Element {
+    rsx! {
         svg {
             view_box: "0 0 100 100",
             class: "colorwheel-cursor",
@@ -161,11 +161,11 @@ fn ColorWheelCursorSvg(cx: Scope, hue: f64) -> Element {
     }
 }
 
-fn ColorView(cx: Scope) -> Element {
-    let color_state = use_shared_state::<Color>(cx).unwrap();
+fn ColorView() -> Element {
+    let color_state = use_context::<Color>();
 
-    let color = color_state.read();
-    render! {
+    let color = color_state;
+    rsx! {
         div {
             class: "color-view",
             style: "--color-view-background: hsl({color.hue}deg, {color.saturation}%, {color.lightness}%);"

@@ -18,7 +18,7 @@ const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
 };
 
 pub fn HomePage(cx: Scope) -> Element {
-    render! {
+    rsx! {
         div {
             class: "home-page",
             for route in Route::iter() {

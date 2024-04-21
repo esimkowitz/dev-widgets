@@ -12,7 +12,7 @@ use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
     IntoEnumIterator
-    + Into<&'static str>
+    + Into<String>
     + FromStr
     + Default
     + Debug
@@ -23,47 +23,46 @@ pub trait SelectFormEnum:
 {
 }
 
-pub fn SelectForm<'a, T: SelectFormEnum>(cx: Scope<'a, SelectFormProps<'a, T>>) -> Element<'a> {
-    render! {
+pub fn SelectForm<T: SelectFormEnum>(props: SelectFormProps<T>) -> Element {
+    rsx! {
         div {
             class: "select-form",
             select {
-                id: "{cx.props.label}",
-                aria_label: "{cx.props.label}",
-                oninput: move |event| if let Ok(value) = T::from_str(&event.value) {
-                    cx.props.oninput.call(value);
+                id: "{props.label}",
+                aria_label: "{props.label}",
+                oninput: move |event| if let Ok(value) = event.parsed::<T>() {
+                    props.oninput.call(value);
                 },
                 for enumInst in T::iter() {
                     option {
                         value: "{enumInst.into()}",
-                        selected: enumInst == cx.props.value,
+                        selected: enumInst == props.value,
                         "{enumInst.into()}"
                     }
                 }
             }
             label {
-                r#for: "{cx.props.label}",
-                "{cx.props.label}"
+                r#for: "{props.label}",
+                "{props.label}"
             }
         }
     }
 }
 
 #[derive(Props)]
-pub struct SelectFormProps<'a, T: SelectFormEnum> {
-    label: &'a str,
+pub struct SelectFormProps<T: SelectFormEnum + 'static> {
+    label: String,
     value: T,
-    oninput: EventHandler<'a, T>,
+    oninput: EventHandler<T>,
 }
 
-#[inline_props]
-pub fn SwitchInput<'a>(
-    cx: Scope<'a>,
-    label: &'a str,
+#[component]
+pub fn SwitchInput(
+    label: String,
     checked: bool,
-    oninput: EventHandler<'a, bool>,
-) -> Element<'a> {
-    render! {
+    oninput: EventHandler<bool>,
+) -> Element {
+    rsx! {
         div {
             class: "switch-input",
             input {
@@ -72,7 +71,7 @@ pub fn SwitchInput<'a>(
                 role: "switch",
                 checked: "{checked}",
                 oninput: move |event| {
-                    let is_enabled = event.value == "true";
+                    let is_enabled = event.checked();
                     oninput.call(is_enabled);
                 }
             }
@@ -84,18 +83,17 @@ pub fn SwitchInput<'a>(
     }
 }
 
-#[inline_props]
-pub fn TextAreaForm<'a>(
-    cx: Scope<'a>,
-    class: Option<&'a str>,
-    value: &'a str,
-    label: &'a str,
+#[component]
+pub fn TextAreaForm(
+    class: Option<String>,
+    value: String,
+    label: String,
     readonly: Option<bool>,
-    oninput: Option<EventHandler<'a, Event<FormData>>>,
-    onchange: Option<EventHandler<'a, Event<FormData>>>,
-) -> Element<'a> {
+    oninput: Option<EventHandler<Event<FormData>>>,
+    onchange: Option<EventHandler<Event<FormData>>>,
+) -> Element {
     let readonly = readonly.unwrap_or(false);
-    render! {
+    rsx! {
         div {
             class: "textarea-form {class.unwrap_or_default()}",
             id: "{label}",
@@ -111,24 +109,23 @@ pub fn TextAreaForm<'a>(
             }
             label {
                 r#for: "{label}",
-                *label
+                {*label}
             }
         }
     }
 }
 
-#[inline_props]
-pub fn TextInput<'a>(
-    cx: Scope<'a>,
-    value: &'a str,
-    label: &'a str,
-    oninput: Option<EventHandler<'a, Event<FormData>>>,
-    onchange: Option<EventHandler<'a, Event<FormData>>>,
+#[component]
+pub fn TextInput(
+    value: String,
+    label: String,
+    oninput: Option<EventHandler<Event<FormData>>>,
+    onchange: Option<EventHandler<Event<FormData>>>,
     readonly: Option<bool>,
-) -> Element<'a> {
+) -> Element {
     let readonly = readonly.unwrap_or(false);
 
-    render! {
+    rsx! {
         div {
             class: "text-input",
             div {
@@ -151,22 +148,21 @@ pub fn TextInput<'a>(
                 }
                 label {
                     r#for: "{label}",
-                    *label
+                    {{*label}}
                 }
             }
         }
     }
 }
 
-#[inline_props]
-pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
-    cx: Scope<'a>,
-    class: Option<&'a str>,
+#[component]
+pub fn NumberInput<T: PrimInt + Display + Default + FromStr + 'static>(
+    class: Option<&'static str>,
     value: T,
-    label: &'a str,
-    onchange: EventHandler<'a, T>,
-) -> Element<'a> {
-    render! {
+    label: &'static str,
+    onchange: EventHandler<T>,
+) -> Element {
+    rsx! {
         div {
             class: "number-input {class.unwrap_or_default()}",
             div {
@@ -177,13 +173,13 @@ pub fn NumberInput<'a, T: PrimInt + Display + Default + FromStr>(
                         r#type: "number",
                         value: "{value}",
                         id: "{label}",
-                        onchange: move |event| if let Ok(value) = event.value.parse::<T>() {
+                        onchange: move |event| if let Ok(value) = event.parsed::<T>() {
                             onchange.call(value);
                         }
                     }
                     label {
                         r#for: "{label}",
-                        *label
+                        {*label}
                     }
                 }
                 div {

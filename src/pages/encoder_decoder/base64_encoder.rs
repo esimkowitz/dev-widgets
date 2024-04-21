@@ -11,17 +11,17 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
     short_title: "Base64",
     description: "Encode and decode base64 strings",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
-pub fn Base64Encoder(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || EncoderValue {
+pub fn Base64Encoder() -> Element {
+    use_context_provider(|| EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
     });
-    render! {
+    rsx! {
         div {
             class: "base64-encoder",
             encoder_input {
@@ -34,17 +34,17 @@ pub fn Base64Encoder(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn encoder_input(cx: Scope, direction: Direction) -> Element {
-    let value_context = use_shared_state::<EncoderValue>(cx).unwrap();
+#[component]
+fn encoder_input(direction: Direction) -> Element {
+    let value_context = use_context::<EncoderValue>();
 
     let current_value = match direction {
-        Direction::Encode => value_context.read().decoded_value.clone(),
-        Direction::Decode => value_context.read().encoded_value.clone(),
+        Direction::Encode => value_context.decoded_value.clone(),
+        Direction::Decode => value_context.encoded_value.clone(),
     };
 
     const NOT_STRING: &str = "Not String";
-    render! {
+    rsx! {
         TextAreaForm {
             label: match direction {
                 Direction::Encode => "Text",
@@ -52,7 +52,7 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
             },
             value: "{current_value}",
             oninput: move |event: Event<FormData>| {
-                let input_value = event.value.clone();
+                let input_value = event.value();
                 match direction {
                     Direction::Encode => {
                         *value_context.write() = EncoderValue {

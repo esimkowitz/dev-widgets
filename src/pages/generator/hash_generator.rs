@@ -11,37 +11,35 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Hash Generator",
     short_title: "Hash",
     description: "Generate cryptographic hashes of strings",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
     icon: BsFingerprint,
 };
 
-pub fn HashGenerator(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || HashGeneratorState {
+pub fn HashGenerator() -> Element {
+    let hash_generator_state = use_context_provider(|| HashGeneratorState {
         value: "".to_string(),
         uppercase: false,
     });
 
-    let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();
-
-    render! {
+    rsx! {
         div {
             class: "number-base-converter",
             SwitchInput {
                 label: "Uppercase",
-                checked: hash_generator_state.read().uppercase,
+                checked: hash_generator_state.uppercase,
                 oninput: move |is_enabled| {
-                    hash_generator_state.write().uppercase = is_enabled;
+                    hash_generator_state.uppercase = is_enabled;
                 }
             }
             TextAreaForm {
                 label: "Value to hash",
-                value: "{hash_generator_state.read().value}",
+                value: "{hash_generator_state.value}",
                 oninput: move |event: Event<FormData>| {
                     let value = event.value.clone();
-                    hash_generator_state.write().value = value;
+                    hash_generator_state.value = value;
                 }
             }
             HashField {
@@ -60,21 +58,19 @@ pub fn HashGenerator(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn HashField(cx: Scope, algorithm: HashingAlgorithm) -> Element {
-    let hash_generator_state = use_shared_state::<HashGeneratorState>(cx).unwrap();
-
-    let hash_generator_state_cur = hash_generator_state.read();
+#[component]
+fn HashField(algorithm: HashingAlgorithm) -> Element {
+    let hash_generator_state = use_context::<HashGeneratorState>();
 
     let mut hasher = select_hasher(*algorithm);
 
     let hashed_value = generate_hash(
-        hash_generator_state_cur.value.clone(),
+        hash_generator_state.value.clone(),
         &mut *hasher,
-        hash_generator_state_cur.uppercase,
+        hash_generator_state.uppercase,
     );
 
-    render! {
+    rsx! {
         TextInput {
             label: "{algorithm}",
             value: "{hashed_value}",

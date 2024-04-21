@@ -16,7 +16,7 @@ pub enum MediaRoute {
 }
 
 fn Index(cx: Scope) -> Element {
-    render! {
+    rsx! {
         div {
             class: "media",
         }

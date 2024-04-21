@@ -10,7 +10,7 @@ use dioxus_router::prelude::*;
 use crate::pages::Route;
 
 pub fn App(cx: Scope) -> Element {
-    render! {
+    rsx! {
         Router::<Route> {}
     }
 }

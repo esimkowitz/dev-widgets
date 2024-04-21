@@ -16,31 +16,31 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Date Converter",
     short_title: "Date",
     description: "Convert dates between formats",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
-pub fn DateConverter(cx: Scope) -> Element {
-    let date_state = use_ref(cx, || DateConverterState {
+pub fn DateConverter() -> Element {
+    let date_signal = use_signal(|| DateConverterState {
         time_zone: DcTimeZone::default(),
         time_utc: OffsetDateTime::now_utc(),
     });
 
-    let local_datetime = date_state.with(|date_state| date_state.local_datetime());
-    let unix_time = date_state.with(|date_state| date_state.time_utc.unix_timestamp());
+    let local_datetime = date_signal.with(|date_state| date_state.local_datetime());
+    let unix_time = date_signal.with(|date_state| date_state.time_utc.unix_timestamp());
 
-    render! {
+    rsx! {
         div {
             class: "date-converter",
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
-                    date_state.with_mut(|date_state| {
+                    date_signal.with_mut(|date_state| {
                         date_state.time_zone = tz;
                     });
                 },
-                value: date_state.with(|date_state| date_state.time_zone),
+                value: date_signal.with(|date_state| date_state.time_zone),
             }
             TextInput {
                 label: "Date",
@@ -54,7 +54,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                     let new_unix_time = event.value.clone();
                     if let Ok(unix_time) = i64::from_str(&new_unix_time) {
                         if let Ok(datetime) = OffsetDateTime::from_unix_timestamp(unix_time) {
-                            date_state.with_mut(|date_state| {
+                            date_signal.with_mut(|date_state| {
                                 date_state.set_local_datetime(datetime);
                             });
                         }
@@ -72,7 +72,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Year",
                             value: local_datetime.year(),
                             onchange: move |year| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_year(year).unwrap_or(local_datetime));
                                 });
                             }
@@ -82,7 +82,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Month",
                             value: u8::from(local_datetime.month()),
                             onchange: move |month| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_month(Month::try_from(month).unwrap_or(local_datetime.month())).unwrap_or(local_datetime));
                                 });
                             }
@@ -92,7 +92,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Day",
                             value: local_datetime.day(),
                             onchange: move |day| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_day(day).unwrap_or(local_datetime));
                                 });
                             }
@@ -108,7 +108,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Hour",
                             value: local_datetime.hour(),
                             onchange: move |hour| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_hour(hour).unwrap_or(local_datetime));
                                 });
                             }
@@ -118,7 +118,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Minute",
                             value: local_datetime.minute(),
                             onchange: move |minute| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_minute(minute).unwrap_or(local_datetime));
                                 });
                             }
@@ -128,7 +128,7 @@ pub fn DateConverter(cx: Scope) -> Element {
                             label: "Second",
                             value: local_datetime.second(),
                             onchange: move |second| {
-                                date_state.with_mut(|date_state| {
+                                date_signal.with_mut(|date_state| {
                                     date_state.set_local_datetime(local_datetime.replace_second(second).unwrap_or(local_datetime));
                                 });
                             }
@@ -155,9 +155,15 @@ impl DateConverterState {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq)]
 enum DcTimeZone {
     Base(&'static Tz),
+}
+
+impl Into<String> for DcTimeZone {
+    fn into(self) -> String {
+        self.inner().name().to_string()
+    }
 }
 
 impl Default for DcTimeZone {
