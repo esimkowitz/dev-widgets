@@ -44,7 +44,7 @@ pub fn QrCodeGenerator() -> Element {
                 oninput: move |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
                 },
-                value: (*qr_code_error_correction.read()).clone(),
+                value: *qr_code_error_correction.read(),
             }
             TextAreaForm {
                 label: "Input",
@@ -79,13 +79,14 @@ enum Ecc {
     High,
 }
 
-impl Into<String> for Ecc {
-    fn into(self) -> String {
-        self.to_string()
-    }
-}
-
 impl SelectFormEnum for Ecc {}
+
+impl From<Ecc> for String {
+    fn from(ecc: Ecc) -> Self {
+        ecc.to_string()
+    }
+
+}
 
 impl From<Ecc> for qrcode_generator::QrCodeEcc {
     fn from(ecc: Ecc) -> Self {

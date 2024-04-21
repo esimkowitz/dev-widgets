@@ -95,7 +95,7 @@ pub fn CidrDecoder() -> Element {
             }
             div {
                 class: "alert alert-warning m-0",
-                hidden: !(*show_error_state.read()).clone(),
+                hidden: !*show_error_state.read(),
                 "The provided CIDR is invalid."
             }
             TextAreaForm {

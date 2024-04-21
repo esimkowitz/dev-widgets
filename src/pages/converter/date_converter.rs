@@ -159,12 +159,6 @@ enum DcTimeZone {
     Base(&'static Tz),
 }
 
-impl Into<String> for DcTimeZone {
-    fn into(self) -> String {
-        self.inner().name().to_string()
-    }
-}
-
 impl Default for DcTimeZone {
     fn default() -> Self {
         Self::Base(match system::get_timezone() {
@@ -195,6 +189,12 @@ impl FromStr for DcTimeZone {
     }
 
     type Err = TzParseError;
+}
+
+impl From<DcTimeZone> for String {
+    fn from(val: DcTimeZone) -> Self {
+        val.to_string()
+    }
 }
 
 #[derive(Debug, Clone)]

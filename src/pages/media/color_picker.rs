@@ -45,17 +45,40 @@ fn ColorWheel() -> Element {
     let mut tracking_state = use_signal(|| false);
     let dimensions = use_signal(Rect::<f64, f64>::zero);
 
-    let mut process_mouse_event = move |event: Event<MouseData>| {
-        let cursor_coordinates = event.data.page_coordinates();
+    let mut process_pointer_event = move |event: Event<PointerData>| {
+        let page_coords = event.data().page_coordinates();
         let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-        color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
+        color_state.write().hue = cursor_position_to_hue(page_coords, center_coordinates);
     };
+
+    let modify_capture_pointer = use_signal(|| {
+        move |pointer_id: i32, is_capturing: bool| {
+            log::info!("modifying capture pointer Colorwheel");
+            let eval = eval(match is_capturing {
+                true => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("capturing " + pointer_id);
+                    document.getElementById('colorwheel').setPointerCapture(pointer_id);
+                    "#
+                },false => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("releasing " + pointer_id);
+                    document.getElementById('colorwheel').releasePointerCapture(pointer_id);
+                    "#
+                },
+            });
+            eval.send(pointer_id.into()).unwrap();
+        }
+    });
 
     rsx! {
         div {
             class: "colorwheel-wrapper",
             div {
                 class: "colorwheel",
+                id: "colorwheel",
                 onmounted: move |cx| {
                     to_owned![dimensions];
                     async move {
@@ -64,27 +87,32 @@ fn ColorWheel() -> Element {
                         }
                     }
                 },
-                onmousedown: move |event| {
+                onpointerdown: move |event| {
                     event.stop_propagation();
+                    let pointerId = event.data().pointer_id();
+                    log::info!("pointerdown, {}", pointerId);
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                    process_pointer_event(event);
+                },
+                onpointerup: move |event| {
+                    event.stop_propagation();
+                    let pointerId = event.data().pointer_id();
+                    log::info!("pointerup, {}", pointerId);
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                },
+                ongotpointercapture: move |_| {
+                    log::info!("gotpointercapture");
                     tracking_state.set(true);
                 },
-                onmouseup: move |event| {
-                    event.stop_propagation();
+                onlostpointercapture: move |_| {
+                    log::info!("lostpointercapture");
                     tracking_state.set(false);
                 },
-                onmouseleave: move |event| {
-                    event.stop_propagation();
-                    tracking_state.set(false);
-                },
-                onmousemove: move |event| {
+                onpointermove: move |event| {
                     event.stop_propagation();
                     if *tracking_state.read() {
-                        process_mouse_event(event);
+                        process_pointer_event(event);
                     }
-                },
-                onclick: move |event| {
-                    event.stop_propagation();
-                    process_mouse_event(event);
                 },
                 ColorWheelSvg {}
                 ColorWheelCursorSvg {
@@ -145,27 +173,54 @@ fn SaturationBrightnessBox() -> Element {
     let mut tracking_state = use_signal(|| false);
     let dimensions = use_signal(Rect::<f64, f64>::zero);
 
-    let mut process_mouse_event = move |event: Event<MouseData>| {
-        let cursor_coordinates = event.data.element_coordinates();
+    let mut process_pointer_event = move |event: Event<PointerData>| {
+        let cursor_coordinates = event.data().element_coordinates();
         log::trace!("cursor_coordinates: {:?}", cursor_coordinates);
-        log::trace!(
-            "dimensions_min: {:?}, dimensions_max: {:?}, dimensions_size: {:?}",
-            dimensions.read().min(),
-            dimensions.read().max(),
-            dimensions.read().size
-        );
+        dimensions.with(|dimensions| {
+            log::trace!(
+                "dimensions_min: {:?}, dimensions_max: {:?}, dimensions_size: {:?}",
+                dimensions.min(),
+                dimensions.max(),
+                dimensions.size
+            );
+        });
         let sv_scale = default::Scale::new(dimensions.read().size.width / 100.0);
         let point_sv = cursor_coordinates.cast_unit() / sv_scale;
         log::trace!("point_sv: {:?}", point_sv);
-        color_state.write().saturation = x_axis_to_saturation(point_sv.x);
-        color_state.write().brightness = y_axis_to_brightness(point_sv.y);
+        color_state.with_mut(|color_state| {
+            color_state.saturation = x_axis_to_saturation(point_sv.x);
+            color_state.brightness = y_axis_to_brightness(point_sv.y);
+        });
     };
+
+    let modify_capture_pointer = use_signal(|| {
+        move |pointer_id: i32, is_capturing: bool| {
+            log::info!("modifying capture pointer S/B");
+            let eval = eval(match is_capturing {
+                true => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("capturing " + pointer_id);
+                    document.getElementById('saturation-brightness-box').setPointerCapture(pointer_id);
+                    "#
+                },false => {
+                    r#"
+                    let pointer_id = await dioxus.recv();
+                    console.log("releasing " + pointer_id);
+                    document.getElementById('saturation-brightness-box').releasePointerCapture(pointer_id);
+                    "#
+                },
+            });
+            eval.send(pointer_id.into()).unwrap();
+        }
+    });
 
     rsx! {
         div {
             class: "saturation-brightness-wrapper",
             div {
                 class: "saturation-brightness-box",
+                id: "saturation-brightness-box",
                 onmounted: move |cx| {
                     to_owned![dimensions];
                     async move {
@@ -174,27 +229,32 @@ fn SaturationBrightnessBox() -> Element {
                         }
                     }
                 },
-                onmousedown: move |event| {
+                onpointerdown: move |event| {
                     event.stop_propagation();
+                    let pointerId = event.data().pointer_id();
+                    log::info!("pointerdown, {}", pointerId);
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                    process_pointer_event(event);
+                },
+                onpointerup: move |event| {
+                    event.stop_propagation();
+                    let pointerId = event.data().pointer_id();
+                    log::info!("pointerup, {}", pointerId);
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                },
+                ongotpointercapture: move |_| {
+                    log::info!("gotpointercapture");
                     tracking_state.set(true);
                 },
-                onmouseup: move |event| {
-                    event.stop_propagation();
+                onlostpointercapture: move |_| {
+                    log::info!("lostpointercapture");
                     tracking_state.set(false);
                 },
-                onmouseleave: move |event| {
-                    event.stop_propagation();
-                    tracking_state.set(false);
-                },
-                onmousemove: move |event| {
+                onpointermove: move |event| {
                     event.stop_propagation();
                     if *tracking_state.read() {
-                        process_mouse_event(event);
+                        process_pointer_event(event);
                     }
-                },
-                onclick: move |event| {
-                    event.stop_propagation();
-                    process_mouse_event(event);
                 },
                 div {
                     class: "saturation-brightness-gradient",
