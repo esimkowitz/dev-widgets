@@ -73,7 +73,7 @@ pub fn CidrDecoder() -> Element {
                 label: "CIDR",
                 value: "{cidr_input_ref.with(|cidr_str| cidr_str.to_string())}",
                 oninput: |event: Event<FormData>| {
-                    let cidr = event.value.clone();
+                    let cidr = event.value();
                     log::info!("CIDR: {}", cidr);
                     cidr_input_ref.with_mut(|cidr_input| {
                         *cidr_input = cidr.clone();
@@ -91,7 +91,7 @@ pub fn CidrDecoder() -> Element {
             }
             div {
                 class: "alert alert-warning m-0",
-                hidden: !show_error_state.get(),
+                hidden: !*show_error_state.read(),
                 "The provided CIDR is invalid."
             }
             TextAreaForm {

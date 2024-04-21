@@ -30,25 +30,25 @@ pub fn ColorPicker() -> Element {
 }
 
 fn ColorWheel() -> Element {
-    let color_state = use_context::<Color>().unwrap();
-    let dimensions = use_signal(Rect::zero);
+    let color_state = use_context::<Color>();
+    let dimensions = use_signal(Rect::<f64, PageSpace>::zero);
     let tracking_state = use_signal(|| false);
 
     let process_mouse_event = move |event: Event<MouseData>| {
         let cursor_coordinates = event.data.page_coordinates();
         let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-        color_state.write().hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
+        color_state.hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);
     };
     
     rsx! {
         div {
             class: "colorwheel-wrapper",
-            onmounted: move || {
+            onmounted: move |_| {
                 to_owned![dimensions];
                 async move {
-                    if let Ok(rect) = get_client_rect().await {
-                        dimensions.set(rect);
-                    }
+                    // if let Ok(rect) = get_client_rect().await {
+                    //     dimensions.set(rect);
+                    // }
                 }
             },
             onmousedown: move |_| {
@@ -61,7 +61,7 @@ fn ColorWheel() -> Element {
                 tracking_state.set(false);
             },
             onmousemove: move |event| {
-                if *tracking_state.get() {
+                if *tracking_state.read() {
                     process_mouse_event(event);
                 }
             },
@@ -147,7 +147,7 @@ fn ColorWheelCursorSvg(hue: f64) -> Element {
                 }
             }
             g {
-                transform: "rotate({hue_to_css_rotation(*hue)} 50 50)",
+                transform: "rotate({hue_to_css_rotation(hue)} 50 50)",
                 circle {
                     cx: 50,
                     cy: 3.75,
@@ -173,6 +173,7 @@ fn ColorView() -> Element {
     }
 }
 
+#[derive(Clone)]
 struct Color {
     hue: f64,
     saturation: f64,

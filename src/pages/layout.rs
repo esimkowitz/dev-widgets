@@ -27,7 +27,7 @@ fn Sidebar() -> Element {
                     SidebarListItem {
                         widget_route: Route::HomePage {},
                         widget_entry_title: HOME_PAGE_WIDGET_ENTRY.short_title,
-                        icon: HOME_PAGE_WIDGET_ENTRY.icon
+                        icon: (HOME_PAGE_WIDGET_ENTRY.icon)()
                     }
                     for widget_type_route in Route::iter() {
                         if let Some(widget_type_string) = widget_type_route.get_widget_type_string() {
@@ -41,7 +41,7 @@ fn Sidebar() -> Element {
                                                 SidebarListItem {
                                                     widget_route: widget_route,
                                                     widget_entry_title: widget_entry.short_title,
-                                                    icon: widget_entry.icon
+                                                    icon: (widget_entry.icon)()
                                                 }
                                             }}
                                         }
@@ -65,15 +65,15 @@ fn SidebarListItem(
     widget_entry_title: &'static str,
     icon: Element,
 ) -> Element {
-    let route = use_route::<Route>().unwrap();
+    let route = use_route::<Route>();
 
-    let active_str = if widget_route == &route { "active" } else { "" };
+    let active_str = if widget_route == route { "active" } else { "" };
 
     rsx! {
         Link {
             class: "btn {active_str}",
             to: widget_route.clone(),
-            icon
+            {icon}
             "{widget_entry_title}"
         }
     }
@@ -81,7 +81,7 @@ fn SidebarListItem(
 
 #[component]
 pub fn WidgetView() -> Element {
-    let route = use_route::<Route>().unwrap();
+    let route = use_route::<Route>();
     let mut title = "Home";
     if let Some(widget_entry) = route.get_widget_entry() {
         title = widget_entry.title;

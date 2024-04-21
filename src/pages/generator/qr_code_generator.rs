@@ -3,7 +3,7 @@ use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
 
-use qrcode_generator;
+use qrcode_generator::{self, QrCodeEcc};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -26,7 +26,7 @@ pub fn QrCodeGenerator() -> Element {
 
     let qr_code_result = qrcode_generator::to_svg_to_string(
         *qr_code_value.read(),
-        qrcode_generator::QrCodeEcc::from(*qr_code_error_correction.read()),
+        (*qr_code_error_correction.read()).into(),
         1024,
         None::<&str>,
     );
@@ -44,13 +44,13 @@ pub fn QrCodeGenerator() -> Element {
                 oninput: |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
                 },
-                value: *qr_code_error_correction.get(),
+                value: *qr_code_error_correction.read(),
             }
             TextAreaForm {
                 label: "Input",
                 value: qr_code_value,
                 oninput: |event: Event<FormData>| {
-                    qr_code_value.set(event.value.clone());
+                    qr_code_value.set(event.value());
                 },
             }
 
@@ -87,9 +87,9 @@ impl Into<String> for Ecc {
 
 impl SelectFormEnum for Ecc {}
 
-impl From<&Ecc> for qrcode_generator::QrCodeEcc {
-    fn from(ecc: &Ecc) -> Self {
-        match *ecc {
+impl From<Ecc> for qrcode_generator::QrCodeEcc {
+    fn from(ecc: Ecc) -> Self {
+        match ecc {
             Ecc::Low => qrcode_generator::QrCodeEcc::Low,
             Ecc::Medium => qrcode_generator::QrCodeEcc::Medium,
             Ecc::Quartile => qrcode_generator::QrCodeEcc::Quartile,

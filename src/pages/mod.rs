@@ -132,7 +132,7 @@ pub struct WidgetIcon<T: IconShape + Copy> {
     pub(crate) icon: T,
 }
 
-impl<T: IconShape + Copy> WidgetIcon<T> {
+impl<T: IconShape + Copy + PartialEq> WidgetIcon<T> {
     pub fn icon(self) -> Element {
         rsx! {
             Icon::<T> {

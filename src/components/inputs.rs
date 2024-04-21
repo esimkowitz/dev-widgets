@@ -49,7 +49,7 @@ pub fn SelectForm<T: SelectFormEnum>(props: SelectFormProps<T>) -> Element {
     }
 }
 
-#[derive(Props)]
+#[derive(Props, Clone, PartialEq)]
 pub struct SelectFormProps<T: SelectFormEnum + 'static> {
     label: String,
     value: T,
@@ -148,7 +148,7 @@ pub fn TextInput(
                 }
                 label {
                     r#for: "{label}",
-                    {{*label}}
+                    {*label}
                 }
             }
         }

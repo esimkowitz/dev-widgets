@@ -51,8 +51,7 @@ pub fn DateConverter() -> Element {
                 label: "Unix Timestamp",
                 value: "{unix_time}",
                 onchange: move |event: Event<FormData>| {
-                    let new_unix_time = event.value.clone();
-                    if let Ok(unix_time) = i64::from_str(&new_unix_time) {
+                    if let Ok(unix_time) = event.parsed::<i64>() {
                         if let Ok(datetime) = OffsetDateTime::from_unix_timestamp(unix_time) {
                             date_signal.with_mut(|date_state| {
                                 date_state.set_local_datetime(datetime);

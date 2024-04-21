@@ -11,17 +11,16 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "UUID/GUID Generator",
     short_title: "UUID",
     description: "Generate unique identifiers",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsGlobe2> = WidgetIcon { icon: BsGlobe2 };
 
-pub fn UuidGenerator(cx: Scope) -> Element {
-    let hyphens_state = use_state(cx, || true);
-    let uppercase_state = use_state(cx, || true);
-    let num_uuids_state = use_state(cx, || 1);
-    #[allow(clippy::redundant_closure)]
-    let uuids_state = use_ref(cx, || Vec::<String>::new());
+pub fn UuidGenerator() -> Element {
+    let hyphens_state = use_signal(|| true);
+    let uppercase_state = use_signal(|| true);
+    let num_uuids_state = use_signal(|| 1);
+    let uuids_state= use_signal(|| Vec::<String>::new());
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {
@@ -46,7 +45,7 @@ pub fn UuidGenerator(cx: Scope) -> Element {
             }
             NumberInput::<usize> {
                 label: "Number of UUIDs to generate",
-                value: **num_uuids_state,
+                value: *num_uuids_state.read(),
                 onchange: move |value| {
                     num_uuids_state.set(value);
                 }
@@ -57,14 +56,14 @@ pub fn UuidGenerator(cx: Scope) -> Element {
                     class: "btn btn-primary me-3",
                     onclick: move |_| {
                         let mut uuids = vec![];
-                        for _ in 0..**num_uuids_state {
+                        for _ in 0..*num_uuids_state.read() {
                             let uuid = uuid::Uuid::new_v4();
-                            let mut uuid = if **hyphens_state {
+                            let mut uuid = if *hyphens_state.read() {
                                 uuid.hyphenated().to_string()
                             } else {
                                 uuid.simple().to_string()
                             };
-                            if **uppercase_state {
+                            if *uppercase_state.read() {
                                 uuid = uuid.to_uppercase();
                             }
                             uuids.push(uuid);

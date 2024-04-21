@@ -55,7 +55,7 @@ fn encoder_input(direction: Direction) -> Element {
                 let input_value = event.value();
                 match direction {
                     Direction::Encode => {
-                        *value_context.write() = EncoderValue {
+                        value_context = EncoderValue {
                             encoded_value: Base64::encode_string(input_value.as_bytes()),
                             decoded_value: input_value,
                         };
@@ -65,7 +65,7 @@ fn encoder_input(direction: Direction) -> Element {
                             Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
                             Err(_) => NOT_STRING.to_string(),
                         };
-                        *value_context.write() = EncoderValue {
+                        value_context = EncoderValue {
                             encoded_value: input_value,
                             decoded_value: decode_val,
                         };
@@ -76,12 +76,13 @@ fn encoder_input(direction: Direction) -> Element {
     }
 }
 
+#[derive(Clone)]
 struct EncoderValue {
     encoded_value: String,
     decoded_value: String,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 enum Direction {
     Encode,
     Decode,

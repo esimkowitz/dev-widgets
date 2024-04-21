@@ -54,11 +54,10 @@ fn converter_input(base: NumberBase) -> Element {
     rsx! {
         TextInput {
             label: "{base}",
-            value: "{format_number(value_context.0, *base, format_number_state.0)}",
+            value: "{format_number(value_context.0, base, format_number_state.0)}",
             oninput: move |event: Event<FormData>| {
-                let event_value = event.value.clone();
-                let event_value = sanitize_string(event_value);
-                value_context.write().0 = match base {
+                let event_value = sanitize_string(event.value());
+                value_context.0 = match base {
                     NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
                     NumberBase::Decimal => event_value.parse::<i64>(),
@@ -103,8 +102,10 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
 }
 
 
+#[derive(Clone)]
 struct ConverterValue(i64);
 
+#[derive(Clone)]
 struct FormatNumberState(bool);
 
 #[derive(PartialEq, Debug, Clone, Copy)]

@@ -38,8 +38,7 @@ pub fn HashGenerator() -> Element {
                 label: "Value to hash",
                 value: "{hash_generator_state.value}",
                 oninput: move |event: Event<FormData>| {
-                    let value = event.value.clone();
-                    hash_generator_state.value = value;
+                    hash_generator_state.value = event.value();
                 }
             }
             HashField {
@@ -62,7 +61,7 @@ pub fn HashGenerator() -> Element {
 fn HashField(algorithm: HashingAlgorithm) -> Element {
     let hash_generator_state = use_context::<HashGeneratorState>();
 
-    let mut hasher = select_hasher(*algorithm);
+    let mut hasher = select_hasher(algorithm);
 
     let hashed_value = generate_hash(
         hash_generator_state.value.clone(),
@@ -109,6 +108,7 @@ fn generate_hash(value: String, hasher: &mut dyn DynDigest, uppercase: bool) -> 
     }
 }
 
+#[derive(Clone)]
 struct HashGeneratorState {
     value: String,
     uppercase: bool,
