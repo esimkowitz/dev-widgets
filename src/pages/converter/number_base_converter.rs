@@ -17,17 +17,17 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn NumberBaseConverter() -> Element {
-    use_context_provider(|| ConverterValue(0));
-    let mut format_number_state = use_context_provider(|| FormatNumberState(false));
+    use_context_provider(|| Signal::new(ConverterValue(0)));
+    let mut format_number_state = use_context_provider(|| Signal::new(FormatNumberState(false)));
 
     rsx! {
         div {
             class: "number-base-converter",
             SwitchInput {
                 label: "Format Numbers",
-                checked: format_number_state.0,
+                checked: format_number_state.read().0,
                 oninput: move |is_enabled| {
-                    format_number_state.0 = is_enabled;
+                    format_number_state.write().0 = is_enabled;
                 }
             }
             converter_input {
@@ -48,16 +48,16 @@ pub fn NumberBaseConverter() -> Element {
 
 #[component]
 fn converter_input(base: NumberBase) -> Element {
-    let mut value_context = use_context::<ConverterValue>();
-    let format_number_state = use_context::<FormatNumberState>();
+    let mut value_context = use_context::<Signal<ConverterValue>>();
+    let format_number_state = use_context::<Signal<FormatNumberState>>();
 
     rsx! {
         TextInput {
             label: "{base}",
-            value: "{format_number(value_context.0, base, format_number_state.0)}",
+            value: "{format_number(value_context.read().0, base, format_number_state.read().0)}",
             oninput: move |event: Event<FormData>| {
                 let event_value = sanitize_string(event.value());
-                value_context.0 = match base {
+                value_context.write().0 = match base {
                     NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
                     NumberBase::Decimal => event_value.parse::<i64>(),
@@ -100,7 +100,6 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
         }
     }
 }
-
 
 #[derive(Clone)]
 struct ConverterValue(i64);
