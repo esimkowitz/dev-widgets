@@ -19,26 +19,26 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
 };
 
 pub fn HashGenerator() -> Element {
-    let mut hash_generator_state = use_context_provider(|| HashGeneratorState {
+    let mut hash_generator_state = use_context_provider(|| Signal::new(HashGeneratorState {
         value: "".to_string(),
         uppercase: false,
-    });
+    }));
 
     rsx! {
         div {
             class: "number-base-converter",
             SwitchInput {
                 label: "Uppercase",
-                checked: hash_generator_state.uppercase,
+                checked: hash_generator_state.read().uppercase,
                 oninput: move |is_enabled| {
-                    hash_generator_state.uppercase = is_enabled;
+                    hash_generator_state.write().uppercase = is_enabled;
                 }
             }
             TextAreaForm {
                 label: "Value to hash",
-                value: "{hash_generator_state.value}",
+                value: "{hash_generator_state.read().value}",
                 oninput: move |event: Event<FormData>| {
-                    hash_generator_state.value = event.value();
+                    hash_generator_state.write().value = event.value();
                 }
             }
             HashField {
@@ -59,15 +59,15 @@ pub fn HashGenerator() -> Element {
 
 #[component]
 fn HashField(algorithm: HashingAlgorithm) -> Element {
-    let hash_generator_state = use_context::<HashGeneratorState>();
+    let hash_generator_state = use_context::<Signal<HashGeneratorState>>();
 
     let mut hasher = select_hasher(algorithm);
 
-    let hashed_value = generate_hash(
-        hash_generator_state.value.clone(),
+    let hashed_value = hash_generator_state.with(|state| generate_hash(
+        state.value.clone(),
         &mut *hasher,
-        hash_generator_state.uppercase,
-    );
+        state.uppercase,
+    ));
 
     rsx! {
         TextInput {

@@ -17,10 +17,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
 pub fn Base64Encoder() -> Element {
-    use_context_provider(|| EncoderValue {
+    use_context_provider(|| Signal::new(EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
-    });
+    }));
     rsx! {
         div {
             class: "base64-encoder",
@@ -37,12 +37,12 @@ pub fn Base64Encoder() -> Element {
 #[allow(unused_assignments, unused_variables)]
 #[component]
 fn encoder_input(direction: Direction) -> Element {
-    let mut value_context = use_context::<EncoderValue>();
+    let mut value_context = use_context::<Signal<EncoderValue>>();
 
-    let current_value = match direction {
-        Direction::Encode => value_context.decoded_value.clone(),
-        Direction::Decode => value_context.encoded_value.clone(),
-    };
+    let current_value = value_context.with(|value| match direction {
+        Direction::Encode => value.decoded_value.clone(),
+        Direction::Decode => value.encoded_value.clone(),
+    });
 
     const NOT_STRING: &str = "Not String";
     rsx! {
@@ -56,20 +56,20 @@ fn encoder_input(direction: Direction) -> Element {
                 let input_value = event.value();
                 match direction {
                     Direction::Encode => {
-                        value_context = EncoderValue {
+                        value_context.set(EncoderValue {
                             encoded_value: Base64::encode_string(input_value.as_bytes()),
                             decoded_value: input_value,
-                        };
+                        });
                     },
                     Direction::Decode => {
                         let decode_val = match Base64::decode_vec(input_value.as_str()) {
                             Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
                             Err(_) => NOT_STRING.to_string(),
                         };
-                        value_context = EncoderValue {
+                        value_context.set(EncoderValue {
                             encoded_value: input_value,
                             decoded_value: decode_val,
-                        };
+                        });
                     },
                 };
             }

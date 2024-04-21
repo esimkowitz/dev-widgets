@@ -20,7 +20,7 @@ pub fn UuidGenerator() -> Element {
     let mut hyphens_state = use_signal(|| true);
     let mut uppercase_state = use_signal(|| true);
     let mut num_uuids_state = use_signal(|| 1);
-    let mut uuids_state= use_signal(|| Vec::<String>::new());
+    let mut uuids_state= use_signal(Vec::<String>::new);
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {
@@ -68,18 +68,14 @@ pub fn UuidGenerator() -> Element {
                             }
                             uuids.push(uuid);
                         }
-                        uuids_state.with_mut(|uuids_vec| {
-                            uuids_vec.append(&mut uuids);
-                        })
+                        uuids_state.write().append(&mut uuids);
                     },
                     "Generate"
                 }
                 button {
                     class: "btn btn-secondary",
                     onclick: move |_| {
-                        uuids_state.with_mut(|uuids_vec| {
-                            uuids_vec.clear();
-                        })
+                        uuids_state.write().clear();
                     },
                     "Clear"
                 }
