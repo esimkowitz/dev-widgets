@@ -3,7 +3,7 @@ use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsQrCode;
 
-use qrcode_generator::{self, QrCodeEcc};
+use qrcode_generator::{self};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -21,11 +21,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
 
 pub fn QrCodeGenerator() -> Element {
-    let qr_code_value = use_signal(|| "".to_string());
-    let qr_code_error_correction = use_signal(Ecc::default);
+    let mut qr_code_value = use_signal(|| "".to_string());
+    let mut qr_code_error_correction = use_signal(Ecc::default);
 
     let qr_code_result = qrcode_generator::to_svg_to_string(
-        *qr_code_value.read(),
+        (*qr_code_value.read()).clone(),
         (*qr_code_error_correction.read()).into(),
         1024,
         None::<&str>,
@@ -41,15 +41,15 @@ pub fn QrCodeGenerator() -> Element {
             class: "qr-code-generator",
             SelectForm::<Ecc> {
                 label: "Error Correction Level",
-                oninput: |ecc: Ecc| {
+                oninput: move |ecc: Ecc| {
                     qr_code_error_correction.set(ecc);
                 },
-                value: *qr_code_error_correction.read(),
+                value: (*qr_code_error_correction.read()).clone(),
             }
             TextAreaForm {
                 label: "Input",
                 value: qr_code_value,
-                oninput: |event: Event<FormData>| {
+                oninput: move |event: Event<FormData>| {
                     qr_code_value.set(event.value());
                 },
             }

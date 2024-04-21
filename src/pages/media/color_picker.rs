@@ -30,11 +30,11 @@ pub fn ColorPicker() -> Element {
 }
 
 fn ColorWheel() -> Element {
-    let color_state = use_context::<Color>();
+    let mut color_state = use_context::<Color>();
     let dimensions = use_signal(Rect::<f64, PageSpace>::zero);
-    let tracking_state = use_signal(|| false);
+    let mut tracking_state = use_signal(|| false);
 
-    let process_mouse_event = move |event: Event<MouseData>| {
+    let mut process_mouse_event = move |event: Event<MouseData>| {
         let cursor_coordinates = event.data.page_coordinates();
         let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
         color_state.hue = cursor_position_to_hue(cursor_coordinates, center_coordinates);

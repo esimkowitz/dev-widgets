@@ -17,10 +17,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsGlobe2> = WidgetIcon { icon: BsGlobe2 };
 
 pub fn UuidGenerator() -> Element {
-    let hyphens_state = use_signal(|| true);
-    let uppercase_state = use_signal(|| true);
-    let num_uuids_state = use_signal(|| 1);
-    let uuids_state= use_signal(|| Vec::<String>::new());
+    let mut hyphens_state = use_signal(|| true);
+    let mut uppercase_state = use_signal(|| true);
+    let mut num_uuids_state = use_signal(|| 1);
+    let mut uuids_state= use_signal(|| Vec::<String>::new());
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {

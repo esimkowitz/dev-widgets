@@ -8,7 +8,7 @@ pub fn Accordion(
     is_open: Option<bool>,
 ) -> Element {
     let default_open_flag = !is_open.unwrap_or(false);
-    let is_close_accordion = use_signal(|| default_open_flag);
+    let mut is_close_accordion = use_signal(|| default_open_flag);
     let buttoncss = if *is_close_accordion.read() {
         "accordion-button p-2 collapsed"
     } else {
@@ -31,7 +31,7 @@ pub fn Accordion(
                     onclick: move |_| {
                         is_close_accordion.set(!*is_close_accordion.read());
                     },
-                    {*title}
+                    {title}
                 }
             }
             div {

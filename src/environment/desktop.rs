@@ -1,13 +1,12 @@
-use dioxus::prelude::Component;
+use dioxus::{dioxus_core::Element, prelude::{Component, LaunchBuilder}};
 use dioxus_desktop::{
     Config as DesktopConfig, 
     WindowBuilder,
 };
-
 #[cfg(target_os = "macos")]
 use dioxus_desktop::tao::menu::{MenuBar, MenuItem};
 
-pub fn init_app(root: Component) {
+pub fn init_app(root: fn() -> Element) {
     // Configure dioxus-desktop Tauri window
     let config_builder = DesktopConfig::default().with_custom_index(
         r#"
@@ -32,7 +31,8 @@ pub fn init_app(root: Component) {
     let window_builder = WindowBuilder::new().with_default();
 
     // Launch the app
-    dioxus_desktop::launch_cfg(root, config_builder.with_window(window_builder));
+    let builder = LaunchBuilder::new().with_cfg(config_builder.with_window(window_builder));
+    builder.launch(root)
 }
 
 trait WindowBuilderExt {
