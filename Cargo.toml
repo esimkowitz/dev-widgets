@@ -1,27 +1,27 @@
 [package]
 name = "dev-widgets"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
 build = "build.rs"
 
 [build-dependencies]
-curl = "0.4.44"
-grass = "0.13.1"
+curl = "0.4"
+grass = "0.13"
 zip-extract = "0.1"
 
 [dependencies]
-base64ct = { version = "1.6.0", features = ["alloc"] }
+base64ct = { version = "1.6", features = ["alloc"] }
 cidr = "0.2.2"
 digest = "0.10"
 dioxus-free-icons = { version = "0.8", features = ["bootstrap"] }
 dioxus-router = "0.5.0"
-md-5 = "0.10.6"
-num-traits = "0.2.17"
+md-5 = "0.10"
+num-traits = "0.2"
 qrcode-generator = "4.1.9"
-sha1 = "0.10.6"
-sha2 = "0.10.8"
+sha1 = "0.10"
+sha2 = "0.10"
 strum = "0.26"
 strum_macros = "0.26"
 uuid = { version = "1.8", features = ["v4", "fast-rng"] }
