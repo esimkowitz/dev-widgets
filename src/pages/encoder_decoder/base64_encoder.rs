@@ -34,9 +34,10 @@ pub fn Base64Encoder() -> Element {
     }
 }
 
+#[allow(unused_assignments, unused_variables)]
 #[component]
 fn encoder_input(direction: Direction) -> Element {
-    let value_context = use_context::<EncoderValue>();
+    let mut value_context = use_context::<EncoderValue>();
 
     let current_value = match direction {
         Direction::Encode => value_context.decoded_value.clone(),

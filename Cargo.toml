@@ -15,7 +15,6 @@ zip-extract = "0.1.2"
 base64ct = { version = "1.6.0", features = ["alloc"] }
 cidr = "0.2.2"
 digest = "0.10.7"
-dioxus = "0.5.1"
 dioxus-free-icons = { version = "0.8.3", features = ["bootstrap"] }
 dioxus-router = "0.5.0"
 md-5 = "0.10.6"
@@ -30,12 +29,12 @@ time-tz = { version = "2.0.0", features = ["db", "system"] }
 log = { version = "0.4.20", features = ["std"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-dioxus-desktop = "0.5.1"
+dioxus = {version = "0.5.1", features = ["desktop"]}
 getrandom = "0.2.12"
 time = "0.3.31"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-dioxus-web = "0.5.1"
+dioxus = {version = "0.5.1", features = ["web"]}
 getrandom = { version = "0.2.12", features = ["js"] }
 time = { version = "0.3.31", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.90", features = ["enable-interning"] }

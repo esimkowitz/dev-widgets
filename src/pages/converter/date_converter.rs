@@ -22,7 +22,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
 
 pub fn DateConverter() -> Element {
-    let date_signal = use_signal(|| DateConverterState {
+    let mut date_signal = use_signal(|| DateConverterState {
         time_zone: DcTimeZone::default(),
         time_utc: OffsetDateTime::now_utc(),
     });

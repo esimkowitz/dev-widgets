@@ -19,7 +19,7 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
 };
 
 pub fn HashGenerator() -> Element {
-    let hash_generator_state = use_context_provider(|| HashGeneratorState {
+    let mut hash_generator_state = use_context_provider(|| HashGeneratorState {
         value: "".to_string(),
         uppercase: false,
     });

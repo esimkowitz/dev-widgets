@@ -18,7 +18,7 @@ const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn NumberBaseConverter() -> Element {
     use_context_provider(|| ConverterValue(0));
-    let format_number_state = use_context_provider(|| FormatNumberState(false));
+    let mut format_number_state = use_context_provider(|| FormatNumberState(false));
 
     rsx! {
         div {
@@ -48,7 +48,7 @@ pub fn NumberBaseConverter() -> Element {
 
 #[component]
 fn converter_input(base: NumberBase) -> Element {
-    let value_context = use_context::<ConverterValue>();
+    let mut value_context = use_context::<ConverterValue>();
     let format_number_state = use_context::<FormatNumberState>();
 
     rsx! {

@@ -109,7 +109,7 @@ pub fn TextAreaForm(
             }
             label {
                 r#for: "{label}",
-                {*label}
+                {label.clone()}
             }
         }
     }
@@ -148,7 +148,7 @@ pub fn TextInput(
                 }
                 label {
                     r#for: "{label}",
-                    {*label}
+                    {label.clone()}
                 }
             }
         }
@@ -179,7 +179,7 @@ pub fn NumberInput<T: PrimInt + Display + Default + FromStr + 'static>(
                     }
                     label {
                         r#for: "{label}",
-                        {*label}
+                        {label}
                     }
                 }
                 div {

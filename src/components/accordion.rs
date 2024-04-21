@@ -29,7 +29,7 @@ pub fn Accordion(
                     r#type: "button",
                     aria_expanded: "{!*is_close_accordion.read()}",
                     onclick: move |_| {
-                        is_close_accordion.set(!*is_close_accordion.read());
+                        is_close_accordion.with_mut(|flag| *flag = !*flag);
                     },
                     {title}
                 }
