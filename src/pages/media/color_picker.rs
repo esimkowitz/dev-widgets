@@ -8,8 +8,12 @@ use dioxus::{
     prelude::{SvgAttributes, *},
 };
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
+use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
-use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::{
+    components::inputs::{SelectForm, SelectFormEnum, TextInput},
+    pages::{WidgetEntry, WidgetIcon},
+};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Color Picker",
@@ -24,31 +28,27 @@ const SATURATION_BRIGHTNESS_BOX_ID: &str = "saturation-brightness-box";
 const COLORWHEEL_ID: &str = "colorwheel";
 
 pub fn ColorPicker() -> Element {
+    let mut target = use_signal(|| None::<&'static str>);
+    let mut tracking = use_signal(|| false);
     let mut color_state = use_context_provider(|| {
         Signal::new(ColorPickerState {
             hue: 0.0,
             saturation: 1.0,
             brightness: 1.0,
             alpha: 1.0,
-            target: None,
-            tracking: false,
             colorwheel_rect: Rect::zero(),
             saturation_brightness_rect: Rect::zero(),
         })
     });
 
     let mut process_pointer_event = move |event: Event<PointerData>| {
-        color_state.with_mut(|color_state| match color_state.target {
+        color_state.with_mut(|color_state| match *target.read() {
             Some(SATURATION_BRIGHTNESS_BOX_ID) => {
                 let page_coordinates = event.data().page_coordinates();
                 let cursor_coordinates = Point2D::<f64, PageSpace>::new(
                     page_coordinates.x - color_state.saturation_brightness_rect.min().x,
                     page_coordinates.y - color_state.saturation_brightness_rect.min().y,
                 );
-                log::info!("processing pointer event for SATURATION_BRIGHTNESS_BOX_ID");
-                log::info!("page_coordinates: {:?}", page_coordinates);
-                log::info!("saturation_brightness_rect: {:?}", color_state.saturation_brightness_rect);
-                log::info!("cursor_coordinates: {:?}", cursor_coordinates);
                 let sv_scale =
                     default::Scale::new(color_state.saturation_brightness_rect.size.width / 100.0);
                 let point_sv = cursor_coordinates.cast_unit() / sv_scale;
@@ -57,12 +57,7 @@ pub fn ColorPicker() -> Element {
             }
             Some(COLORWHEEL_ID) => {
                 let page_coordinates: Point2D<f64, PageSpace> = event.data().page_coordinates();
-                log::info!("min_coords: {:?}", color_state.colorwheel_rect.min());
-                log::info!("processing pointer event for COLORWHEEL_ID");
-                log::info!("page_coordinates: {:?}", page_coordinates);
-                log::info!("colorwheel_rect: {:?}", color_state.colorwheel_rect);
                 let center_coordinates = color_state.colorwheel_rect.center().cast_unit();
-                log::info!("center_coordinates: {:?}", center_coordinates);
                 color_state.hue = cursor_position_to_hue(page_coordinates, center_coordinates);
             }
             _ => {}
@@ -71,20 +66,20 @@ pub fn ColorPicker() -> Element {
 
     let modify_capture_pointer = use_signal(|| {
         move |pointer_id: i32, is_capturing: bool| {
-            log::info!("modifying capture pointer ColorPicker");
+            log::trace!("modifying capture pointer ColorPicker");
             let eval = eval(match is_capturing {
                 true => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("capturing " + pointer_id);
-                    document.getElementById('color-picker').setPointerCapture(pointer_id);
+                    document.getElementById('color-picker-inner').setPointerCapture(pointer_id);
                     "#
                 }
                 false => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("releasing " + pointer_id);
-                    document.getElementById('color-picker').releasePointerCapture(pointer_id);
+                    document.getElementById('color-picker-inner').releasePointerCapture(pointer_id);
                     "#
                 }
             });
@@ -95,51 +90,43 @@ pub fn ColorPicker() -> Element {
     rsx! {
         div {
             class: "color-picker",
-            id: "color-picker",
-            onpointerdown: move |event| {
-                let pointerId = event.data().pointer_id();
-                event.stop_propagation();
-                log::info!("pointerdown ColorPicker, {}", pointerId);
-                modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
-                let pointerRect = event.data().page_coordinates();
-                let elementRect = event.data().element_coordinates();
-                log::info!("pointerRect: {:?}", pointerRect);
-                log::info!("elementRect: {:?}", elementRect);
-                log::info!("colorwheel_rect: {:?}", color_state.read().colorwheel_rect);
-                log::info!("saturation_brightness_rect: {:?}", color_state.read().saturation_brightness_rect);
-                if pointerRect.x >= color_state.read().saturation_brightness_rect.min().x
-                    && pointerRect.x <= color_state.read().saturation_brightness_rect.max().x
-                    && pointerRect.y >= color_state.read().saturation_brightness_rect.min().y
-                    && pointerRect.y <= color_state.read().saturation_brightness_rect.max().y
-                {
-                    color_state.write().target = Some(SATURATION_BRIGHTNESS_BOX_ID);
-                } else {
-                    color_state.write().target = Some(COLORWHEEL_ID);
-                }
-                process_pointer_event(event);
-            },
-            onpointerup: move |event| {
-                let pointerId = event.data().pointer_id();
-                modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
-            },
-            ongotpointercapture: move |_| {
-                log::info!("gotpointercapture");
-                color_state.write().tracking = true;
-            },
-            onlostpointercapture: move |_| {
-                log::info!("lostpointercapture");
-                color_state.with_mut(|color_state| {
-                    color_state.target = None;
-                    color_state.tracking = false;
-                });
-            },
-            onpointermove: move |event| {
-                if color_state.read().tracking {
-                    process_pointer_event(event);
-                }
-            },
             div {
                 class: "color-picker-inner",
+                id: "color-picker-inner",
+                onpointerdown: move |event| {
+                    let pointerId = event.data().pointer_id();
+                    event.stop_propagation();
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                    let pointerRect = event.data().page_coordinates();
+                    if pointerRect.x >= color_state.read().saturation_brightness_rect.min().x
+                        && pointerRect.x <= color_state.read().saturation_brightness_rect.max().x
+                        && pointerRect.y >= color_state.read().saturation_brightness_rect.min().y
+                        && pointerRect.y <= color_state.read().saturation_brightness_rect.max().y
+                    {
+                        target.set(Some(SATURATION_BRIGHTNESS_BOX_ID));
+                    } else {
+                        target.set(Some(COLORWHEEL_ID));
+                    }
+                    process_pointer_event(event);
+                },
+                onpointerup: move |event| {
+                    let pointerId = event.data().pointer_id();
+                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                },
+                ongotpointercapture: move |_| {
+                    log::trace!("gotpointercapture");
+                    tracking.set(true);
+                },
+                onlostpointercapture: move |_| {
+                    log::trace!("lostpointercapture");
+                    tracking.set(false);
+                    target.set(None);
+                },
+                onpointermove: move |event| {
+                    if *tracking.read() {
+                        process_pointer_event(event);
+                    }
+                },
                 ColorWheel {}
                 SaturationBrightnessBox {}
             }
@@ -310,25 +297,36 @@ fn CursorPrimitiveSvg(
 }
 
 fn ColorView() -> Element {
+    let mut color_format = use_signal(ColorFormat::default);
     let color_state = use_context::<Signal<ColorPickerState>>();
+    let color = color_state.read().get_color();
+    let rgb_string = color.to_rgb_string();
+    let color_text = match *color_format.read() {
+        ColorFormat::RGB => rgb_string.clone(),
+        ColorFormat::HSL => color.to_hsl_string(),
+        ColorFormat::HSV => color.to_hsv_string(),
+        ColorFormat::HEX => color.to_hex_string(),
+        ColorFormat::HWB => color.to_hwb_string(),
+        ColorFormat::CMYK => color.to_cmyk_string(),
+    };
     rsx! {
         div {
             class: "color-view",
             div {
                 class: "color-view-display",
-                style: "--color-view-background: {color_state.read().get_rgb_string()};"
+                style: "--color-view-background: {rgb_string};"
             }
-            div {
-                class: "color-view-text",
-                {color_state.read().get_rgb_string()}
+            TextInput {
+                label: "Color",
+                value: color_text,
+                readonly: true
             }
-            div {
-                class: "color-view-text",
-                {color_state.read().get_color().to_hsl_string()}
-            }
-            div {
-                class: "color-view-text",
-                {color_state.read().get_color().to_hex_string()}
+            SelectForm::<ColorFormat> {
+                label: "Color Format",
+                oninput: move |new_format: ColorFormat| {
+                    color_format.set(new_format)
+                },
+                value: *color_format.read(),
             }
         }
     }
@@ -339,10 +337,30 @@ struct ColorPickerState {
     saturation: f64,
     brightness: f64,
     alpha: f64,
-    target: Option<&'static str>,
-    tracking: bool,
     colorwheel_rect: Rect<f64, f64>,
     saturation_brightness_rect: Rect<f64, f64>,
+}
+
+#[derive(
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+)]
+#[allow(clippy::upper_case_acronyms)]
+enum ColorFormat {
+    #[default]
+    RGB,
+    HSL,
+    HSV,
+    HEX,
+    HWB,
+    CMYK,
+}
+
+impl SelectFormEnum for ColorFormat {}
+
+impl From<ColorFormat> for String {
+    fn from(color_format: ColorFormat) -> Self {
+        color_format.to_string()
+    }
 }
 
 impl ColorPickerState {

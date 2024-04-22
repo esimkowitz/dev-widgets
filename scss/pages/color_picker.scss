@@ -78,21 +78,20 @@ div.color-picker {
   $color_view_height: 2rem;
   .color-view {
     margin-top: 1rem;
-    height: $color_view_height;
-    line-height: $color_view_height;
     display: flex;
     flex-direction: row;
-    vertical-align: middle;
+    height: calc($color_view_height * 2);
     .color-view-display {
+      margin: auto;
       height: $color_view_height;
       width: $color_view_height;
       border-radius: calc($color_view_height * 0.5);
       background-color: var(--color-view-background);
       border: solid $border_width var(--bs-dark);
     }
-    .color-view-text {
+    .text-input, .select-form {
+      margin: auto;
       flex-grow: 1;
-      justify-content: center;
       margin-left: 1rem;
     }
   }

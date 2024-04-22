@@ -35,7 +35,6 @@ pub fn QrCodeGenerator() -> Element {
         Err(_) => "".to_string(),
     };
 
-    // TODO: fix errors
     rsx! {
         div {
             class: "qr-code-generator",
