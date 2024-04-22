@@ -23,8 +23,8 @@ pub enum GeneratorRoute {
     UuidGenerator {},
 }
 
-fn Index(cx: Scope) -> Element {
-    render! {
+fn Index() -> Element {
+    rsx! {
         div {
             class: "generator",
         }

@@ -10,36 +10,36 @@ pub static HOME_PAGE_WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Home",
     short_title: "Home",
     description: "Home page",
-    icon: |cx| HOME_ICON.icon(cx),
+    icon: || HOME_ICON.icon(),
 };
 
 const HOME_ICON: WidgetIcon<BsHouseDoorFill> = WidgetIcon {
     icon: BsHouseDoorFill,
 };
 
-pub fn HomePage(cx: Scope) -> Element {
-    render! {
+pub fn HomePage() -> Element {
+    rsx! {
         div {
             class: "home-page",
             for route in Route::iter() {
                 for widget_route in route.get_widgets() {
                     if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
-                        rsx! {
+                        {rsx! {
                             div {
                                 class: "card",
                                 div {
                                     class: "card-img-top",
-                                    (widget_entry.icon)(cx)
+                                    {(widget_entry.icon)()}
                                 }
                                 div {
                                     class: "card-body",
                                     div {
                                         class: "card-title",
-                                        widget_entry.title
+                                        {widget_entry.title}
                                     }
                                     div {
                                         class: "card-text",
-                                        widget_entry.description
+                                        {widget_entry.description}
                                     }
                                     Link {
                                         class: "stretched-link",
@@ -47,7 +47,7 @@ pub fn HomePage(cx: Scope) -> Element {
                                     }
                                 }
                             }
-                        }
+                        }}
                     }
                 }
             }

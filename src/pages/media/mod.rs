@@ -15,8 +15,8 @@ pub enum MediaRoute {
     ColorPicker {},
 }
 
-fn Index(cx: Scope) -> Element {
-    render! {
+fn Index() -> Element {
+    rsx! {
         div {
             class: "media",
         }

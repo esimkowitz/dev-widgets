@@ -11,17 +11,17 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
     short_title: "Base64",
     description: "Encode and decode base64 strings",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
-pub fn Base64Encoder(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || EncoderValue {
+pub fn Base64Encoder() -> Element {
+    use_context_provider(|| Signal::new(EncoderValue {
         encoded_value: String::new(),
         decoded_value: String::new(),
-    });
-    render! {
+    }));
+    rsx! {
         div {
             class: "base64-encoder",
             encoder_input {
@@ -34,17 +34,18 @@ pub fn Base64Encoder(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn encoder_input(cx: Scope, direction: Direction) -> Element {
-    let value_context = use_shared_state::<EncoderValue>(cx).unwrap();
+#[allow(unused_assignments, unused_variables)]
+#[component]
+fn encoder_input(direction: Direction) -> Element {
+    let mut value_context = use_context::<Signal<EncoderValue>>();
 
-    let current_value = match direction {
-        Direction::Encode => value_context.read().decoded_value.clone(),
-        Direction::Decode => value_context.read().encoded_value.clone(),
-    };
+    let current_value = value_context.with(|value| match direction {
+        Direction::Encode => value.decoded_value.clone(),
+        Direction::Decode => value.encoded_value.clone(),
+    });
 
     const NOT_STRING: &str = "Not String";
-    render! {
+    rsx! {
         TextAreaForm {
             label: match direction {
                 Direction::Encode => "Text",
@@ -52,23 +53,23 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
             },
             value: "{current_value}",
             oninput: move |event: Event<FormData>| {
-                let input_value = event.value.clone();
+                let input_value = event.value();
                 match direction {
                     Direction::Encode => {
-                        *value_context.write() = EncoderValue {
+                        value_context.set(EncoderValue {
                             encoded_value: Base64::encode_string(input_value.as_bytes()),
                             decoded_value: input_value,
-                        };
+                        });
                     },
                     Direction::Decode => {
                         let decode_val = match Base64::decode_vec(input_value.as_str()) {
                             Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
                             Err(_) => NOT_STRING.to_string(),
                         };
-                        *value_context.write() = EncoderValue {
+                        value_context.set(EncoderValue {
                             encoded_value: input_value,
                             decoded_value: decode_val,
-                        };
+                        });
                     },
                 };
             }
@@ -76,12 +77,13 @@ fn encoder_input(cx: Scope, direction: Direction) -> Element {
     }
 }
 
+#[derive(Clone)]
 struct EncoderValue {
     encoded_value: String,
     decoded_value: String,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 enum Direction {
     Encode,
     Decode,

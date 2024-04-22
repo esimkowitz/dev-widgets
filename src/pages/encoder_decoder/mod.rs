@@ -19,8 +19,8 @@ pub enum EncoderDecoderRoute {
     CidrDecoder {},
 }
 
-fn Index(cx: Scope) -> Element {
-    render! {
+fn Index() -> Element {
+    rsx! {
         div {
             class: "encoder-decoder"
         }

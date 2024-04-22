@@ -11,18 +11,16 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Number Base Converter",
     short_title: "Number Base",
     description: "Convert numbers between binary, octal, decimal, and hexadecimal",
-    icon: move |cx| ICON.icon(cx),
+    icon: move || ICON.icon(),
 };
 
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
-pub fn NumberBaseConverter(cx: Scope) -> Element {
-    use_shared_state_provider(cx, || ConverterValue(0));
-    use_shared_state_provider(cx, || FormatNumberState(false));
+pub fn NumberBaseConverter() -> Element {
+    use_context_provider(|| Signal::new(ConverterValue(0)));
+    let mut format_number_state = use_context_provider(|| Signal::new(FormatNumberState(false)));
 
-    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
-
-    render! {
+    rsx! {
         div {
             class: "number-base-converter",
             SwitchInput {
@@ -48,18 +46,17 @@ pub fn NumberBaseConverter(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn converter_input(cx: Scope, base: NumberBase) -> Element {
-    let value_context = use_shared_state::<ConverterValue>(cx).unwrap();
-    let format_number_state = use_shared_state::<FormatNumberState>(cx).unwrap();
+#[component]
+fn converter_input(base: NumberBase) -> Element {
+    let mut value_context = use_context::<Signal<ConverterValue>>();
+    let format_number_state = use_context::<Signal<FormatNumberState>>();
 
-    render! {
+    rsx! {
         TextInput {
             label: "{base}",
-            value: "{format_number(value_context.read().0, *base, format_number_state.read().0)}",
+            value: "{format_number(value_context.read().0, base, format_number_state.read().0)}",
             oninput: move |event: Event<FormData>| {
-                let event_value = event.value.clone();
-                let event_value = sanitize_string(event_value);
+                let event_value = sanitize_string(event.value());
                 value_context.write().0 = match base {
                     NumberBase::Binary => i64::from_str_radix(&event_value, 2),
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
@@ -104,9 +101,10 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
     }
 }
 
-
+#[derive(Clone)]
 struct ConverterValue(i64);
 
+#[derive(Clone)]
 struct FormatNumberState(bool);
 
 #[derive(PartialEq, Debug, Clone, Copy)]

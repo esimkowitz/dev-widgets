@@ -1,52 +1,52 @@
 [package]
 name = "dev-widgets"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
 build = "build.rs"
 
 [build-dependencies]
-curl = "0.4.44"
-grass = "0.13.1"
-zip-extract = "0.1.2"
+curl = "0.4"
+grass = "0.13"
+zip-extract = "0.1"
 
 [dependencies]
-base64ct = { version = "1.6.0", features = ["alloc"] }
+base64ct = { version = "1.6", features = ["alloc"] }
 cidr = "0.2.2"
-digest = "0.10.7"
-dioxus = "0.4.3"
-dioxus-free-icons = { version = "0.7.0", features = ["bootstrap"] }
-dioxus-router = "0.4.0"
-md-5 = "0.10.6"
-num-traits = "0.2.17"
+digest = "0.10"
+dioxus-free-icons = { version = "0.8", features = ["bootstrap"] }
+dioxus-router = "0.5.0"
+md-5 = "0.10"
+num-traits = "0.2"
 qrcode-generator = "4.1.9"
-sha1 = "0.10.6"
-sha2 = "0.10.8"
-strum = "0.25.0"
-strum_macros = "0.25.3"
-uuid = { version = "1.6.1", features = ["v4", "fast-rng"] }
-time-tz = { version = "2.0.0", features = ["db", "system"] }
-log = { version = "0.4.20", features = ["std"] }
+sha1 = "0.10"
+sha2 = "0.10"
+strum = "0.26"
+strum_macros = "0.26"
+uuid = { version = "1.8", features = ["v4", "fast-rng"] }
+time-tz = { version = "2.0", features = ["db", "system"] }
+log = { version = "0.4", features = ["std"] }
+color_processing = "0.6"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-dioxus-desktop = "0.4.3"
-getrandom = "0.2.12"
-time = "0.3.31"
+dioxus = {version = "0.5.1", features = ["desktop"]}
+getrandom = "0.2"
+time = "0.3"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-dioxus-web = "0.4.3"
-getrandom = { version = "0.2.12", features = ["js"] }
-time = { version = "0.3.31", features = ["wasm-bindgen"] }
-wasm-bindgen = { version = "0.2.90", features = ["enable-interning"] }
+dioxus = {version = "0.5.1", features = ["web"]}
+getrandom = { version = "0.2", features = ["js"] }
+time = { version = "0.3", features = ["wasm-bindgen"] }
+wasm-bindgen = { version = "0.2.92", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
-version = "0.1.0"
+version = "0.2.0"
 resources = ["public/**/*"]
-copyright = "Copyright (c) Evan Simkowitz 2023. All rights reserved."
+copyright = "Copyright (c) Evan Simkowitz 2024. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]

@@ -23,8 +23,8 @@ pub enum ConverterRoute {
     NumberBaseConverter {},
 }
 
-fn Index(cx: Scope) -> Element {
-    render! {
+fn Index() -> Element {
+    rsx! {
         div {
             class: "converter",
         }

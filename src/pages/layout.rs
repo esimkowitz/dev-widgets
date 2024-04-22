@@ -6,8 +6,8 @@ use crate::components;
 use crate::pages::home_page::HOME_PAGE_WIDGET_ENTRY;
 use crate::pages::Route;
 
-pub fn Container(cx: Scope) -> Element {
-    render! {
+pub fn Container() -> Element {
+    rsx! {
         div {
             class: "container-fluid",
             Sidebar {}
@@ -16,8 +16,8 @@ pub fn Container(cx: Scope) -> Element {
     }
 }
 
-fn Sidebar(cx: Scope) -> Element {
-    render! {
+fn Sidebar() -> Element {
+    rsx! {
         div {
             class: "sidebar",
             div {
@@ -27,27 +27,27 @@ fn Sidebar(cx: Scope) -> Element {
                     SidebarListItem {
                         widget_route: Route::HomePage {},
                         widget_entry_title: HOME_PAGE_WIDGET_ENTRY.short_title,
-                        icon: (HOME_PAGE_WIDGET_ENTRY.icon)(cx)
+                        icon: (HOME_PAGE_WIDGET_ENTRY.icon)()
                     }
                     for widget_type_route in Route::iter() {
                         if let Some(widget_type_string) = widget_type_route.get_widget_type_string() {
-                            rsx! {
+                            {rsx! {
                                 components::accordion::Accordion {
                                     title: "{widget_type_string}",
                                     is_open: true,
                                     for widget_route in widget_type_route.get_widgets() {
                                         if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
-                                            rsx! {
+                                            {rsx! {
                                                 SidebarListItem {
                                                     widget_route: widget_route,
                                                     widget_entry_title: widget_entry.short_title,
-                                                    icon: (widget_entry.icon)(cx)
+                                                    icon: (widget_entry.icon)()
                                                 }
-                                            }
+                                            }}
                                         }
                                     }
                                 }
-                            }
+                            }}
                         }
                     }
                 }
@@ -59,35 +59,34 @@ fn Sidebar(cx: Scope) -> Element {
     }
 }
 
-#[inline_props]
-fn SidebarListItem<'a>(
-    cx: Scope<'a>,
+#[component]
+fn SidebarListItem(
     widget_route: Route,
-    widget_entry_title: &'a str,
-    icon: Element<'a>,
-) -> Element<'a> {
-    let route = use_route::<Route>(cx).unwrap();
+    widget_entry_title: &'static str,
+    icon: Element,
+) -> Element {
+    let route = use_route::<Route>();
 
-    let active_str = if widget_route == &route { "active" } else { "" };
+    let active_str = if widget_route == route { "active" } else { "" };
 
-    render! {
+    rsx! {
         Link {
             class: "btn {active_str}",
             to: widget_route.clone(),
-            icon
+            {icon}
             "{widget_entry_title}"
         }
     }
 }
 
-#[inline_props]
-pub fn WidgetView(cx: Scope) -> Element {
-    let route = use_route::<Route>(cx).unwrap();
+#[component]
+pub fn WidgetView() -> Element {
+    let route = use_route::<Route>();
     let mut title = "Home";
     if let Some(widget_entry) = route.get_widget_entry() {
         title = widget_entry.title;
     }
-    render! {
+    rsx! {
         div {
             class: "widget-view",
             h3 {
