@@ -1,6 +1,8 @@
 div.color-picker {
   $colorwheel_diameter: 30em;
 
+  width: $colorwheel_diameter;
+
   .color-picker-inner {
     position: relative;
     .colorwheel-wrapper {
@@ -73,11 +75,25 @@ div.color-picker {
   }
 
   --color-view-background: white;
+  $color_view_height: 2rem;
   .color-view {
-    height: 5rem;
-    width: 5rem;
-    border-radius: 1rem;
-    background-color: var(--color-view-background);
-    border: solid $border_width var(--bs-dark);
+    margin-top: 1rem;
+    height: $color_view_height;
+    line-height: $color_view_height;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    .color-view-display {
+      height: $color_view_height;
+      width: $color_view_height;
+      border-radius: calc($color_view_height * 0.5);
+      background-color: var(--color-view-background);
+      border: solid $border_width var(--bs-dark);
+    }
+    .color-view-text {
+      flex-grow: 1;
+      justify-content: center;
+      margin-left: 1rem;
+    }
   }
 }
