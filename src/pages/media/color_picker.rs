@@ -20,54 +20,73 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 
 const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
 
+const SATURATION_BRIGHTNESS_BOX_ID: &str = "saturation-brightness-box";
+const COLORWHEEL_ID: &str = "colorwheel";
+
 pub fn ColorPicker() -> Element {
-    use_context_provider(|| {
+    let mut color_state = use_context_provider(|| {
         Signal::new(ColorPickerState {
             hue: 0.0,
             saturation: 1.0,
             brightness: 1.0,
             alpha: 1.0,
+            target: None,
+            tracking: false,
+            colorwheel_rect: Rect::zero(),
+            saturation_brightness_rect: Rect::zero(),
         })
     });
 
-    rsx! {
-        div {
-            class: "color-picker",
-            ColorWheel {}
-            SaturationBrightnessBox {}
-            ColorView {}
-        }
-    }
-}
-
-fn ColorWheel() -> Element {
-    let mut color_state = use_context::<Signal<ColorPickerState>>();
-    let mut tracking_state = use_signal(|| false);
-    let dimensions = use_signal(Rect::<f64, f64>::zero);
-
     let mut process_pointer_event = move |event: Event<PointerData>| {
-        let page_coords = event.data().page_coordinates();
-        let center_coordinates = dimensions.with(|rect| rect.center().cast_unit());
-        color_state.write().hue = cursor_position_to_hue(page_coords, center_coordinates);
+        color_state.with_mut(|color_state| match color_state.target {
+            Some(SATURATION_BRIGHTNESS_BOX_ID) => {
+                let page_coordinates = event.data().page_coordinates();
+                let cursor_coordinates = Point2D::<f64, PageSpace>::new(
+                    page_coordinates.x - color_state.saturation_brightness_rect.min().x,
+                    page_coordinates.y - color_state.saturation_brightness_rect.min().y,
+                );
+                log::info!("processing pointer event for SATURATION_BRIGHTNESS_BOX_ID");
+                log::info!("page_coordinates: {:?}", page_coordinates);
+                log::info!("saturation_brightness_rect: {:?}", color_state.saturation_brightness_rect);
+                log::info!("cursor_coordinates: {:?}", cursor_coordinates);
+                let sv_scale =
+                    default::Scale::new(color_state.saturation_brightness_rect.size.width / 100.0);
+                let point_sv = cursor_coordinates.cast_unit() / sv_scale;
+                color_state.saturation = x_axis_to_saturation(point_sv.x);
+                color_state.brightness = y_axis_to_brightness(point_sv.y);
+            }
+            Some(COLORWHEEL_ID) => {
+                let page_coordinates: Point2D<f64, PageSpace> = event.data().page_coordinates();
+                log::info!("min_coords: {:?}", color_state.colorwheel_rect.min());
+                log::info!("processing pointer event for COLORWHEEL_ID");
+                log::info!("page_coordinates: {:?}", page_coordinates);
+                log::info!("colorwheel_rect: {:?}", color_state.colorwheel_rect);
+                let center_coordinates = color_state.colorwheel_rect.center().cast_unit();
+                log::info!("center_coordinates: {:?}", center_coordinates);
+                color_state.hue = cursor_position_to_hue(page_coordinates, center_coordinates);
+            }
+            _ => {}
+        })
     };
 
     let modify_capture_pointer = use_signal(|| {
         move |pointer_id: i32, is_capturing: bool| {
-            log::info!("modifying capture pointer Colorwheel");
+            log::info!("modifying capture pointer ColorPicker");
             let eval = eval(match is_capturing {
                 true => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("capturing " + pointer_id);
-                    document.getElementById('colorwheel').setPointerCapture(pointer_id);
+                    document.getElementById('color-picker').setPointerCapture(pointer_id);
                     "#
-                },false => {
+                }
+                false => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("releasing " + pointer_id);
-                    document.getElementById('colorwheel').releasePointerCapture(pointer_id);
+                    document.getElementById('color-picker').releasePointerCapture(pointer_id);
                     "#
-                },
+                }
             });
             eval.send(pointer_id.into()).unwrap();
         }
@@ -75,43 +94,74 @@ fn ColorWheel() -> Element {
 
     rsx! {
         div {
+            class: "color-picker",
+            id: "color-picker",
+            onpointerdown: move |event| {
+                let pointerId = event.data().pointer_id();
+                event.stop_propagation();
+                log::info!("pointerdown ColorPicker, {}", pointerId);
+                modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                let pointerRect = event.data().page_coordinates();
+                let elementRect = event.data().element_coordinates();
+                log::info!("pointerRect: {:?}", pointerRect);
+                log::info!("elementRect: {:?}", elementRect);
+                log::info!("colorwheel_rect: {:?}", color_state.read().colorwheel_rect);
+                log::info!("saturation_brightness_rect: {:?}", color_state.read().saturation_brightness_rect);
+                if pointerRect.x >= color_state.read().saturation_brightness_rect.min().x
+                    && pointerRect.x <= color_state.read().saturation_brightness_rect.max().x
+                    && pointerRect.y >= color_state.read().saturation_brightness_rect.min().y
+                    && pointerRect.y <= color_state.read().saturation_brightness_rect.max().y
+                {
+                    color_state.write().target = Some(SATURATION_BRIGHTNESS_BOX_ID);
+                } else {
+                    color_state.write().target = Some(COLORWHEEL_ID);
+                }
+                process_pointer_event(event);
+            },
+            onpointerup: move |event| {
+                let pointerId = event.data().pointer_id();
+                modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+            },
+            ongotpointercapture: move |_| {
+                log::info!("gotpointercapture");
+                color_state.write().tracking = true;
+            },
+            onlostpointercapture: move |_| {
+                log::info!("lostpointercapture");
+                color_state.with_mut(|color_state| {
+                    color_state.target = None;
+                    color_state.tracking = false;
+                });
+            },
+            onpointermove: move |event| {
+                if color_state.read().tracking {
+                    process_pointer_event(event);
+                }
+            },
+            div {
+                class: "color-picker-inner",
+                ColorWheel {}
+                SaturationBrightnessBox {}
+            }
+            ColorView {}
+        }
+    }
+}
+
+fn ColorWheel() -> Element {
+    let mut color_state = use_context::<Signal<ColorPickerState>>();
+
+    rsx! {
+        div {
             class: "colorwheel-wrapper",
             div {
-                class: "colorwheel",
-                id: "colorwheel",
-                onmounted: move |cx| {
-                    to_owned![dimensions];
+                class: COLORWHEEL_ID,
+                id: COLORWHEEL_ID,
+                onmounted: move |event| {
                     async move {
-                        if let Ok(rect) = cx.get_client_rect().await {
-                            dimensions.set(rect);
+                        if let Ok(rect) = event.get_client_rect().await {
+                            color_state.write().colorwheel_rect = rect;
                         }
-                    }
-                },
-                onpointerdown: move |event| {
-                    event.stop_propagation();
-                    let pointerId = event.data().pointer_id();
-                    log::info!("pointerdown, {}", pointerId);
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
-                    process_pointer_event(event);
-                },
-                onpointerup: move |event| {
-                    event.stop_propagation();
-                    let pointerId = event.data().pointer_id();
-                    log::info!("pointerup, {}", pointerId);
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
-                },
-                ongotpointercapture: move |_| {
-                    log::info!("gotpointercapture");
-                    tracking_state.set(true);
-                },
-                onlostpointercapture: move |_| {
-                    log::info!("lostpointercapture");
-                    tracking_state.set(false);
-                },
-                onpointermove: move |event| {
-                    event.stop_propagation();
-                    if *tracking_state.read() {
-                        process_pointer_event(event);
                     }
                 },
                 ColorWheelSvg {}
@@ -170,90 +220,18 @@ fn ColorWheelCursorSvg(hue: f64) -> Element {
 
 fn SaturationBrightnessBox() -> Element {
     let mut color_state = use_context::<Signal<ColorPickerState>>();
-    let mut tracking_state = use_signal(|| false);
-    let dimensions = use_signal(Rect::<f64, f64>::zero);
-
-    let mut process_pointer_event = move |event: Event<PointerData>| {
-        let cursor_coordinates = event.data().element_coordinates();
-        log::trace!("cursor_coordinates: {:?}", cursor_coordinates);
-        dimensions.with(|dimensions| {
-            log::trace!(
-                "dimensions_min: {:?}, dimensions_max: {:?}, dimensions_size: {:?}",
-                dimensions.min(),
-                dimensions.max(),
-                dimensions.size
-            );
-        });
-        let sv_scale = default::Scale::new(dimensions.read().size.width / 100.0);
-        let point_sv = cursor_coordinates.cast_unit() / sv_scale;
-        log::trace!("point_sv: {:?}", point_sv);
-        color_state.with_mut(|color_state| {
-            color_state.saturation = x_axis_to_saturation(point_sv.x);
-            color_state.brightness = y_axis_to_brightness(point_sv.y);
-        });
-    };
-
-    let modify_capture_pointer = use_signal(|| {
-        move |pointer_id: i32, is_capturing: bool| {
-            log::info!("modifying capture pointer S/B");
-            let eval = eval(match is_capturing {
-                true => {
-                    r#"
-                    let pointer_id = await dioxus.recv();
-                    console.log("capturing " + pointer_id);
-                    document.getElementById('saturation-brightness-box').setPointerCapture(pointer_id);
-                    "#
-                },false => {
-                    r#"
-                    let pointer_id = await dioxus.recv();
-                    console.log("releasing " + pointer_id);
-                    document.getElementById('saturation-brightness-box').releasePointerCapture(pointer_id);
-                    "#
-                },
-            });
-            eval.send(pointer_id.into()).unwrap();
-        }
-    });
 
     rsx! {
         div {
             class: "saturation-brightness-wrapper",
             div {
-                class: "saturation-brightness-box",
-                id: "saturation-brightness-box",
-                onmounted: move |cx| {
-                    to_owned![dimensions];
+                class: SATURATION_BRIGHTNESS_BOX_ID,
+                id: SATURATION_BRIGHTNESS_BOX_ID,
+                onmounted: move |event| {
                     async move {
-                        if let Ok(rect) = cx.get_client_rect().await {
-                            dimensions.set(rect);
+                        if let Ok(rect) = event.get_client_rect().await {
+                            color_state.write().saturation_brightness_rect = rect;
                         }
-                    }
-                },
-                onpointerdown: move |event| {
-                    event.stop_propagation();
-                    let pointerId = event.data().pointer_id();
-                    log::info!("pointerdown, {}", pointerId);
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
-                    process_pointer_event(event);
-                },
-                onpointerup: move |event| {
-                    event.stop_propagation();
-                    let pointerId = event.data().pointer_id();
-                    log::info!("pointerup, {}", pointerId);
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
-                },
-                ongotpointercapture: move |_| {
-                    log::info!("gotpointercapture");
-                    tracking_state.set(true);
-                },
-                onlostpointercapture: move |_| {
-                    log::info!("lostpointercapture");
-                    tracking_state.set(false);
-                },
-                onpointermove: move |event| {
-                    event.stop_propagation();
-                    if *tracking_state.read() {
-                        process_pointer_event(event);
                     }
                 },
                 div {
@@ -265,6 +243,7 @@ fn SaturationBrightnessBox() -> Element {
                     fill: "{color_state.read().get_rgb_string()}",
                     x: saturation_to_x_axis(color_state.read().saturation),
                     y: brightness_to_y_axis(color_state.read().brightness),
+                    scale_factor: 2,
                 }
             }
         }
@@ -278,11 +257,13 @@ fn CursorPrimitiveSvg(
     class: Option<String>,
     fill: String,
     transform: Option<String>,
+    scale_factor: Option<i64>,
 ) -> Element {
+    let scale_factor = scale_factor.unwrap_or(1);
     rsx! {
         svg {
             view_box: "0 0 100 100",
-            class: class.unwrap_or("\\".to_string()),
+            class: class.unwrap_or("".to_string()),
             defs {
                 radialGradient {
                     id: "cursor-border",
@@ -314,13 +295,13 @@ fn CursorPrimitiveSvg(
                 }
             }
             g {
-                transform: transform.unwrap_or("\\".to_string()),
+                transform: transform.unwrap_or("".to_string()),
                 circle {
                     cx: x.unwrap_or(50f64),
-                    cy: y.unwrap_or(3.75),
-                    r: 3.75,
+                    cy: y.unwrap_or(3.75 * scale_factor as f64),
+                    r: 3.75 * scale_factor as f64,
                     stroke: "url(#cursor-border)",
-                    stroke_width: 2,
+                    stroke_width: 2 * scale_factor,
                     fill: fill
                 }
             }
@@ -333,7 +314,22 @@ fn ColorView() -> Element {
     rsx! {
         div {
             class: "color-view",
-            style: "--color-view-background: {color_state.read().get_rgb_string()};"
+            div {
+                class: "color-view-display",
+                style: "--color-view-background: {color_state.read().get_rgb_string()};"
+            }
+            div {
+                class: "color-view-text",
+                {color_state.read().get_rgb_string()}
+            }
+            div {
+                class: "color-view-text",
+                {color_state.read().get_color().to_hsl_string()}
+            }
+            div {
+                class: "color-view-text",
+                {color_state.read().get_color().to_hex_string()}
+            }
         }
     }
 }
@@ -343,6 +339,10 @@ struct ColorPickerState {
     saturation: f64,
     brightness: f64,
     alpha: f64,
+    target: Option<&'static str>,
+    tracking: bool,
+    colorwheel_rect: Rect<f64, f64>,
+    saturation_brightness_rect: Rect<f64, f64>,
 }
 
 impl ColorPickerState {
