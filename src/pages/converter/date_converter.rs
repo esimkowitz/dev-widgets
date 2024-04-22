@@ -193,7 +193,7 @@ impl FromStr for DcTimeZone {
 
 impl From<DcTimeZone> for String {
     fn from(val: DcTimeZone) -> Self {
-        val.to_string()
+        val.inner().name().to_string()
     }
 }
 
