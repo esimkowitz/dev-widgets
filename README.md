@@ -13,6 +13,7 @@ The following widgets are now stable:
 * UUID Generator
 * Hash Generator
 * CIDR Decoder
+* Color Picker
 
 ## Development Setup
 
