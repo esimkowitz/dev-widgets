@@ -33,8 +33,10 @@ pub fn ColorPicker() -> Element {
     rsx! {
         div {
             class: "color-picker",
-            ColorWheel {}
-            SaturationBrightnessBox {}
+            div {
+                class: "color-picker-inner",
+                ColorWheel {}
+            }
             ColorView {}
         }
     }
@@ -61,13 +63,14 @@ fn ColorWheel() -> Element {
                     console.log("capturing " + pointer_id);
                     document.getElementById('colorwheel').setPointerCapture(pointer_id);
                     "#
-                },false => {
+                }
+                false => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("releasing " + pointer_id);
                     document.getElementById('colorwheel').releasePointerCapture(pointer_id);
                     "#
-                },
+                }
             });
             eval.send(pointer_id.into()).unwrap();
         }
@@ -88,17 +91,18 @@ fn ColorWheel() -> Element {
                     }
                 },
                 onpointerdown: move |event| {
-                    event.stop_propagation();
                     let pointerId = event.data().pointer_id();
-                    log::info!("pointerdown, {}", pointerId);
+                    event.stop_propagation();
+                    log::info!("pointerdown cw, {}", pointerId);
                     modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
                     process_pointer_event(event);
                 },
                 onpointerup: move |event| {
-                    event.stop_propagation();
                     let pointerId = event.data().pointer_id();
-                    log::info!("pointerup, {}", pointerId);
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                    if *tracking_state.read() {
+                        log::info!("pointerup cw, {}", pointerId);
+                        modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                    }
                 },
                 ongotpointercapture: move |_| {
                     log::info!("gotpointercapture");
@@ -114,6 +118,7 @@ fn ColorWheel() -> Element {
                         process_pointer_event(event);
                     }
                 },
+                SaturationBrightnessBox {}
                 ColorWheelSvg {}
                 ColorWheelCursorSvg {
                     hue: color_state.read().hue,
@@ -175,9 +180,9 @@ fn SaturationBrightnessBox() -> Element {
 
     let mut process_pointer_event = move |event: Event<PointerData>| {
         let cursor_coordinates = event.data().element_coordinates();
-        log::trace!("cursor_coordinates: {:?}", cursor_coordinates);
+        log::info!("cursor_coordinates: {:?}", cursor_coordinates);
         dimensions.with(|dimensions| {
-            log::trace!(
+            log::info!(
                 "dimensions_min: {:?}, dimensions_max: {:?}, dimensions_size: {:?}",
                 dimensions.min(),
                 dimensions.max(),
@@ -186,7 +191,7 @@ fn SaturationBrightnessBox() -> Element {
         });
         let sv_scale = default::Scale::new(dimensions.read().size.width / 100.0);
         let point_sv = cursor_coordinates.cast_unit() / sv_scale;
-        log::trace!("point_sv: {:?}", point_sv);
+        log::info!("point_sv: {:?}", point_sv);
         color_state.with_mut(|color_state| {
             color_state.saturation = x_axis_to_saturation(point_sv.x);
             color_state.brightness = y_axis_to_brightness(point_sv.y);
@@ -203,13 +208,14 @@ fn SaturationBrightnessBox() -> Element {
                     console.log("capturing " + pointer_id);
                     document.getElementById('saturation-brightness-box').setPointerCapture(pointer_id);
                     "#
-                },false => {
+                }
+                false => {
                     r#"
                     let pointer_id = await dioxus.recv();
                     console.log("releasing " + pointer_id);
                     document.getElementById('saturation-brightness-box').releasePointerCapture(pointer_id);
                     "#
-                },
+                }
             });
             eval.send(pointer_id.into()).unwrap();
         }
@@ -221,10 +227,10 @@ fn SaturationBrightnessBox() -> Element {
             div {
                 class: "saturation-brightness-box",
                 id: "saturation-brightness-box",
-                onmounted: move |cx| {
+                onmounted: move |event| {
                     to_owned![dimensions];
                     async move {
-                        if let Ok(rect) = cx.get_client_rect().await {
+                        if let Ok(rect) = event.get_client_rect().await {
                             dimensions.set(rect);
                         }
                     }
@@ -232,14 +238,14 @@ fn SaturationBrightnessBox() -> Element {
                 onpointerdown: move |event| {
                     event.stop_propagation();
                     let pointerId = event.data().pointer_id();
-                    log::info!("pointerdown, {}", pointerId);
+                    log::info!("pointerdown s/b, {}", pointerId);
                     modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
                     process_pointer_event(event);
                 },
                 onpointerup: move |event| {
                     event.stop_propagation();
                     let pointerId = event.data().pointer_id();
-                    log::info!("pointerup, {}", pointerId);
+                    log::info!("pointerup s/b, {}", pointerId);
                     modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
                 },
                 ongotpointercapture: move |_| {
@@ -265,6 +271,7 @@ fn SaturationBrightnessBox() -> Element {
                     fill: "{color_state.read().get_rgb_string()}",
                     x: saturation_to_x_axis(color_state.read().saturation),
                     y: brightness_to_y_axis(color_state.read().brightness),
+                    scale_factor: 2,
                 }
             }
         }
@@ -278,11 +285,13 @@ fn CursorPrimitiveSvg(
     class: Option<String>,
     fill: String,
     transform: Option<String>,
+    scale_factor: Option<i64>,
 ) -> Element {
+    let scale_factor = scale_factor.unwrap_or(1);
     rsx! {
         svg {
             view_box: "0 0 100 100",
-            class: class.unwrap_or("\\".to_string()),
+            class: class.unwrap_or("".to_string()),
             defs {
                 radialGradient {
                     id: "cursor-border",
@@ -314,13 +323,13 @@ fn CursorPrimitiveSvg(
                 }
             }
             g {
-                transform: transform.unwrap_or("\\".to_string()),
+                transform: transform.unwrap_or("".to_string()),
                 circle {
                     cx: x.unwrap_or(50f64),
-                    cy: y.unwrap_or(3.75),
-                    r: 3.75,
+                    cy: y.unwrap_or(3.75 * scale_factor as f64),
+                    r: 3.75 * scale_factor as f64,
                     stroke: "url(#cursor-border)",
-                    stroke_width: 2,
+                    stroke_width: 2 * scale_factor,
                     fill: fill
                 }
             }
