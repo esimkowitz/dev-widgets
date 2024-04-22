@@ -1,11 +1,8 @@
 use dioxus::{
-    desktop::{Config, WindowBuilder},
+    desktop::{Config, WindowBuilder, LogicalSize},
     dioxus_core::Element,
     prelude::LaunchBuilder,
 };
-
-#[cfg(target_os = "macos")]
-use dioxus::desktop::LogicalSize;
 
 pub fn init_app(root: fn() -> Element) {
     // Configure dioxus-desktop Tauri window
