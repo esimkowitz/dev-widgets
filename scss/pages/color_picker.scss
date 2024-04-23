@@ -87,7 +87,7 @@ div.color-picker {
       width: $color_view_height;
       border-radius: calc($color_view_height * 0.5);
       background-color: var(--color-view-background);
-      border: solid $border_width var(--bs-dark);
+      border: solid var(--bs-border-width) var(--bs-border-color);
     }
     .text-input, .select-form {
       margin: auto;
