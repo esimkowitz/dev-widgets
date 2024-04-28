@@ -20,19 +20,15 @@ jobs:
           targets: wasm32-unknown-unknown
       - name: Configure Cargo cache
         uses: Swatinem/rust-cache@v2
-      - name: Install Trunk
-        uses: jetli/trunk-action@v0.5.0
-        with:
-          version: latest
+      - name: Install dioxus-cli
+        uses: taiki-e/install-action@v2
+        with: 
+          tool: dioxus-cli
 
       # Build app
-      - name: Build Rust and static site
+      - name: Build static site
         run: |
-          trunk build --release
-
-      - name: Copy 404.html to target dir
-        run: |
-          cp ./public/404.html ./dist
+          dx build --platform web --release
 
       # Upload artifact
       - name: Fix permissions for artifact upload
