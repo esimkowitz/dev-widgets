@@ -41,6 +41,12 @@ time = { version = "0.3", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.92", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
 
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.
+lto = true # Use Link-Time-Optimization
+codegen-units = 1 # Fewer codegen units to increase optimizations.
+panic = "abort" # Aborting strips the stack unwind code from the binary.
+
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
