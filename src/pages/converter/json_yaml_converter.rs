@@ -16,7 +16,11 @@ const ICON: WidgetIcon<BsFileText> = WidgetIcon { icon: BsFileText };
 pub fn JsonYamlConverter() -> Element {
     rsx! {
         div {
-            class: "json-yaml-converter"
+            class: "json-yaml-converter",
+            div {
+                class: "alert alert-warning",
+                "JSON <> YAML converter is not implemented yet."
+            }
         }
     }
 }
