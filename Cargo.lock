@@ -1143,9 +1143,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus-free-icons"
-version = "0.8.5"
+version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4b60c5a6f9c15bc3b0e12291f8a91162042b9eb5b3015f561185aac813df834"
+checksum = "bfbba8b2089b185e4cebc394fb36353c7269a3230b542d97d3d192ccd864d48b"
 dependencies = [
  "dioxus",
 ]
