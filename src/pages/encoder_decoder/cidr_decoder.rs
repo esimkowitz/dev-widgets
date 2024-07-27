@@ -74,11 +74,12 @@ pub fn CidrDecoder() -> Element {
                 value: "{cidr_input_ref.with(|cidr_str| cidr_str.to_string())}",
                 oninput: move |event: Event<FormData>| {
                     let cidr = event.value();
+                    let cidr_clone = cidr.clone();
+                    let cidr_trim = cidr.trim();
                     log::info!("CIDR: {}", cidr);
                     cidr_input_ref.with_mut(|cidr_input| {
-                        *cidr_input = cidr.clone();
+                        *cidr_input = cidr_clone;
                     });
-                    let cidr_trim = cidr.trim();
                     if let Ok(cidr_valid) = IpCidr::from_str(cidr_trim) {
                         cidr_ref.with_mut(|cidr_obj| {
                             *cidr_obj = cidr_valid;
