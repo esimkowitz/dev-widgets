@@ -13,7 +13,7 @@ zip-extract = "0.2"
 
 [dependencies]
 base64ct = { version = "1.6", features = ["alloc"] }
-cidr = "0.2.3"
+cidr = "0.3.0"
 digest = "0.10"
 dioxus-free-icons = { version = "0.8", features = ["bootstrap"] }
 dioxus-router = "0.5.6"
