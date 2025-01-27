@@ -3,7 +3,7 @@ use color_processing::Color;
 use dioxus::{
     html::geometry::{
         euclid::{default, Point2D, Rect},
-        PageSpace, Pixels, PixelsRect,
+        PageSpace, PixelsRect,
     },
     prelude::*,
 };
