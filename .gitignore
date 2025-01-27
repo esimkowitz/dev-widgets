@@ -13,7 +13,7 @@ build
 # Bootstrap
 bootstrap/
 public/style/
-public/js/[!darkmode.js]*
+public/js/[!darkmode.js,!ghpages_redirect.js]*
 
 # macOS files
 .DS_Store
