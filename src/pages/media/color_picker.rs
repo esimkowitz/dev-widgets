@@ -3,9 +3,9 @@ use color_processing::Color;
 use dioxus::{
     html::geometry::{
         euclid::{default, Point2D, Rect},
-        PageSpace,
+        PageSpace, Pixels, PixelsRect,
     },
-    prelude::{SvgAttributes, *},
+    prelude::*,
 };
 use dioxus_free_icons::icons::bs_icons::BsEyedropper;
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
@@ -67,7 +67,7 @@ pub fn ColorPicker() -> Element {
     let modify_capture_pointer = use_signal(|| {
         move |pointer_id: i32, is_capturing: bool| {
             log::trace!("modifying capture pointer ColorPicker");
-            let eval = eval(match is_capturing {
+            let eval = document::eval(match is_capturing {
                 true => {
                     r#"
                     let pointer_id = await dioxus.recv();
@@ -83,7 +83,7 @@ pub fn ColorPicker() -> Element {
                     "#
                 }
             });
-            eval.send(pointer_id.into()).unwrap();
+            eval.send(pointer_id).unwrap();
         }
     });
 
@@ -337,8 +337,8 @@ struct ColorPickerState {
     saturation: f64,
     brightness: f64,
     alpha: f64,
-    colorwheel_rect: Rect<f64, f64>,
-    saturation_brightness_rect: Rect<f64, f64>,
+    colorwheel_rect: PixelsRect,
+    saturation_brightness_rect: PixelsRect,
 }
 
 #[derive(

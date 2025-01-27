@@ -1,6 +1,6 @@
 [package]
 name = "dev-widgets"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
@@ -15,8 +15,8 @@ zip-extract = "0.2"
 base64ct = { version = "1.6", features = ["alloc"] }
 cidr = "0.3.0"
 digest = "0.10"
-dioxus-free-icons = { version = "0.8", features = ["bootstrap"] }
-dioxus-router = "0.5.6"
+dioxus-free-icons = { version = "0.9", features = ["bootstrap"] }
+dioxus-router = "0.6.1"
 md-5 = "0.10"
 num-traits = "0.2"
 qrcode-generator = "5.0.0"
@@ -28,14 +28,15 @@ uuid = { version = "1.12", features = ["v4", "fast-rng"] }
 time-tz = { version = "2.0", features = ["db", "system"] }
 log = { version = "0.4", features = ["std"] }
 color_processing = "0.6"
+manganis = "0.6.2"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-dioxus = {version = "0.5.6", features = ["desktop"]}
+dioxus = {version = "0.6.1", features = ["desktop"]}
 getrandom = "0.2"
 time = "0.3"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-dioxus = {version = "0.5.1", features = ["web"]}
+dioxus = {version = "0.6.1", features = ["web"]}
 getrandom = { version = "0.2", features = ["js"] }
 time = { version = "0.3", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.100", features = ["enable-interning"] }
@@ -46,15 +47,25 @@ lto = true # Use Link-Time-Optimization
 codegen-units = 1 # Fewer codegen units to increase optimizations.
 panic = "abort" # Aborting strips the stack unwind code from the binary.
 
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+
 [target.'cfg(not(any(target_os = "windows", target_os = "none")))'.profile.release]
 strip = true  # Automatically strip symbols from the binary. Only available for *nix targets.
 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
-version = "0.2.0"
+version = "0.3.0"
 resources = ["public/**/*"]
-copyright = "Copyright (c) Evan Simkowitz 2024. All rights reserved."
+copyright = "Copyright (c) Evan Simkowitz 2025. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]

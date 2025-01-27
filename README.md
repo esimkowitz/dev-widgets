@@ -21,6 +21,12 @@ If you haven't already, [install Rust](https://www.rust-lang.org/tools/install).
 
 Follow the Dioxus instructions to [install platform-specific dependencies](https://dioxuslabs.com/docs/0.3/guide/en/getting_started/desktop.html#platform-specific-dependencies).
 
+Install the Dioxus CLI:
+
+```bash
+cargo install dioxus-cli
+```
+
 Clone this repository and enter its root directory.
 
 ## Desktop App
@@ -35,16 +41,10 @@ If you would like to enable hot-reloading, you can do so by setting the `USE_HOT
 
 ### Bundle app
 
-You can bundle the app into an executable for your platform using [cargo-bundle](https://github.com/burtonageo/cargo-bundle). If you haven't already, run the following command to install cargo-bundle:
+You can bundle the app into an executable for your platform using the Dioxus CLI
 
 ```bash
-cargo install cargo-bundle
-```
-
-Once you have cargo-bundle installed, run the following command to package the application for your platform:
-
-```bash
-cargo bundle --release
+dx bundle --platform desktop --release
 ```
 
 ## Web App
@@ -55,34 +55,20 @@ Dev Widgets now works as a web app! You can find it hosted at <https://widgets.f
 
 ### Run from command line - Dioxus CLI
 
-You can run the web app locally using the [dioxus-cli](https://github.com/DioxusLabs/dioxus/tree/master/packages/cli). Because this repo depends on unstable releases of Dioxus, you need to install Dioxus CLI via Git to make sure it is compatible:
+You can run the web app locally using the [dioxus-cli](https://github.com/DioxusLabs/dioxus/tree/master/packages/cli):
 
 ```bash
-cargo install dioxus-cli --git https://github.com/DioxusLabs/dioxus.git --rev b25501af48977817d9d0bb2534c94cff30317c8c
-```
-
-Once you have the CLI installed, you can launch the web app using the following command:
-
-```bash
-dioxus serve
+dx serve --platform web
 ```
 
 This will automatically enable hot-reloading for any changes you make to the source code.
 
-### Validate release buld - Trunk CLI
+### Validate release buld
 
-When packaging for release, I use Trunk as it is more-readily installable on the Github Actions agents. I found that installing the Dioxus CLI would compile the binary from scratch, which took too long and would hit out-of-memory errors unless I increased the swap file size.
-
-You can install Trunk using the following command:
+When packaging for release, I use the Dioxus CLI:
 
 ```bash
-cargo install trunk --locked
-```
-
-You won't be able to run the app locally using Trunk, but you can validate that it builds correctly by running the following command:
-
-```bash
-trunk build --release
+dx build --platform web --release
 ```
 
 ## Roadmap
