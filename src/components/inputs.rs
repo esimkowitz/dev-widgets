@@ -93,9 +93,10 @@ pub fn TextAreaForm(
     onchange: Option<EventHandler<Event<FormData>>>,
 ) -> Element {
     let readonly = readonly.unwrap_or(false);
+    let classLocal: String = class.unwrap_or_default();
     rsx! {
         div {
-            class: "textarea-form {class.unwrap_or_default()}",
+            class: "textarea-form {classLocal}",
             id: "{label}",
             textarea {
                 value: "{value}",
