@@ -1399,9 +1399,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus-router"
-version = "0.6.2"
+version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc284034f3fffb198a189eaaa8be854520770160d79bdc85b8ad64a8e8170433"
+checksum = "7266a76fc9e4a91f56499d1d1aecfff7168952b6627a6008b4e9748d6bf863e4"
 dependencies = [
  "dioxus-cli-config",
  "dioxus-history",
