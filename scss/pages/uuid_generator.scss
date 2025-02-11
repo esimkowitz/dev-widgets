@@ -1,5 +1,19 @@
 div.uuid-generator {
   @extend .d-flex, .flex-column, .row-gap-3, .h-100;
+  .params {
+    @extend .d-flex, .flex-row, .column-gap-3, .row-gap-3, .flex-wrap;
+    >div:not(.switches) {
+      @extend .d-flex, .flex-grow-1;
+      min-width: 225px;
+    }
+
+    .switches {
+      @extend .d-flex, .flex-column, .row-gap-3;
+      .switch {
+        @extend .column-gap-1;
+      }
+    }
+  }
   .textarea-form {
     flex: 1 1 auto;
   }

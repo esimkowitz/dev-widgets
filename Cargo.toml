@@ -24,7 +24,6 @@ sha1 = "0.10"
 sha2 = "0.10"
 strum = "0.27"
 strum_macros = "0.27"
-uuid = { version = "1.13", features = ["v4", "fast-rng"] }
 time-tz = { version = "2.0", features = ["db", "system"] }
 log = { version = "0.4", features = ["std"] }
 color_processing = "0.6"
@@ -32,15 +31,18 @@ manganis = "0.6.2"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus = {version = "0.6.3", features = ["desktop"]}
-getrandom = "0.2"
+uuid = { version = "1.13", features = ["v4", "v7", "rng-getrandom"] }
+getrandom = "0.3"
 time = "0.3"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 dioxus = {version = "0.6.1", features = ["web"]}
-getrandom = { version = "0.2", features = ["js"] }
+getrandom = { version = "0.3", features = ["wasm_js"] }
 time = { version = "0.3", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.100", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
+uuid = { version = "1.13", features = ["v4", "v7", "rng-getrandom", "js"] }
+
 
 [profile.release]
 lto = true # Use Link-Time-Optimization
