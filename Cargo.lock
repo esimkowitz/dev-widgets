@@ -1035,7 +1035,7 @@ dependencies = [
  "dioxus",
  "dioxus-free-icons",
  "dioxus-router",
- "getrandom 0.3.2",
+ "getrandom 0.3.3",
  "grass",
  "log",
  "manganis",
@@ -2022,9 +2022,9 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73fea8450eea4bac3940448fb7ae50d91f034f941199fcd9d909a5a07aa455f0"
+checksum = "26145e563e54f2cadc477553f1ec5ee650b00862f0a58bcd12cbdc5f0ea2d2f4"
 dependencies = [
  "cfg-if",
  "js-sys",
@@ -5052,7 +5052,7 @@ version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "458f7a779bf54acc9f347480ac654f68407d3aab21269a6e3c9f922acd9e2da9"
 dependencies = [
- "getrandom 0.3.2",
+ "getrandom 0.3.3",
  "js-sys",
  "uuid-rng-internal",
  "wasm-bindgen",
@@ -5064,7 +5064,7 @@ version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9376f53b15ed85851c10175b5e45f0af556b4853ff3fe335080b337e3828981e"
 dependencies = [
- "getrandom 0.3.2",
+ "getrandom 0.3.3",
 ]
 
 [[package]]
@@ -6088,7 +6088,7 @@ dependencies = [
  "crossbeam-utils",
  "deflate64",
  "flate2",
- "getrandom 0.3.2",
+ "getrandom 0.3.3",
  "hmac",
  "indexmap 2.7.1",
  "lzma-rs",
