@@ -31,7 +31,7 @@ manganis = "0.6.2"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus = {version = "0.6.3", features = ["desktop"]}
-uuid = { version = "1.16", features = ["v4", "v7", "rng-getrandom"] }
+uuid = { version = "1.17", features = ["v4", "v7", "rng-getrandom"] }
 getrandom = "0.3"
 time = "0.3"
 
@@ -41,7 +41,7 @@ getrandom = { version = "0.3", features = ["wasm_js"] }
 time = { version = "0.3", features = ["wasm-bindgen"] }
 wasm-bindgen = { version = "0.2.100", features = ["enable-interning"] }
 wasm-logger = "0.2.0"
-uuid = { version = "1.15", features = ["v4", "v7", "rng-getrandom", "js"] }
+uuid = { version = "1.17", features = ["v4", "v7", "rng-getrandom", "js"] }
 
 
 [profile.release]
