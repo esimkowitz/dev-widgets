@@ -12,7 +12,7 @@ grass = "0.13"
 zip-extract = "0.4"
 
 [dependencies]
-base64ct = { version = "1.7", features = ["alloc"] }
+base64ct = { version = "1.8", features = ["alloc"] }
 cidr = "0.3.0"
 digest = "0.10"
 dioxus-free-icons = { version = "0.9", features = ["bootstrap"] }
