@@ -31,7 +31,7 @@ manganis = "0.6.2"
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 dioxus = {version = "0.6.3", features = ["desktop"]}
-uuid = { version = "1.17", features = ["v4", "v7", "rng-getrandom"] }
+uuid = { version = "1.18", features = ["v4", "v7", "rng-getrandom"] }
 getrandom = "0.3"
 time = "0.3"
 
