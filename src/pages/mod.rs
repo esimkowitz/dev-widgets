@@ -120,6 +120,7 @@ pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
     fn get_widget_entry(&self) -> Option<&'static WidgetEntry>;
 }
 
+#[allow(unpredictable_function_pointer_comparisons)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub struct WidgetEntry {
     pub title: &'static str,

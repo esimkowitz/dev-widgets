@@ -39,12 +39,9 @@ fn main() {
         // Extract Bootstrap archive
         let bootstrap_extract_target_dir: PathBuf =
             [cargo_manifest_dir, "bootstrap"].iter().collect();
-        zip_extract::extract(
-            std::io::Cursor::new(bootstrap_zip),
-            &bootstrap_extract_target_dir,
-            true,
-        )
-        .unwrap();
+        let mut archive =
+            zip::ZipArchive::new(std::io::Cursor::new(bootstrap_zip.clone())).unwrap();
+        archive.extract(&bootstrap_extract_target_dir).unwrap();
 
         // Copy Bootstrap JS files
         let bootstrap_js_filename = "bootstrap.min.js";
