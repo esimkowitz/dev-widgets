@@ -19,7 +19,7 @@ fn main() {
         let mut bootstrap_zip = Vec::new();
         let mut curl_handle = curl::easy::Easy::new();
         curl_handle
-            .url("https://github.com/twbs/bootstrap/archive/v5.3.0.zip")
+            .url("https://github.com/twbs/bootstrap/archive/v5.3.8.zip")
             .unwrap();
         curl_handle.follow_location(true).unwrap();
         {
