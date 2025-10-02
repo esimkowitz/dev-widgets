@@ -19,40 +19,33 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
 };
 
 pub fn HashGenerator() -> Element {
-    let mut hash_generator_state = use_context_provider(|| Signal::new(HashGeneratorState {
-        value: "".to_string(),
-        uppercase: false,
-    }));
+    let mut hash_generator_state = use_context_provider(|| {
+        Signal::new(HashGeneratorState {
+            value: "".to_string(),
+            uppercase: false,
+        })
+    });
 
     rsx! {
-        div {
-            class: "number-base-converter",
+        div { class: "number-base-converter",
             SwitchInput {
                 label: "Uppercase",
                 checked: hash_generator_state.read().uppercase,
                 oninput: move |is_enabled| {
                     hash_generator_state.write().uppercase = is_enabled;
-                }
+                },
             }
             TextAreaForm {
                 label: "Value to hash",
                 value: "{hash_generator_state.read().value}",
                 oninput: move |event: Event<FormData>| {
                     hash_generator_state.write().value = event.value();
-                }
+                },
             }
-            HashField {
-                algorithm: HashingAlgorithm::MD5,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA1,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA256,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA512,
-            }
+            HashField { algorithm: HashingAlgorithm::MD5 }
+            HashField { algorithm: HashingAlgorithm::SHA1 }
+            HashField { algorithm: HashingAlgorithm::SHA256 }
+            HashField { algorithm: HashingAlgorithm::SHA512 }
         }
     }
 }
@@ -63,18 +56,11 @@ fn HashField(algorithm: HashingAlgorithm) -> Element {
 
     let mut hasher = select_hasher(algorithm);
 
-    let hashed_value = hash_generator_state.with(|state| generate_hash(
-        state.value.clone(),
-        &mut *hasher,
-        state.uppercase,
-    ));
+    let hashed_value = hash_generator_state
+        .with(|state| generate_hash(state.value.clone(), &mut *hasher, state.uppercase));
 
     rsx! {
-        TextInput {
-            label: "{algorithm}",
-            value: "{hashed_value}",
-            readonly: true,
-        }
+        TextInput { label: "{algorithm}", value: "{hashed_value}", readonly: true }
     }
 }
 
@@ -92,19 +78,15 @@ fn generate_hash(value: String, hasher: &mut dyn DynDigest, uppercase: bool) -> 
     let hashed_value = hasher.finalize_reset();
 
     if uppercase {
-        hashed_value
-            .iter()
-            .fold(String::new(), |mut output, b| {
-                let _ = write!(output, "{:X}", b);
-                output
-            })
+        hashed_value.iter().fold(String::new(), |mut output, b| {
+            let _ = write!(output, "{:X}", b);
+            output
+        })
     } else {
-        hashed_value
-            .iter()
-            .fold(String::new(), |mut output, b| {
-                let _ = write!(output, "{:x}", b);
-                output
-            })
+        hashed_value.iter().fold(String::new(), |mut output, b| {
+            let _ = write!(output, "{:x}", b);
+            output
+        })
     }
 }
 

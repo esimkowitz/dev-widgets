@@ -17,9 +17,7 @@ pub enum MediaRoute {
 
 fn Index() -> Element {
     rsx! {
-        div {
-            class: "media",
-        }
+        div { class: "media" }
     }
 }
 

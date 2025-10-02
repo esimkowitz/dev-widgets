@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
+pub mod assets;
 pub mod components;
 pub mod environment;
 pub mod pages;
 pub mod utils;
-pub mod assets;
 
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;

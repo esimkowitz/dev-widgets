@@ -25,9 +25,7 @@ pub enum GeneratorRoute {
 
 fn Index() -> Element {
     rsx! {
-        div {
-            class: "generator",
-        }
+        div { class: "generator" }
     }
 }
 

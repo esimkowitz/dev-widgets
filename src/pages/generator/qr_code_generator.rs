@@ -36,8 +36,7 @@ pub fn QrCodeGenerator() -> Element {
     };
 
     rsx! {
-        div {
-            class: "qr-code-generator",
+        div { class: "qr-code-generator",
             SelectForm::<Ecc> {
                 label: "Error Correction Level",
                 oninput: move |ecc: Ecc| {
@@ -61,14 +60,14 @@ pub fn QrCodeGenerator() -> Element {
             img {
                 class: "qr-code",
                 display: if qr_code_result.is_empty() { "none" } else { "block" },
-                src: "data:image/svg+xml;base64,{qr_code_result}"
+                src: "data:image/svg+xml;base64,{qr_code_result}",
             }
         }
     }
 }
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
 )]
 enum Ecc {
     #[default]
@@ -84,7 +83,6 @@ impl From<Ecc> for String {
     fn from(ecc: Ecc) -> Self {
         ecc.to_string()
     }
-
 }
 
 impl From<Ecc> for qrcode_generator::QrCodeEcc {

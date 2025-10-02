@@ -17,19 +17,16 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
 pub fn Base64Encoder() -> Element {
-    use_context_provider(|| Signal::new(EncoderValue {
-        encoded_value: String::new(),
-        decoded_value: String::new(),
-    }));
+    use_context_provider(|| {
+        Signal::new(EncoderValue {
+            encoded_value: String::new(),
+            decoded_value: String::new(),
+        })
+    });
     rsx! {
-        div {
-            class: "base64-encoder",
-            encoder_input {
-                direction: Direction::Encode
-            }
-            encoder_input {
-                direction: Direction::Decode
-            }
+        div { class: "base64-encoder",
+            encoder_input { direction: Direction::Encode }
+            encoder_input { direction: Direction::Decode }
         }
     }
 }
@@ -56,23 +53,25 @@ fn encoder_input(direction: Direction) -> Element {
                 let input_value = event.value();
                 match direction {
                     Direction::Encode => {
-                        value_context.set(EncoderValue {
-                            encoded_value: Base64::encode_string(input_value.as_bytes()),
-                            decoded_value: input_value,
-                        });
-                    },
+                        value_context
+                            .set(EncoderValue {
+                                encoded_value: Base64::encode_string(input_value.as_bytes()),
+                                decoded_value: input_value,
+                            });
+                    }
                     Direction::Decode => {
                         let decode_val = match Base64::decode_vec(input_value.as_str()) {
                             Ok(val) => String::from_utf8(val).unwrap_or(NOT_STRING.to_string()),
                             Err(_) => NOT_STRING.to_string(),
                         };
-                        value_context.set(EncoderValue {
-                            encoded_value: input_value,
-                            decoded_value: decode_val,
-                        });
-                    },
+                        value_context
+                            .set(EncoderValue {
+                                encoded_value: input_value,
+                                decoded_value: decode_val,
+                            });
+                    }
                 };
-            }
+            },
         }
     }
 }

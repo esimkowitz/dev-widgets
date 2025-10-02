@@ -1,4 +1,4 @@
-use log::{Record, Metadata};
+use log::{Metadata, Record};
 
 pub struct SimpleLogger;
 

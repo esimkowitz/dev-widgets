@@ -11,27 +11,20 @@ use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
-    IntoEnumIterator
-    + Into<String>
-    + FromStr
-    + Default
-    + Debug
-    + Display
-    + Copy
-    + Clone
-    + PartialEq
+    IntoEnumIterator + Into<String> + FromStr + Default + Debug + Display + Copy + Clone + PartialEq
 {
 }
 
 pub fn SelectForm<T: SelectFormEnum>(props: SelectFormProps<T>) -> Element {
     rsx! {
-        div {
-            class: "select-form",
+        div { class: "select-form",
             select {
                 id: "{props.label}",
                 aria_label: "{props.label}",
-                oninput: move |event| if let Ok(value) = event.parsed::<T>() {
-                    props.oninput.call(value);
+                oninput: move |event| {
+                    if let Ok(value) = event.parsed::<T>() {
+                        props.oninput.call(value);
+                    }
                 },
                 for enumInst in T::iter() {
                     option {
@@ -41,10 +34,7 @@ pub fn SelectForm<T: SelectFormEnum>(props: SelectFormProps<T>) -> Element {
                     }
                 }
             }
-            label {
-                r#for: "{props.label}",
-                "{props.label}"
-            }
+            label { r#for: "{props.label}", "{props.label}" }
         }
     }
 }
@@ -57,14 +47,9 @@ pub struct SelectFormProps<T: SelectFormEnum + 'static> {
 }
 
 #[component]
-pub fn SwitchInput(
-    label: String,
-    checked: bool,
-    oninput: EventHandler<bool>,
-) -> Element {
+pub fn SwitchInput(label: String, checked: bool, oninput: EventHandler<bool>) -> Element {
     rsx! {
-        div {
-            class: "switch-input",
+        div { class: "switch-input",
             input {
                 r#type: "checkbox",
                 id: "{label}",
@@ -73,12 +58,9 @@ pub fn SwitchInput(
                 oninput: move |event| {
                     let is_enabled = event.checked();
                     oninput.call(is_enabled);
-                }
+                },
             }
-            label {
-                r#for: "{label}",
-                "{label}"
-            }
+            label { r#for: "{label}", "{label}" }
         }
     }
 }
@@ -95,23 +77,22 @@ pub fn TextAreaForm(
     let readonly = readonly.unwrap_or(false);
     let classLocal: String = class.unwrap_or_default();
     rsx! {
-        div {
-            class: "textarea-form {classLocal}",
-            id: "{label}",
+        div { class: "textarea-form {classLocal}", id: "{label}",
             textarea {
                 value: "{value}",
-                oninput:  move |event| if let Some(oninput) = oninput {
-                    oninput.call(event);
+                oninput: move |event| {
+                    if let Some(oninput) = oninput {
+                        oninput.call(event);
+                    }
                 },
-                onchange: move |event| if let Some(onchange) = onchange {
-                    onchange.call(event);
+                onchange: move |event| {
+                    if let Some(onchange) = onchange {
+                        onchange.call(event);
+                    }
                 },
-                readonly: readonly,
+                readonly,
             }
-            label {
-                r#for: "{label}",
-                {label.clone()}
-            }
+            label { r#for: "{label}", {label.clone()} }
         }
     }
 }
@@ -127,10 +108,8 @@ pub fn TextInput(
     let readonly = readonly.unwrap_or(false);
 
     rsx! {
-        div {
-            class: "text-input",
-            div {
-                class: "form-floating",
+        div { class: "text-input",
+            div { class: "form-floating",
                 input {
                     class: "form-control",
                     r#type: "text",
@@ -145,12 +124,9 @@ pub fn TextInput(
                             onchange.call(event);
                         }
                     },
-                    readonly: readonly
+                    readonly,
                 }
-                label {
-                    r#for: "{label}",
-                    {label.clone()}
-                }
+                label { r#for: "{label}", {label.clone()} }
             }
         }
     }
@@ -164,30 +140,27 @@ pub fn NumberInput<T: PrimInt + Display + Default + FromStr + 'static>(
     onchange: EventHandler<T>,
 ) -> Element {
     rsx! {
-        div {
-            class: "number-input {class.unwrap_or_default()}",
-            div {
-                class: "input-group",
-                div {
-                    class: "input-and-label",
+        div { class: "number-input {class.unwrap_or_default()}",
+            div { class: "input-group",
+                div { class: "input-and-label",
                     input {
                         r#type: "number",
                         value: "{value}",
                         id: "{label}",
-                        onchange: move |event| if let Ok(value) = event.parsed::<T>() {
-                            onchange.call(value);
-                        }
+                        onchange: move |event| {
+                            if let Ok(value) = event.parsed::<T>() {
+                                onchange.call(value);
+                            }
+                        },
                     }
-                    label {
-                        r#for: "{label}",
-                        {label}
-                    }
+                    label { r#for: "{label}", {label} }
                 }
-                div {
-                    class: "inc-dec-buttons",
+                div { class: "inc-dec-buttons",
                     button {
-                        onclick: move |_| if let Some(value) = value.checked_add(&T::one()) {
-                            onchange.call(value);
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_add(&T::one()) {
+                                onchange.call(value);
+                            }
                         },
                         Icon {
                             icon: BsPlus,
@@ -197,8 +170,10 @@ pub fn NumberInput<T: PrimInt + Display + Default + FromStr + 'static>(
                         }
                     }
                     button {
-                        onclick: move |_| if let Some(value) = value.checked_sub(&T::one()) {
-                            onchange.call(value);
+                        onclick: move |_| {
+                            if let Some(value) = value.checked_sub(&T::one()) {
+                                onchange.call(value);
+                            }
                         },
                         Icon {
                             icon: BsDash,

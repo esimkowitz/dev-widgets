@@ -31,106 +31,126 @@ pub fn DateConverter() -> Element {
     let unix_time = date_signal.with(|date_state| date_state.time_utc.unix_timestamp());
 
     rsx! {
-        div {
-            class: "date-converter",
+        div { class: "date-converter",
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
-                    date_signal.with_mut(|date_state| {
-                        date_state.time_zone = tz;
-                    });
+                    date_signal
+                        .with_mut(|date_state| {
+                            date_state.time_zone = tz;
+                        });
                 },
                 value: date_signal.with(|date_state| date_state.time_zone),
             }
-            TextInput {
-                label: "Date",
-                value: "{local_datetime}",
-                readonly: true,
-            }
+            TextInput { label: "Date", value: "{local_datetime}", readonly: true }
             TextInput {
                 label: "Unix Timestamp",
                 value: "{unix_time}",
                 onchange: move |event: Event<FormData>| {
                     if let Ok(unix_time) = event.parsed::<i64>() {
                         if let Ok(datetime) = OffsetDateTime::from_unix_timestamp(unix_time) {
-                            date_signal.with_mut(|date_state| {
-                                date_state.set_local_datetime(datetime);
-                            });
+                            date_signal
+                                .with_mut(|date_state| {
+                                    date_state.set_local_datetime(datetime);
+                                });
                         }
                     }
-                }
+                },
             }
-            div {
-                class: "selectors-wrapper",
-                div {
-                    class: "ymd selectors",
-                    div {
-                        class: "selectors-inner",
+            div { class: "selectors-wrapper",
+                div { class: "ymd selectors",
+                    div { class: "selectors-inner",
                         NumberInput::<i32> {
                             class: "year",
                             label: "Year",
                             value: local_datetime.year(),
                             onchange: move |year| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_year(year).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime.replace_year(year).unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                         NumberInput::<u8> {
                             class: "month",
                             label: "Month",
                             value: u8::from(local_datetime.month()),
                             onchange: move |month| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_month(Month::try_from(month).unwrap_or(local_datetime.month())).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime
+                                                    .replace_month(
+                                                        Month::try_from(month).unwrap_or(local_datetime.month()),
+                                                    )
+                                                    .unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                         NumberInput::<u8> {
                             class: "day",
                             label: "Day",
                             value: local_datetime.day(),
                             onchange: move |day| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_day(day).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime.replace_day(day).unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                     }
                 }
-                div {
-                    class: "hms selectors",
-                    div {
-                        class: "selectors-inner",
+                div { class: "hms selectors",
+                    div { class: "selectors-inner",
                         NumberInput::<u8> {
                             class: "hour",
                             label: "Hour",
                             value: local_datetime.hour(),
                             onchange: move |hour| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_hour(hour).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime.replace_hour(hour).unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                         NumberInput::<u8> {
                             class: "minute",
                             label: "Minute",
                             value: local_datetime.minute(),
                             onchange: move |minute| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_minute(minute).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime.replace_minute(minute).unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                         NumberInput::<u8> {
                             class: "second",
                             label: "Second",
                             value: local_datetime.second(),
                             onchange: move |second| {
-                                date_signal.with_mut(|date_state| {
-                                    date_state.set_local_datetime(local_datetime.replace_second(second).unwrap_or(local_datetime));
-                                });
-                            }
+                                date_signal
+                                    .with_mut(|date_state| {
+                                        date_state
+                                            .set_local_datetime(
+                                                local_datetime.replace_second(second).unwrap_or(local_datetime),
+                                            );
+                                    });
+                            },
                         }
                     }
                 }
@@ -166,7 +186,7 @@ impl Default for DcTimeZone {
             Err(err) => {
                 log::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
                 timezones::get_by_name("UTC").unwrap()
-            },
+            }
         })
     }
 }
@@ -184,7 +204,7 @@ impl FromStr for DcTimeZone {
             None => {
                 log::error!("Failed to parse timezone: {}", s);
                 Err(TzParseError)
-            },
+            }
         }
     }
 

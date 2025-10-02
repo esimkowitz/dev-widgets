@@ -88,15 +88,15 @@ pub fn ColorPicker() -> Element {
     });
 
     rsx! {
-        div {
-            class: "color-picker",
+        div { class: "color-picker",
             div {
                 class: "color-picker-inner",
                 id: "color-picker-inner",
                 onpointerdown: move |event| {
                     let pointerId = event.data().pointer_id();
                     event.stop_propagation();
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
+                    modify_capture_pointer
+                        .with(|modify_capture_pointer| modify_capture_pointer(pointerId, true));
                     let pointerRect = event.data().page_coordinates();
                     if pointerRect.x >= color_state.read().saturation_brightness_rect.min().x
                         && pointerRect.x <= color_state.read().saturation_brightness_rect.max().x
@@ -111,7 +111,8 @@ pub fn ColorPicker() -> Element {
                 },
                 onpointerup: move |event| {
                     let pointerId = event.data().pointer_id();
-                    modify_capture_pointer.with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
+                    modify_capture_pointer
+                        .with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
                 },
                 ongotpointercapture: move |_| {
                     log::trace!("gotpointercapture");
@@ -139,8 +140,7 @@ fn ColorWheel() -> Element {
     let mut color_state = use_context::<Signal<ColorPickerState>>();
 
     rsx! {
-        div {
-            class: "colorwheel-wrapper",
+        div { class: "colorwheel-wrapper",
             div {
                 class: COLORWHEEL_ID,
                 id: COLORWHEEL_ID,
@@ -152,9 +152,7 @@ fn ColorWheel() -> Element {
                     }
                 },
                 ColorWheelSvg {}
-                ColorWheelCursorSvg {
-                    hue: color_state.read().hue,
-                }
+                ColorWheelCursorSvg { hue: color_state.read().hue }
             }
         }
     }
@@ -162,11 +160,8 @@ fn ColorWheel() -> Element {
 
 fn ColorWheelSvg() -> Element {
     rsx! {
-        svg {
-            view_box: "0 0 100 100",
-            class: "colorwheel-svg",
-            mask {
-                id: "colorwheel-mask",
+        svg { view_box: "0 0 100 100", class: "colorwheel-svg",
+            mask { id: "colorwheel-mask",
                 circle {
                     cx: 50,
                     cy: 50,
@@ -179,17 +174,15 @@ fn ColorWheelSvg() -> Element {
                     r: 42.5,
                     fill: "black",
                 }
-            },
+            }
             foreignObject {
                 x: 0,
                 y: 0,
                 width: 100,
                 height: 100,
                 mask: "url(#colorwheel-mask)",
-                div {
-                    class: "colorwheel-gradient",
-                }
-            },
+                div { class: "colorwheel-gradient" }
+            }
         }
     }
 }
@@ -209,8 +202,7 @@ fn SaturationBrightnessBox() -> Element {
     let mut color_state = use_context::<Signal<ColorPickerState>>();
 
     rsx! {
-        div {
-            class: "saturation-brightness-wrapper",
+        div { class: "saturation-brightness-wrapper",
             div {
                 class: SATURATION_BRIGHTNESS_BOX_ID,
                 id: SATURATION_BRIGHTNESS_BOX_ID,
@@ -223,7 +215,7 @@ fn SaturationBrightnessBox() -> Element {
                 },
                 div {
                     class: "saturation-brightness-gradient",
-                    style: "background-color: hsl({color_state.read().hue}deg, 100%, 50%);"
+                    style: "background-color: hsl({color_state.read().hue}deg, 100%, 50%);",
                 }
                 CursorPrimitiveSvg {
                     class: "saturation-brightness-cursor",
@@ -248,27 +240,12 @@ fn CursorPrimitiveSvg(
 ) -> Element {
     let scale_factor = scale_factor.unwrap_or(1);
     rsx! {
-        svg {
-            view_box: "0 0 100 100",
-            class: class.unwrap_or("".to_string()),
+        svg { view_box: "0 0 100 100", class: class.unwrap_or("".to_string()),
             defs {
-                radialGradient {
-                    id: "cursor-border",
-                    stop {
-                        offset: "0%",
-                        stop_color: "white",
-                        stop_opacity: 0,
-                    }
-                    stop {
-                        offset: "50%",
-                        stop_color: "white",
-                        stop_opacity: 1,
-                    }
-                    stop {
-                        offset: "90%",
-                        stop_color: "white",
-                        stop_opacity: 1,
-                    }
+                radialGradient { id: "cursor-border",
+                    stop { offset: "0%", stop_color: "white", stop_opacity: 0 }
+                    stop { offset: "50%", stop_color: "white", stop_opacity: 1 }
+                    stop { offset: "90%", stop_color: "white", stop_opacity: 1 }
                     stop {
                         offset: "90%",
                         stop_color: "lightgray",
@@ -281,15 +258,14 @@ fn CursorPrimitiveSvg(
                     }
                 }
             }
-            g {
-                transform: transform.unwrap_or("".to_string()),
+            g { transform: transform.unwrap_or("".to_string()),
                 circle {
                     cx: x.unwrap_or(50f64),
                     cy: y.unwrap_or(3.75 * scale_factor as f64),
                     r: 3.75 * scale_factor as f64,
                     stroke: "url(#cursor-border)",
                     stroke_width: 2 * scale_factor,
-                    fill: fill
+                    fill,
                 }
             }
         }
@@ -310,22 +286,15 @@ fn ColorView() -> Element {
         ColorFormat::CMYK => color.to_cmyk_string(),
     };
     rsx! {
-        div {
-            class: "color-view",
+        div { class: "color-view",
             div {
                 class: "color-view-display",
-                style: "--color-view-background: {rgb_string};"
+                style: "--color-view-background: {rgb_string};",
             }
-            TextInput {
-                label: "Color",
-                value: color_text,
-                readonly: true
-            }
+            TextInput { label: "Color", value: color_text, readonly: true }
             SelectForm::<ColorFormat> {
                 label: "Color Format",
-                oninput: move |new_format: ColorFormat| {
-                    color_format.set(new_format)
-                },
+                oninput: move |new_format: ColorFormat| { color_format.set(new_format) },
                 value: *color_format.read(),
             }
         }
