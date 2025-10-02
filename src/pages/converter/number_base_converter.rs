@@ -21,27 +21,18 @@ pub fn NumberBaseConverter() -> Element {
     let mut format_number_state = use_context_provider(|| Signal::new(FormatNumberState(false)));
 
     rsx! {
-        div {
-            class: "number-base-converter",
+        div { class: "number-base-converter",
             SwitchInput {
                 label: "Format Numbers",
                 checked: format_number_state.read().0,
                 oninput: move |is_enabled| {
                     format_number_state.write().0 = is_enabled;
-                }
+                },
             }
-            converter_input {
-                base: NumberBase::Decimal
-            }
-            converter_input {
-                base: NumberBase::Hexadecimal
-            }
-            converter_input {
-                base: NumberBase::Octal
-            }
-            converter_input {
-                base: NumberBase::Binary
-            }
+            converter_input { base: NumberBase::Decimal }
+            converter_input { base: NumberBase::Hexadecimal }
+            converter_input { base: NumberBase::Octal }
+            converter_input { base: NumberBase::Binary }
         }
     }
 }
@@ -62,8 +53,9 @@ fn converter_input(base: NumberBase) -> Element {
                     NumberBase::Octal => i64::from_str_radix(&event_value, 8),
                     NumberBase::Decimal => event_value.parse::<i64>(),
                     NumberBase::Hexadecimal => i64::from_str_radix(&event_value, 16),
-                }.unwrap_or(0);
-            }
+                }
+                    .unwrap_or(0);
+            },
         }
     }
 }

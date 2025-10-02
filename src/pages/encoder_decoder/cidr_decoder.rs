@@ -66,8 +66,7 @@ pub fn CidrDecoder() -> Element {
 
     let mut show_error_state = use_signal(|| false);
     rsx! {
-        div {
-            class: "cidr-decoder",
+        div { class: "cidr-decoder",
             TextInput {
                 label: "CIDR",
                 value: "{cidr_input_ref.with(|cidr_str| cidr_str.to_string())}",
@@ -76,22 +75,26 @@ pub fn CidrDecoder() -> Element {
                     let cidr_clone = cidr.clone();
                     let cidr_trim = cidr.trim();
                     log::info!("CIDR: {}", cidr);
-                    cidr_input_ref.with_mut(|cidr_input| {
-                        *cidr_input = cidr_clone;
-                    });
+                    cidr_input_ref
+                        .with_mut(|cidr_input| {
+                            *cidr_input = cidr_clone;
+                        });
                     if let Ok(cidr_valid) = IpCidr::from_str(cidr_trim) {
-                        cidr_ref.with_mut(|cidr_obj| {
-                            *cidr_obj = cidr_valid;
-                            show_error_state.with_mut(|show_error_state| {
-                                *show_error_state = false;
+                        cidr_ref
+                            .with_mut(|cidr_obj| {
+                                *cidr_obj = cidr_valid;
+                                show_error_state
+                                    .with_mut(|show_error_state| {
+                                        *show_error_state = false;
+                                    });
                             });
-                        });
                     } else {
-                        show_error_state.with_mut(|show_error_state| {
-                            *show_error_state = true;
-                        });
+                        show_error_state
+                            .with_mut(|show_error_state| {
+                                *show_error_state = true;
+                            });
                     }
-                }
+                },
             }
             div {
                 class: "alert alert-warning m-0",

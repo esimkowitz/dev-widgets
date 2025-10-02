@@ -26,25 +26,22 @@ pub fn UuidGenerator() -> Element {
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {
-        div {
-            class: "uuid-generator",
-            div {
-                class: "params",
-                div {
-                    class: "switches",
+        div { class: "uuid-generator",
+            div { class: "params",
+                div { class: "switches",
                     SwitchInput {
                         label: "Hyphens",
                         checked: true,
                         oninput: move |value| {
                             hyphens_state.set(value);
-                        }
+                        },
                     }
                     SwitchInput {
                         label: "Uppercase",
                         checked: true,
                         oninput: move |value| {
                             uppercase_state.set(value);
-                        }
+                        },
                     }
                 }
                 SelectForm::<UUIDVersion> {
@@ -52,19 +49,18 @@ pub fn UuidGenerator() -> Element {
                     value: *uuid_version_state.read(),
                     oninput: move |uuid_version| {
                         uuid_version_state.set(uuid_version);
-                    }
+                    },
                 }
                 NumberInput::<usize> {
                     label: "Number of UUIDs to generate",
                     value: *num_uuids_state.read(),
                     onchange: move |value| {
                         num_uuids_state.set(value);
-                    }
+                    },
                 }
             }
 
-            div {
-                class: "buttons",
+            div { class: "buttons",
                 button {
                     class: "btn btn-primary me-3",
                     onclick: move |_| {
@@ -93,11 +89,7 @@ pub fn UuidGenerator() -> Element {
                     "Clear"
                 }
             }
-            TextAreaForm {
-                label: "UUIDs",
-                value: "{uuids_str}",
-                readonly: true,
-            }
+            TextAreaForm { label: "UUIDs", value: "{uuids_str}", readonly: true }
         }
     }
 }

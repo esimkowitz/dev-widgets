@@ -39,6 +39,8 @@ wasm-logger = { version = "0.2.0", optional = true }
 desktop = ["dioxus/desktop"]
 web = ["dioxus/web", "getrandom/wasm_js", "time/wasm-bindgen", "uuid/js", "dep:wasm-bindgen", "dep:wasm-logger"]
 
+default = ["desktop"]
+
 [profile.release]
 lto = true # Use Link-Time-Optimization
 codegen-units = 1 # Fewer codegen units to increase optimizations.

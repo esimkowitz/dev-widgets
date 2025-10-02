@@ -16,10 +16,8 @@ pub fn Accordion(children: Element, title: String, is_open: Option<bool>) -> Ele
         "accordion-collapse collapse show"
     };
     rsx! {
-        div {
-            class: "accordion-item",
-            h3 {
-                class: "accordion-header",
+        div { class: "accordion-item",
+            h3 { class: "accordion-header",
                 button {
                     class: "{buttoncss}",
                     r#type: "button",
@@ -30,12 +28,8 @@ pub fn Accordion(children: Element, title: String, is_open: Option<bool>) -> Ele
                     {title}
                 }
             }
-            div {
-                class: "{accordioncss}",
-                div {
-                    class: "accordion-body p-0",
-                    {children}
-                }
+            div { class: "{accordioncss}",
+                div { class: "accordion-body p-0", {children} }
             }
         }
     }

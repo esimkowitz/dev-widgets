@@ -25,9 +25,7 @@ pub enum ConverterRoute {
 
 fn Index() -> Element {
     rsx! {
-        div {
-            class: "converter",
-        }
+        div { class: "converter" }
     }
 }
 

@@ -27,34 +27,25 @@ pub fn HashGenerator() -> Element {
     });
 
     rsx! {
-        div {
-            class: "number-base-converter",
+        div { class: "number-base-converter",
             SwitchInput {
                 label: "Uppercase",
                 checked: hash_generator_state.read().uppercase,
                 oninput: move |is_enabled| {
                     hash_generator_state.write().uppercase = is_enabled;
-                }
+                },
             }
             TextAreaForm {
                 label: "Value to hash",
                 value: "{hash_generator_state.read().value}",
                 oninput: move |event: Event<FormData>| {
                     hash_generator_state.write().value = event.value();
-                }
+                },
             }
-            HashField {
-                algorithm: HashingAlgorithm::MD5,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA1,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA256,
-            }
-            HashField {
-                algorithm: HashingAlgorithm::SHA512,
-            }
+            HashField { algorithm: HashingAlgorithm::MD5 }
+            HashField { algorithm: HashingAlgorithm::SHA1 }
+            HashField { algorithm: HashingAlgorithm::SHA256 }
+            HashField { algorithm: HashingAlgorithm::SHA512 }
         }
     }
 }
@@ -69,11 +60,7 @@ fn HashField(algorithm: HashingAlgorithm) -> Element {
         .with(|state| generate_hash(state.value.clone(), &mut *hasher, state.uppercase));
 
     rsx! {
-        TextInput {
-            label: "{algorithm}",
-            value: "{hashed_value}",
-            readonly: true,
-        }
+        TextInput { label: "{algorithm}", value: "{hashed_value}", readonly: true }
     }
 }
 

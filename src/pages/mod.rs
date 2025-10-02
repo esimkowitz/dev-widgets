@@ -55,10 +55,7 @@ fn PageNotFound(route: Vec<String>) -> Element {
     rsx! {
         h1 { "Page not found" }
         p { "We are terribly sorry, but the page you requested doesn't exist." }
-        pre {
-            color: "red",
-            "log:\nattemped to navigate to: {route:?}"
-        }
+        pre { color: "red", "log:\nattemped to navigate to: {route:?}" }
     }
 }
 
@@ -136,10 +133,7 @@ pub struct WidgetIcon<T: IconShape + Copy> {
 impl<T: IconShape + Copy + PartialEq + 'static> WidgetIcon<T> {
     pub fn icon(self) -> Element {
         rsx! {
-            Icon::<T> {
-                class: "icon",
-                icon: self.icon,
-            }
+            Icon::<T> { class: "icon", icon: self.icon }
         }
     }
 }

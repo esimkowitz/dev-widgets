@@ -21,9 +21,7 @@ pub enum EncoderDecoderRoute {
 
 fn Index() -> Element {
     rsx! {
-        div {
-            class: "encoder-decoder"
-        }
+        div { class: "encoder-decoder" }
     }
 }
 
