@@ -11,10 +11,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repo
         uses: actions/checkout@v5
-      
+
       # Install toolchain
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@master
@@ -25,7 +27,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
       - name: Install dioxus-cli
         uses: taiki-e/install-action@v2
-        with: 
+        with:
           tool: dioxus-cli
 
       # Build app
