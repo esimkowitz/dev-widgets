@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 use dioxus_free_icons::icons::bs_icons::BsHouseDoorFill;
+use dioxus_router::prelude::*;
 use strum::IntoEnumIterator;
 
 use crate::pages::{Route, WidgetEntry, WidgetIcon};

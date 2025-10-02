@@ -11,15 +11,7 @@ use num_traits::PrimInt;
 use strum::IntoEnumIterator;
 
 pub trait SelectFormEnum:
-    IntoEnumIterator
-    + Into<String>
-    + FromStr
-    + Default
-    + Debug
-    + Display
-    + Copy
-    + Clone
-    + PartialEq
+    IntoEnumIterator + Into<String> + FromStr + Default + Debug + Display + Copy + Clone + PartialEq
 {
 }
 
@@ -57,11 +49,7 @@ pub struct SelectFormProps<T: SelectFormEnum + 'static> {
 }
 
 #[component]
-pub fn SwitchInput(
-    label: String,
-    checked: bool,
-    oninput: EventHandler<bool>,
-) -> Element {
+pub fn SwitchInput(label: String, checked: bool, oninput: EventHandler<bool>) -> Element {
     rsx! {
         div {
             class: "switch-input",

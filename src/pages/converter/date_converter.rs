@@ -166,7 +166,7 @@ impl Default for DcTimeZone {
             Err(err) => {
                 log::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
                 timezones::get_by_name("UTC").unwrap()
-            },
+            }
         })
     }
 }
@@ -184,7 +184,7 @@ impl FromStr for DcTimeZone {
             None => {
                 log::error!("Failed to parse timezone: {}", s);
                 Err(TzParseError)
-            },
+            }
         }
     }
 

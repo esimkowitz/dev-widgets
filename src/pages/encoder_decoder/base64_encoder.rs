@@ -17,10 +17,12 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
 
 pub fn Base64Encoder() -> Element {
-    use_context_provider(|| Signal::new(EncoderValue {
-        encoded_value: String::new(),
-        decoded_value: String::new(),
-    }));
+    use_context_provider(|| {
+        Signal::new(EncoderValue {
+            encoded_value: String::new(),
+            decoded_value: String::new(),
+        })
+    });
     rsx! {
         div {
             class: "base64-encoder",

@@ -24,11 +24,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<BsEthernet> = WidgetIcon { icon: BsEthernet };
 
 pub fn CidrDecoder() -> Element {
-    let mut cidr_ref = use_signal(|| {
-        IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap()
-    });
+    let mut cidr_ref =
+        use_signal(|| IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap());
 
-    let mut cidr_input_ref= use_signal(|| cidr_ref.with(|cidr| cidr.to_string()));
+    let mut cidr_input_ref = use_signal(|| cidr_ref.with(|cidr| cidr.to_string()));
 
     let cidr_description = cidr_ref.with(|cidr| {
         let mut description = String::new();

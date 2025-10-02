@@ -9,7 +9,7 @@ pub fn init(level: log::Level) {
     {
         wasm_logger::init(wasm_logger::Config::new(level));
     }
-    
+
     #[cfg(not(target_family = "wasm"))]
     {
         match set_boxed_logger(Box::new(simple_logger::SimpleLogger)) {

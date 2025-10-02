@@ -1,5 +1,5 @@
 use dioxus::{
-    desktop::{Config, WindowBuilder, LogicalSize},
+    desktop::{Config, LogicalSize, WindowBuilder},
     dioxus_core::Element,
     prelude::LaunchBuilder,
 };

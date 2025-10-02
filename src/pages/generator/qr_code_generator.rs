@@ -68,7 +68,7 @@ pub fn QrCodeGenerator() -> Element {
 }
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
 )]
 enum Ecc {
     #[default]
@@ -84,7 +84,6 @@ impl From<Ecc> for String {
     fn from(ecc: Ecc) -> Self {
         ecc.to_string()
     }
-
 }
 
 impl From<Ecc> for qrcode_generator::QrCodeEcc {

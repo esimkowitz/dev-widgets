@@ -2,11 +2,7 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Accordion(
-    children: Element,
-    title: String,
-    is_open: Option<bool>,
-) -> Element {
+pub fn Accordion(children: Element, title: String, is_open: Option<bool>) -> Element {
     let default_open_flag = !is_open.unwrap_or(false);
     let mut is_close_accordion = use_signal(|| default_open_flag);
     let buttoncss = if *is_close_accordion.read() {

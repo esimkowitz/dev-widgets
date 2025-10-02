@@ -21,7 +21,7 @@ pub fn UuidGenerator() -> Element {
     let mut hyphens_state = use_signal(|| true);
     let mut uppercase_state = use_signal(|| true);
     let mut num_uuids_state = use_signal(|| 1);
-    let mut uuids_state= use_signal(Vec::<String>::new);
+    let mut uuids_state = use_signal(Vec::<String>::new);
     let mut uuid_version_state = use_signal(|| UUIDVersion::V4);
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
@@ -62,7 +62,7 @@ pub fn UuidGenerator() -> Element {
                     }
                 }
             }
-            
+
             div {
                 class: "buttons",
                 button {
@@ -101,7 +101,6 @@ pub fn UuidGenerator() -> Element {
         }
     }
 }
-
 
 #[derive(
     Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,

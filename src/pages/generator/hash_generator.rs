@@ -19,10 +19,12 @@ const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
 };
 
 pub fn HashGenerator() -> Element {
-    let mut hash_generator_state = use_context_provider(|| Signal::new(HashGeneratorState {
-        value: "".to_string(),
-        uppercase: false,
-    }));
+    let mut hash_generator_state = use_context_provider(|| {
+        Signal::new(HashGeneratorState {
+            value: "".to_string(),
+            uppercase: false,
+        })
+    });
 
     rsx! {
         div {
@@ -63,11 +65,8 @@ fn HashField(algorithm: HashingAlgorithm) -> Element {
 
     let mut hasher = select_hasher(algorithm);
 
-    let hashed_value = hash_generator_state.with(|state| generate_hash(
-        state.value.clone(),
-        &mut *hasher,
-        state.uppercase,
-    ));
+    let hashed_value = hash_generator_state
+        .with(|state| generate_hash(state.value.clone(), &mut *hasher, state.uppercase));
 
     rsx! {
         TextInput {
@@ -92,19 +91,15 @@ fn generate_hash(value: String, hasher: &mut dyn DynDigest, uppercase: bool) -> 
     let hashed_value = hasher.finalize_reset();
 
     if uppercase {
-        hashed_value
-            .iter()
-            .fold(String::new(), |mut output, b| {
-                let _ = write!(output, "{:X}", b);
-                output
-            })
+        hashed_value.iter().fold(String::new(), |mut output, b| {
+            let _ = write!(output, "{:X}", b);
+            output
+        })
     } else {
-        hashed_value
-            .iter()
-            .fold(String::new(), |mut output, b| {
-                let _ = write!(output, "{:x}", b);
-                output
-            })
+        hashed_value.iter().fold(String::new(), |mut output, b| {
+            let _ = write!(output, "{:x}", b);
+            output
+        })
     }
 }
 
