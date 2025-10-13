@@ -9,7 +9,7 @@ build = "build.rs"
 [build-dependencies]
 curl = "0.4"
 grass = "0.13"
-zip = "5.1.1"
+zip = "6.0.0"
 
 [dependencies]
 base64ct = { version = "1.8", features = ["alloc"] }
