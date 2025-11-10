@@ -21,7 +21,7 @@ dioxus-free-icons = { version = "0.9", features = ["bootstrap"] }
 dioxus-router = "0.6.3"
 getrandom = "0.3"
 log = { version = "0.4", features = ["std"] }
-manganis = "0.6.2"
+manganis = "0.7.1"
 md-5 = "0.10"
 num-traits = "0.2"
 qrcode-generator = "5.0.0"
