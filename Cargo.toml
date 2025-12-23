@@ -13,7 +13,7 @@ zip = "6.0.0"
 
 [dependencies]
 base64ct = { version = "1.8", features = ["alloc"] }
-cidr = "0.3.0"
+cidr = "0.3.2"
 color_processing = "0.6"
 digest = "0.10"
 dioxus = { version = "0.6.3" }
