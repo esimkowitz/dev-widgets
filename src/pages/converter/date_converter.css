@@ -1,0 +1,28 @@
+/* Date Converter */
+@layer components {
+  .date-converter {
+    @apply grid gap-y-3;
+  }
+
+  .date-converter .selectors-wrapper {
+    @apply flex flex-row gap-y-3 gap-x-2 flex-nowrap;
+  }
+
+  .date-converter .selectors {
+    @apply flex-col;
+  }
+
+  .date-converter .selectors-inner {
+    @apply flex flex-row flex-nowrap gap-x-2;
+  }
+
+  .date-converter .selectors-inner .number-input {
+    @apply flex flex-col flex-1;
+  }
+
+  @media screen and (max-width: 835px) {
+    .date-converter .selectors-wrapper {
+      @apply flex-wrap;
+    }
+  }
+}

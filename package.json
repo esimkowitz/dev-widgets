@@ -4,8 +4,8 @@
   "description": "## Overview",
   "main": "index.js",
   "scripts": {
-    "tailwind:build": "npx @tailwindcss/cli -i ./input.css -o ./assets/tailwind.css",
-    "tailwind:watch": "npx @tailwindcss/cli -i ./input.css -o ./assets/tailwind.css --watch",
+    "tailwind:build": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css",
+    "tailwind:watch": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css --watch",
     "serve:web": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform web)",
     "serve:desktop": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform desktop)"
   },

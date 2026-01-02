@@ -1,0 +1,10 @@
+/* Hash Generator */
+@layer components {
+  .hash-generator {
+    @apply grid gap-y-3;
+  }
+
+  .hash-generator .textarea-form {
+    height: 20em;
+  }
+}

@@ -1,0 +1,29 @@
+/* Home Page */
+@layer components {
+  .home-page {
+    @apply flex flex-row flex-wrap gap-2 pb-4;
+  }
+
+  .home-page .card {
+    @apply p-0;
+    width: 10em;
+    height: 14em;
+  }
+
+  .home-page .card .card-img-top {
+    @apply text-center mt-4;
+  }
+
+  .home-page .card .icon {
+    height: 3em;
+    width: 3em;
+  }
+
+  .home-page .card .card-title {
+    @apply text-start text-lg font-bold;
+  }
+
+  .home-page .card .card-body {
+    @apply text-start text-sm;
+  }
+}

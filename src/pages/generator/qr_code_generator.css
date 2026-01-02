@@ -1,0 +1,15 @@
+/* QR Code Generator */
+@layer components {
+  .qr-code-generator {
+    @apply grid gap-y-3;
+  }
+
+  .qr-code-generator .textarea-form {
+    height: 14em;
+  }
+
+  .qr-code-generator .qr-code {
+    width: 30em;
+    height: 30em;
+  }
+}

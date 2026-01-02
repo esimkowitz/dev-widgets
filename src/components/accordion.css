@@ -1,0 +1,10 @@
+/* Accordion/Collapse - Custom styling for DaisyUI collapse */
+@layer components {
+  .accordion-item .collapse-title {
+    @apply p-2 min-h-0;
+  }
+
+  .accordion-item .collapse-content {
+    @apply p-0;
+  }
+}
