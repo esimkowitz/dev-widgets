@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::{Icon, IconShape};
-use dioxus_router::prelude::*;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 

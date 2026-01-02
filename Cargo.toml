@@ -1,6 +1,6 @@
 [package]
 name = "dev-widgets"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
@@ -16,12 +16,11 @@ base64ct = { version = "1.8", features = ["alloc"] }
 cidr = "0.3.2"
 color_processing = "0.6"
 digest = "0.10"
-dioxus = { version = "0.6.3" }
-dioxus-free-icons = { version = "0.9", features = ["bootstrap"] }
-dioxus-router = "0.6.3"
+dioxus = { version = "0.7.2", features = ["router"] }
+dioxus-free-icons = { version = "0.10.0", features = ["bootstrap"] }
 getrandom = "0.3"
 log = { version = "0.4", features = ["std"] }
-manganis = "0.6.2"
+manganis = "0.7.2"
 md-5 = "0.10"
 num-traits = "0.2"
 qrcode-generator = "5.0.0"
@@ -62,7 +61,7 @@ strip = true  # Automatically strip symbols from the binary. Only available for 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
-version = "0.3.0"
+version = "0.3.1"
 resources = ["public/**/*"]
 copyright = "Copyright (c) Evan Simkowitz 2025. All rights reserved."
 category = "Developer Tool"
