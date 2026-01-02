@@ -109,25 +109,22 @@ pub fn TextInput(
 
     rsx! {
         div { class: "text-input",
-            div { class: "form-floating",
-                input {
-                    class: "form-control",
-                    r#type: "text",
-                    value: "{value}",
-                    oninput: move |event| {
-                        if let Some(oninput) = oninput {
-                            oninput.call(event);
-                        }
-                    },
-                    onchange: move |event| {
-                        if let Some(onchange) = onchange {
-                            onchange.call(event);
-                        }
-                    },
-                    readonly,
-                }
-                label { r#for: "{label}", {label.clone()} }
+            input {
+                r#type: "text",
+                value: "{value}",
+                oninput: move |event| {
+                    if let Some(oninput) = oninput {
+                        oninput.call(event);
+                    }
+                },
+                onchange: move |event| {
+                    if let Some(onchange) = onchange {
+                        onchange.call(event);
+                    }
+                },
+                readonly,
             }
+            label { r#for: "{label}", {label.clone()} }
         }
     }
 }

@@ -21,3 +21,8 @@ public/js/[!darkmode.js,!ghpages_redirect.js]*
 # Dioxus
 dioxusin
 dist/
+
+# Tailwind compiled output
+assets/tailwind.css
+
+node_modules/

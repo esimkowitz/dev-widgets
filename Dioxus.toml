@@ -16,7 +16,7 @@ title = "Dev Widgets"
 
 [web.watcher]
 
-watch_path = ["src", "scss", "index.html"]
+watch_path = ["src", "index.html"]
 reload_html = true
 index_on_404 = true
 

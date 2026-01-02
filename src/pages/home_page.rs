@@ -24,12 +24,12 @@ pub fn HomePage() -> Element {
                     if let Some(widget_entry) = widget_route.clone().get_widget_entry() {
                         {
                             rsx! {
-                                div { class: "card",
+                                div { class: "card relative",
                                     div { class: "card-img-top", {(widget_entry.icon)()} }
                                     div { class: "card-body",
                                         div { class: "card-title", {widget_entry.title} }
                                         div { class: "card-text", {widget_entry.description} }
-                                        Link { class: "stretched-link", to: widget_route }
+                                        Link { class: "absolute inset-0", to: widget_route }
                                     }
                                 }
                             }

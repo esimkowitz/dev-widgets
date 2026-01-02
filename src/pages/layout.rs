@@ -49,7 +49,7 @@ fn Sidebar() -> Element {
                     }
                 }
             }
-            div { class: "vr" }
+            div { class: "divider divider-horizontal m-0" }
         }
     }
 }

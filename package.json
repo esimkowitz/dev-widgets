@@ -1,0 +1,28 @@
+{
+  "name": "dev-widgets",
+  "version": "1.0.0",
+  "description": "## Overview",
+  "main": "index.js",
+  "scripts": {
+    "tailwind:build": "npx @tailwindcss/cli -i ./input.css -o ./assets/tailwind.css",
+    "tailwind:watch": "npx @tailwindcss/cli -i ./input.css -o ./assets/tailwind.css --watch",
+    "serve:web": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform web)",
+    "serve:desktop": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform desktop)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esimkowitz/dev-widgets.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esimkowitz/dev-widgets/issues"
+  },
+  "homepage": "https://github.com/esimkowitz/dev-widgets#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "daisyui": "^5.5.14",
+    "tailwindcss": "^4.1.18"
+  }
+}
