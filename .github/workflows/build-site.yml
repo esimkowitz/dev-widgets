@@ -17,6 +17,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
+      # Install Node.js and build Tailwind CSS
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Build Tailwind CSS
+        run: npm run tailwind:build
+
       # Install toolchain
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@master
