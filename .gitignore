@@ -26,3 +26,8 @@ dist/
 assets/tailwind.css
 
 node_modules/
+
+.aicontext/
+
+# Git worktrees
+.worktrees/
