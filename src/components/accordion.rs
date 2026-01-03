@@ -22,7 +22,9 @@ pub fn Accordion(children: Element, title: String, is_open: Option<bool>) -> Ele
                 {title}
             }
             div { class: "collapse-content p-0",
-                {children}
+                ul { class: "menu w-full",
+                    {children}
+                }
             }
         }
     }

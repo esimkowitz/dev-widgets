@@ -1,55 +1,145 @@
 /* Layout Components */
 @layer components {
-  /* Container */
-  .container-fluid {
-    @apply flex flex-row w-screen h-screen overflow-y-scroll justify-start pe-0;
-  }
-
-  .container-fluid::-webkit-scrollbar {
-    display: none;
+  /* App Layout - persistent sidebar with main content */
+  .app-layout {
+    @apply flex flex-row w-screen h-screen overflow-hidden;
   }
 
   /* Sidebar */
   .sidebar {
-    @apply flex flex-row;
-    width: 15em;
+    @apply flex flex-col h-full bg-base-200 relative flex-shrink-0;
   }
 
-  .sidebar-list {
-    @apply overflow-y-scroll w-full;
+  /* Only animate width when collapsing/expanding, not during drag resize */
+  .sidebar:not(.resizing) {
+    transition: width 0.2s ease-in-out;
   }
 
-  .sidebar-list .btn {
-    @apply btn-sm w-full text-left whitespace-nowrap;
+  /* Collapse Toggle Button */
+  .collapse-toggle-btn {
+    @apply btn btn-ghost btn-xs absolute -right-3 top-4 z-50;
+    @apply rounded-full bg-base-100 border border-base-300 shadow-sm;
+    @apply flex items-center justify-center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
   }
 
-  .sidebar-list .btn .icon {
-    @apply h-4 w-4 mr-2 -mt-1;
+  .collapse-toggle-btn:hover {
+    @apply bg-base-200 border-base-content/20;
   }
 
-  .sidebar-list .accordion {
-    @apply flex flex-col ms-2 mb-2 pt-2 pe-3;
+  /* Resize Handle */
+  .resize-handle {
+    @apply absolute top-0 -right-1 h-full w-2 cursor-col-resize z-40;
+    @apply hover:bg-primary/20;
+    transition: background-color 0.15s ease;
+  }
+
+  .resize-handle:active {
+    @apply bg-primary/30;
+  }
+
+  /* Sidebar Menu */
+  .sidebar-menu {
+    @apply menu menu-vertical flex-grow overflow-y-auto p-2 w-full gap-0;
+  }
+
+  .sidebar-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar-menu.collapsed {
+    @apply items-center px-1;
+  }
+
+  /* Menu Items - ensure full width */
+  .sidebar-menu > li {
+    @apply w-full;
+  }
+
+  .sidebar-menu li > a {
+    @apply flex items-center gap-2 w-full;
+  }
+
+  .sidebar-menu.collapsed li > a {
+    @apply justify-center p-2 w-auto;
+  }
+
+  /* Icon sizing within menu items */
+  .sidebar-menu li > a > svg {
+    @apply h-4 w-4 flex-shrink-0;
+  }
+
+  /* Accordion in sidebar */
+  .sidebar-menu .accordion-item {
+    @apply w-full;
+  }
+
+  .sidebar-menu .accordion-item .collapse-content {
+    @apply w-full;
+  }
+
+  .sidebar-menu .accordion-item .collapse-content li {
+    @apply w-full;
+  }
+
+  .sidebar-menu .accordion {
+    @apply flex flex-col;
+  }
+
+  /* Category Header (Collapsed State) */
+  .category-header {
+    @apply flex items-center gap-2 cursor-pointer p-2;
+  }
+
+  .category-header.collapsed {
+    @apply justify-center;
+  }
+
+  .category-header .icon {
+    @apply h-4 w-4;
+  }
+
+  /* Tooltips positioning fix for sidebar */
+  .sidebar-menu.collapsed .tooltip {
+    @apply w-full;
+  }
+
+  .sidebar-menu.collapsed .tooltip::before,
+  .sidebar-menu.collapsed .tooltip::after {
+    @apply left-full ml-2;
+  }
+
+  /* Main Content Area */
+  .main-content {
+    @apply flex flex-col flex-grow h-full overflow-hidden;
+  }
+
+  /* Content Header */
+  .content-header {
+    @apply flex-shrink-0 px-4 py-2 bg-base-100 border-b border-base-300;
+  }
+
+  .content-title {
+    @apply text-xl font-semibold m-0;
+  }
+
+  /* Content Body */
+  .content-body {
+    @apply flex-grow overflow-y-auto overflow-x-hidden p-4;
+  }
+
+  .content-body::-webkit-scrollbar {
+    display: none;
   }
 
   /* Widget View */
   .widget-view {
-    @apply ps-3 pe-3 w-full h-full overflow-y-scroll overflow-x-clip;
+    @apply w-full h-full;
   }
 
-  .widget-title {
-    @apply sticky top-0 mb-0 pt-1 pb-1 bg-base-100 z-[100];
-    width: calc(100% + 1em);
-    margin-left: -0.5em;
-    padding-left: 0.5em;
-  }
-
-  .widget-body {
-    @apply pt-2 w-full;
-    height: 1px;
-    min-height: calc(100% - 3em);
-  }
-
-  .widget-body > div {
+  .widget-view > div {
     @apply pb-3;
   }
 }
