@@ -1,9 +1,12 @@
 use dioxus::prelude::*;
+use dioxus_free_icons::icons::fa_brands_icons::FaGithub;
+use dioxus_free_icons::icons::fa_regular_icons::FaCopyright;
 use dioxus_free_icons::icons::fa_solid_icons::{FaChevronLeft, FaChevronRight};
 use dioxus_free_icons::Icon;
 use dioxus_sdk::storage::use_persistent;
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
+use time::OffsetDateTime;
 
 use crate::components;
 use crate::pages::home_page::HOME_PAGE_CATEGORY_ENTRY;
@@ -246,6 +249,8 @@ fn Sidebar(
                         }
                     }
                 }
+
+                SidebarFooter {}
             }
 
             // Collapse toggle button on the edge
@@ -385,5 +390,31 @@ fn SidebarWidgetItem(
 pub fn WidgetView() -> Element {
     rsx! {
         div { class: "widget-view", Outlet::<Route> {} }
+    }
+}
+
+#[component]
+fn SidebarFooter() -> Element {
+    let current_year = OffsetDateTime::now_utc().year();
+    let version = env!("CARGO_PKG_VERSION");
+
+    rsx! {
+        div { class: "sidebar-footer",
+            p { "Dev Widgets v{version}" }
+            a {
+                class: "link link-hover",
+                href: "https://github.com/esimkowitz/dev-widgets",
+                target: "_blank",
+                Icon::<FaGithub> { icon: FaGithub, class: "inline-block w-3 h-3" }
+                " esimkowitz/dev-widgets"
+            }
+            a {
+                class: "link link-hover",
+                href: "https://github.com/esimkowitz/dev-widgets/blob/main/LICENSE",
+                target: "_blank",
+                Icon::<FaCopyright> { icon: FaCopyright, class: "inline-block w-3 h-3" }
+                " {current_year} Evan Simkowitz"
+            }
+        }
     }
 }

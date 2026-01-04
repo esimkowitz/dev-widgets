@@ -200,4 +200,14 @@
   .widget-view > div {
     @apply pb-3;
   }
+
+  /* Sidebar Footer */
+  .sidebar-footer {
+    @apply flex-shrink-0 px-3 py-2 text-xs text-base-content/70;
+    @apply flex flex-col items-center gap-1 border-t border-base-300;
+  }
+
+  .sidebar-footer a {
+    @apply flex items-center gap-1;
+  }
 }
