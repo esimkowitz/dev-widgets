@@ -31,24 +31,38 @@ Collection of useful developer utilities built as a pure Rust app on the [Dioxus
 
 ## Development Setup
 
-1. Install prerequisites:
-   - [Rust](https://www.rust-lang.org/tools/install)
-   - [Node.js](https://nodejs.org/) (for Tailwind CSS compilation)
-   - [Platform-specific dependencies](https://dioxuslabs.com/learn/0.7/getting_started/#platform-specific-dependencies) for Dioxus
+### 1. Install prerequisites
 
-2. Install the Dioxus CLI:
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Node.js](https://nodejs.org/) (for Tailwind CSS compilation)
+- [Platform-specific dependencies](https://dioxuslabs.com/learn/0.7/getting_started/#platform-specific-dependencies) for Dioxus
 
-   ```bash
-   cargo install dioxus-cli
-   ```
+### 2. Install the Dioxus CLI
 
-3. Clone this repository and enter its root directory.
+The easiest way to install the Dioxus CLI is via `cargo-binstall`:
 
-4. Install npm dependencies:
+```bash
+cargo binstall dioxus-cli --force
+```
 
-   ```bash
-   npm install
-   ```
+If you don't have `cargo-binstall`, you can install it via:
+
+```bash
+cargo install cargo-binstall
+```
+
+### 3. Clone the repository
+
+```bash
+git clone https://github.com/esimkowitz/dev-widgets.git
+cd dev-widgets
+```
+
+### 4. Install npm dependencies
+
+```bash
+npm install
+```
 
 ## Web App
 
