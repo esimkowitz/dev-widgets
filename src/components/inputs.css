@@ -1,0 +1,144 @@
+/* Form Components - Floating Label Pattern */
+@layer components {
+  .form-floating {
+    @apply relative;
+  }
+
+  .form-floating input,
+  .form-floating textarea,
+  .form-floating select {
+    @apply pt-6 pb-2;
+  }
+
+  .form-floating label {
+    @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
+  }
+
+  /* Textarea Form */
+  .textarea-form {
+    @apply relative;
+  }
+
+  .textarea-form textarea {
+    @apply textarea h-full w-full resize-none pt-6 pb-2;
+    font-family: "Monaco", Courier, monospace;
+    letter-spacing: 0.05rem;
+  }
+
+  .textarea-form label {
+    @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
+  }
+
+  .textarea-form textarea::-webkit-resizer {
+    display: none;
+  }
+
+  /* Text Input */
+  .text-input {
+    @apply relative;
+  }
+
+  .text-input input {
+    @apply input w-full pt-6 pb-2;
+  }
+
+  .text-input label {
+    @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
+  }
+
+  /* Select Form */
+  .select-form {
+    @apply relative;
+  }
+
+  .select-form select {
+    @apply select h-full w-full pt-6 pb-2;
+  }
+
+  .select-form label {
+    @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
+  }
+
+  /* Number Input */
+  .number-input {
+    @apply join w-full;
+  }
+
+  .number-input .number-input-field {
+    @apply relative flex-1;
+  }
+
+  .number-input .number-input-field input {
+    @apply input join-item h-full w-full pt-6 pb-2 border-r-0;
+    border-top-left-radius: var(--radius-field);
+    border-bottom-left-radius: var(--radius-field);
+  }
+
+  .number-input .number-input-field label {
+    @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
+  }
+
+  .number-input .number-input-buttons {
+    @apply flex flex-col;
+  }
+
+  .number-input .number-input-buttons button {
+    @apply flex-1 px-3 bg-transparent flex items-center justify-center transition-colors border-r border-base-content/20;
+  }
+
+  .number-input .number-input-buttons button:first-child {
+    @apply border-t;
+    border-top-right-radius: var(--radius-field);
+  }
+
+  .number-input .number-input-buttons button:last-child {
+    @apply border-b;
+    border-bottom-right-radius: var(--radius-field);
+  }
+
+  .number-input .number-input-buttons button:hover {
+    @apply bg-info text-info-content;
+  }
+
+  /* Hide native spinner */
+  .number-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .number-input input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Switch Input */
+  .switch-input {
+    @apply flex flex-row items-center gap-2;
+  }
+
+  .switch-input input[type="checkbox"] {
+    @apply toggle;
+  }
+
+  .switch-input label {
+    @apply text-sm cursor-pointer;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply rounded bg-base-100 cursor-pointer;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
+    transition:
+      0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
+      0.3s box-shadow;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .card-body {
+    @apply w-full;
+  }
+}

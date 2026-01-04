@@ -1,0 +1,85 @@
+/* Color Picker */
+@layer components {
+  .color-picker {
+    --color-view-background: white;
+    --colorwheel-diameter: 30em;
+    width: var(--colorwheel-diameter);
+  }
+
+  .color-picker .color-picker-inner {
+    @apply relative;
+  }
+
+  .color-picker .colorwheel-wrapper {
+    width: var(--colorwheel-diameter);
+    height: var(--colorwheel-diameter);
+  }
+
+  .color-picker .colorwheel {
+    @apply h-full w-full relative select-none block;
+  }
+
+  .color-picker .colorwheel-svg {
+    @apply absolute z-10;
+  }
+
+  .color-picker .colorwheel-gradient {
+    @apply h-full w-full;
+    background: conic-gradient(
+      from 90deg,
+      rgb(255 0 0),
+      rgb(255 0 255),
+      rgb(0 0 255),
+      rgb(0 255 255),
+      rgb(0 255 0),
+      rgb(255 255 0),
+      rgb(255, 0, 0)
+    );
+  }
+
+  .color-picker .colorwheel-cursor {
+    @apply relative z-[11];
+    height: var(--colorwheel-diameter);
+    width: var(--colorwheel-diameter);
+  }
+
+  .color-picker .saturation-brightness-wrapper {
+    @apply absolute block;
+    height: calc(var(--colorwheel-diameter) * 0.5);
+    width: calc(var(--colorwheel-diameter) * 0.5);
+    top: calc(var(--colorwheel-diameter) * 0.25);
+    left: calc(var(--colorwheel-diameter) * 0.25);
+  }
+
+  .color-picker .saturation-brightness-box {
+    @apply relative z-10 h-full w-full;
+  }
+
+  .color-picker .saturation-brightness-gradient {
+    @apply absolute h-full w-full;
+    background-image:
+      linear-gradient(to top, #000 0%, transparent 100%),
+      linear-gradient(to right, #fff 0%, transparent 100%);
+  }
+
+  .color-picker .saturation-brightness-cursor {
+    @apply absolute;
+  }
+
+  .color-picker .color-view {
+    @apply mt-4 flex flex-row;
+    height: 4rem;
+  }
+
+  .color-picker .color-view-display {
+    @apply m-auto rounded-full border border-base-300;
+    height: 2rem;
+    width: 2rem;
+    background-color: var(--color-view-background);
+  }
+
+  .color-picker .color-view .text-input,
+  .color-picker .color-view .select-form {
+    @apply m-auto grow ml-4;
+  }
+}

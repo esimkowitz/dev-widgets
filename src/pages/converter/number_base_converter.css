@@ -1,0 +1,6 @@
+/* Number Base Converter */
+@layer components {
+  .number-base-converter {
+    @apply grid gap-y-3;
+  }
+}

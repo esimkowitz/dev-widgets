@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsGlobe2;
+use dioxus_free_icons::icons::fa_solid_icons::FaGlobe;
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -15,7 +15,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsGlobe2> = WidgetIcon { icon: BsGlobe2 };
+const ICON: WidgetIcon<FaGlobe> = WidgetIcon { icon: FaGlobe };
 
 pub fn UuidGenerator() -> Element {
     let mut hyphens_state = use_signal(|| true);
@@ -62,7 +62,7 @@ pub fn UuidGenerator() -> Element {
 
             div { class: "buttons",
                 button {
-                    class: "btn btn-primary me-3",
+                    class: "btn btn-info me-3",
                     onclick: move |_| {
                         let mut uuids = vec![];
                         for _ in 0..*num_uuids_state.read() {
@@ -82,7 +82,7 @@ pub fn UuidGenerator() -> Element {
                     "Generate"
                 }
                 button {
-                    class: "btn btn-secondary",
+                    class: "btn btn-error",
                     onclick: move |_| {
                         uuids_state.write().clear();
                     },

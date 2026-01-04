@@ -4,6 +4,7 @@
         "vadimcn.vscode-lldb",
         "ms-vscode.cpptools",
         "tamasfe.even-better-toml",
-        "dioxuslabs.dioxus"
+        "dioxuslabs.dioxus",
+        "bradlc.vscode-tailwindcss"
     ]
 }

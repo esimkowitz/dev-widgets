@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use digest::DynDigest;
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsFingerprint;
+use dioxus_free_icons::icons::fa_solid_icons::FaFingerprint;
 use std::fmt::{self, Write};
 
 use crate::components::inputs::{SwitchInput, TextAreaForm, TextInput};
@@ -14,8 +14,8 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsFingerprint> = WidgetIcon {
-    icon: BsFingerprint,
+const ICON: WidgetIcon<FaFingerprint> = WidgetIcon {
+    icon: FaFingerprint,
 };
 
 pub fn HashGenerator() -> Element {

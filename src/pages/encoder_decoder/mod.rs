@@ -1,11 +1,22 @@
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
+use dioxus_free_icons::icons::fa_solid_icons::FaArrowRightArrowLeft;
+use dioxus_free_icons::Icon;
 use strum_macros::EnumIter;
 
 pub mod base64_encoder;
 pub mod cidr_decoder;
 
-use crate::pages::{Route, WidgetEntry, WidgetRoute};
+use crate::pages::{CategoryEntry, Route, WidgetEntry, WidgetRoute};
+
+pub static CATEGORY_ENTRY: CategoryEntry = CategoryEntry {
+    title: "Encoder/Decoder",
+    description: "Encode and decode data in various formats",
+    icon: || {
+        rsx! {
+            Icon::<FaArrowRightArrowLeft> { class: "icon", icon: FaArrowRightArrowLeft }
+        }
+    },
+};
 use base64_encoder::Base64Encoder;
 use cidr_decoder::CidrDecoder;
 
@@ -21,7 +32,7 @@ pub enum EncoderDecoderRoute {
 
 fn Index() -> Element {
     rsx! {
-        div { class: "encoder-decoder" }
+        crate::pages::home_page::WidgetGrid { category_filter: Some("Encoder/Decoder") }
     }
 }
 
@@ -45,6 +56,10 @@ impl WidgetRoute for EncoderDecoderRoute {
             Self::CidrDecoder { .. } => Some(&cidr_decoder::WIDGET_ENTRY),
             _ => None,
         }
+    }
+
+    fn get_category_entry() -> &'static CategoryEntry {
+        &CATEGORY_ENTRY
     }
 }
 

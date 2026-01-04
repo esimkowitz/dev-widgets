@@ -1,10 +1,21 @@
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
+use dioxus_free_icons::icons::fa_solid_icons::FaPhotoFilm;
+use dioxus_free_icons::Icon;
 use strum_macros::EnumIter;
 
 pub mod color_picker;
 
-use crate::pages::{Route, WidgetEntry, WidgetRoute};
+use crate::pages::{CategoryEntry, Route, WidgetEntry, WidgetRoute};
+
+pub static CATEGORY_ENTRY: CategoryEntry = CategoryEntry {
+    title: "Media",
+    description: "Tools for working with colors and media",
+    icon: || {
+        rsx! {
+            Icon::<FaPhotoFilm> { class: "icon", icon: FaPhotoFilm }
+        }
+    },
+};
 use color_picker::ColorPicker;
 
 #[derive(Clone, Debug, EnumIter, PartialEq, Routable)]
@@ -17,7 +28,7 @@ pub enum MediaRoute {
 
 fn Index() -> Element {
     rsx! {
-        div { class: "media" }
+        crate::pages::home_page::WidgetGrid { category_filter: Some("Media") }
     }
 }
 
@@ -40,6 +51,10 @@ impl WidgetRoute for MediaRoute {
             Self::ColorPicker { .. } => Some(&color_picker::WIDGET_ENTRY),
             _ => None,
         }
+    }
+
+    fn get_category_entry() -> &'static CategoryEntry {
+        &CATEGORY_ENTRY
     }
 }
 

@@ -1,12 +1,23 @@
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
+use dioxus_free_icons::icons::fa_solid_icons::FaScrewdriverWrench;
+use dioxus_free_icons::Icon;
 use strum_macros::EnumIter;
 
 pub mod hash_generator;
 pub mod qr_code_generator;
 pub mod uuid_generator;
 
-use crate::pages::{Route, WidgetEntry, WidgetRoute};
+use crate::pages::{CategoryEntry, Route, WidgetEntry, WidgetRoute};
+
+pub static CATEGORY_ENTRY: CategoryEntry = CategoryEntry {
+    title: "Generator",
+    description: "Generate hashes, codes, and identifiers",
+    icon: || {
+        rsx! {
+            Icon::<FaScrewdriverWrench> { class: "icon", icon: FaScrewdriverWrench }
+        }
+    },
+};
 use hash_generator::HashGenerator;
 use qr_code_generator::QrCodeGenerator;
 use uuid_generator::UuidGenerator;
@@ -25,7 +36,7 @@ pub enum GeneratorRoute {
 
 fn Index() -> Element {
     rsx! {
-        div { class: "generator" }
+        crate::pages::home_page::WidgetGrid { category_filter: Some("Generator") }
     }
 }
 
@@ -50,6 +61,10 @@ impl WidgetRoute for GeneratorRoute {
             Self::UuidGenerator { .. } => Some(&uuid_generator::WIDGET_ENTRY),
             _ => None,
         }
+    }
+
+    fn get_category_entry() -> &'static CategoryEntry {
+        &CATEGORY_ENTRY
     }
 }
 
