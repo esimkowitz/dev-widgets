@@ -51,17 +51,19 @@ fn converter_input(direction: Direction) -> Element {
                 match direction {
                     Direction::Json => {
                         let yaml_result = convert_json_to_yaml(&input_value);
-                        value_context.set(ConverterValue {
-                            json_value: input_value,
-                            yaml_value: yaml_result,
-                        });
+                        value_context
+                            .set(ConverterValue {
+                                json_value: input_value,
+                                yaml_value: yaml_result,
+                            });
                     }
                     Direction::Yaml => {
                         let json_result = convert_yaml_to_json(&input_value);
-                        value_context.set(ConverterValue {
-                            json_value: json_result,
-                            yaml_value: input_value,
-                        });
+                        value_context
+                            .set(ConverterValue {
+                                json_value: json_result,
+                                yaml_value: input_value,
+                            });
                     }
                 };
             },

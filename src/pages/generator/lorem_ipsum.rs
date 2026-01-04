@@ -102,11 +102,7 @@ pub fn LoremIpsum() -> Element {
                     onchange: move |value: usize| count.set(value.clamp(1, 50)),
                 }
                 div { class: "widget-buttons",
-                    button {
-                        class: "btn btn-info",
-                        onclick: generate,
-                        "Generate"
-                    }
+                    button { class: "btn btn-info", onclick: generate, "Generate" }
                     button {
                         class: "btn btn-error",
                         onclick: move |_| generated_text.set(String::new()),

@@ -26,17 +26,14 @@ pub fn Accordion(
             div { class: "collapse-title p-2 min-h-0 flex items-center",
                 // Category link (icon + title) - no tooltip needed when expanded
                 if let Some(route) = category_route.clone() {
-                    Link {
-                        class: "flex items-center gap-2 grow",
-                        to: route,
+                    Link { class: "flex items-center gap-2 grow", to: route,
                         if let Some(icon) = icon {
                             {icon}
                         }
                         {title}
                     }
                 } else {
-                    div {
-                        class: "flex items-center gap-2 grow",
+                    div { class: "flex items-center gap-2 grow",
                         if let Some(icon) = icon {
                             {icon}
                         }
@@ -59,7 +56,7 @@ pub fn Accordion(
                             path {
                                 "fill-rule": "evenodd",
                                 "d": "M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z",
-                                "clip-rule": "evenodd"
+                                "clip-rule": "evenodd",
                             }
                         }
                     }
@@ -68,9 +65,7 @@ pub fn Accordion(
             // Collapsible content (only if has children)
             if has_children {
                 div { class: "collapse-content p-0",
-                    ul { class: "menu w-full",
-                        {children}
-                    }
+                    ul { class: "menu w-full", {children} }
                 }
             }
         }
