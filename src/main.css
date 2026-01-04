@@ -11,6 +11,7 @@
 
 /* Layout */
 @import "./pages/layout.css";
+@import "./pages/widget.css";
 
 /* Pages */
 @import "./pages/home_page.css";

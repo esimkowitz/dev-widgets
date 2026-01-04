@@ -1,10 +1,1 @@
-/* Base64 Encoder */
-@layer components {
-  .base64-encoder {
-    @apply flex flex-col gap-y-3 h-full;
-  }
-
-  .base64-encoder .textarea-form {
-    flex: 1 1 auto;
-  }
-}
+/* Base64 Encoder - uses .widget from widget.css */

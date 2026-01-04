@@ -27,7 +27,7 @@ pub fn HashGenerator() -> Element {
     });
 
     rsx! {
-        div { class: "number-base-converter",
+        div { class: "widget",
             SwitchInput {
                 label: "Uppercase",
                 checked: hash_generator_state.read().uppercase,

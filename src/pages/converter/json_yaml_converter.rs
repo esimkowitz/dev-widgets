@@ -23,7 +23,7 @@ pub fn JsonYamlConverter() -> Element {
         })
     });
     rsx! {
-        div { class: "json-yaml-converter",
+        div { class: "widget",
             converter_input { direction: Direction::Json }
             converter_input { direction: Direction::Yaml }
         }

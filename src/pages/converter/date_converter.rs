@@ -31,7 +31,7 @@ pub fn DateConverter() -> Element {
     let unix_time = date_signal.with(|date_state| date_state.time_utc.unix_timestamp());
 
     rsx! {
-        div { class: "date-converter",
+        div { class: "widget-grid date-converter",
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {

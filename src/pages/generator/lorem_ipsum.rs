@@ -89,8 +89,8 @@ pub fn LoremIpsum() -> Element {
     };
 
     rsx! {
-        div { class: "lorem-ipsum-generator",
-            div { class: "params",
+        div { class: "widget",
+            div { class: "widget-params",
                 SelectForm::<LoremMode> {
                     label: "Mode",
                     value: *mode.read(),
@@ -101,7 +101,7 @@ pub fn LoremIpsum() -> Element {
                     value: *count.read(),
                     onchange: move |value: usize| count.set(value.clamp(1, 50)),
                 }
-                div { class: "buttons",
+                div { class: "widget-buttons",
                     button {
                         class: "btn btn-info",
                         onclick: generate,
@@ -113,7 +113,7 @@ pub fn LoremIpsum() -> Element {
                         "Clear"
                     }
                 }
-                div { class: "switches",
+                div { class: "widget-switches",
                     SwitchInput {
                         label: "Start with \"Lorem ipsum...\"",
                         checked: *start_with_lorem.read(),
