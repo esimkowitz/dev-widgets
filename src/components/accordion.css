@@ -10,6 +10,12 @@
     @apply px-2 py-0.5 min-h-0 w-full overflow-visible;
   }
 
+  /* Allow category titles to wrap */
+  .accordion-item .collapse-title a,
+  .accordion-item .collapse-title > div {
+    @apply flex-wrap;
+  }
+
   .accordion-item .collapse-content {
     @apply p-0 w-full;
     /* Keep overflow hidden on content for collapse animation */
