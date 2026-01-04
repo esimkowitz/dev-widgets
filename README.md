@@ -2,18 +2,32 @@
 
 ## Overview
 
-Collection of useful conversions and widgets built as a pure Rust app on the [Dioxus framework](https://github.com/DioxusLabs/dioxus).
+Collection of useful developer utilities built as a pure Rust app on the [Dioxus framework](https://github.com/DioxusLabs/dioxus).
 
-The following widgets are now stable:
+### Available Widgets
 
-- Number Base Converter
-- Base64 Encoder/Decoder
-- QR Code Generator
-- Date/Timestamp Converter
-- UUID Generator
-- Hash Generator
-- CIDR Decoder
-- Color Picker
+#### Generators
+
+- UUID/GUID Generator - Generate unique identifiers
+- QR Code Generator - Generate QR codes from text
+- Hash Generator - Generate cryptographic hashes of strings
+- Password Generator - Generate secure, customizable passwords
+- Lorem Ipsum Generator - Generate placeholder text
+
+#### Converters
+
+- Number Base Converter - Convert between binary, octal, decimal, and hexadecimal
+- JSON <> YAML Converter - Convert between JSON and YAML formats
+- Date Converter - Convert dates between formats
+
+#### Encoders/Decoders
+
+- Base64 Encoder/Decoder - Encode and decode base64 strings
+- CIDR Decoder - Decode CIDR notation to IP address range
+
+#### Media
+
+- Color Picker - Pick a color and get output in different formats
 
 ## Development Setup
 
