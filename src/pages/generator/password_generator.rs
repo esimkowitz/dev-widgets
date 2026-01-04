@@ -131,6 +131,14 @@ pub fn PasswordGenerator() -> Element {
                         quantity.set(value.clamp(1, 100));
                     },
                 }
+                div { class: "buttons",
+                    button { class: "btn btn-info", onclick: generate_passwords, "Generate" }
+                    button {
+                        class: "btn btn-error",
+                        onclick: move |_| passwords.write().clear(),
+                        "Clear"
+                    }
+                }
                 div { class: "switches",
                     SwitchInput {
                         label: "Uppercase (A-Z)",
@@ -161,15 +169,6 @@ pub fn PasswordGenerator() -> Element {
             }
 
             div { class: "entropy-display", "Entropy: {entropy:.0} bits ({entropy_label})" }
-
-            div { class: "buttons",
-                button { class: "btn btn-info me-3", onclick: generate_passwords, "Generate" }
-                button {
-                    class: "btn btn-error",
-                    onclick: move |_| passwords.write().clear(),
-                    "Clear"
-                }
-            }
 
             TextAreaForm {
                 label: "Generated Passwords",
