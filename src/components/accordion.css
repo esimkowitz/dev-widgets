@@ -33,8 +33,7 @@
   .accordion-item .collapse-content .menu {
     @apply p-0 gap-0 m-0;
     /* Override DaisyUI's 1rem padding on collapse-content */
-    padding: 0 !important;
-    padding-left: 0.5rem !important;
+    padding: 0 0.5rem !important;
   }
 
   .accordion-item .collapse-content .menu li a {
