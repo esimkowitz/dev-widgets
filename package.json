@@ -1,6 +1,7 @@
 {
   "name": "dev-widgets",
   "private": true,
+  "type": "module",
   "scripts": {
     "tailwind:build": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css",
     "tailwind:watch": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css --watch",
