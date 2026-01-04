@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fa_solid_icons::{FaChevronLeft, FaChevronRight};
+use dioxus_free_icons::Icon;
 use dioxus_sdk::storage::use_persistent;
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;

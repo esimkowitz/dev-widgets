@@ -1,0 +1,13 @@
+# AI tooling
+.claude/
+.aicontext/
+
+# Build outputs
+dist/
+target/
+
+# Dependencies
+node_modules/
+
+# Rust files (handled by rustfmt)
+*.rs

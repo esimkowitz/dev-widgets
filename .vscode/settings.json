@@ -1,12 +1,28 @@
 {
-    "debug.allowBreakpointsEverywhere": true,
-    "rust-analyzer.check.command": "clippy",
-    "rust-analyzer.linkedProjects": [
-        "./Cargo.toml"
-    ],
-    "tailwindCSS.experimental.classRegex": ["class: \"(.*)\""],
-    "tailwindCSS.includeLanguages": {
-        "rust": "html"
-    }
+  "debug.allowBreakpointsEverywhere": true,
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.linkedProjects": ["./Cargo.toml"],
+  "tailwindCSS.experimental.classRegex": ["class: \"(.*)\""],
+  "tailwindCSS.includeLanguages": {
+    "rust": "html"
+  },
+  "editor.formatOnSave": true,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
-

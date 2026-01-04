@@ -1,10 +1,12 @@
 {
-    "recommendations": [
-        "rust-lang.rust-analyzer",
-        "vadimcn.vscode-lldb",
-        "ms-vscode.cpptools",
-        "tamasfe.even-better-toml",
-        "dioxuslabs.dioxus",
-        "bradlc.vscode-tailwindcss"
-    ]
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb",
+    "ms-vscode.cpptools",
+    "tamasfe.even-better-toml",
+    "dioxuslabs.dioxus",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig"
+  ]
 }
