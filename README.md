@@ -38,17 +38,25 @@ Collection of useful developer utilities built as a pure Rust app on the [Dioxus
 
 2. Install the Dioxus CLI:
 
+   See the [Dioxus Getting Started guide](https://dioxuslabs.com/learn/0.7/getting_started/#install-the-cli) for the latest instructions. Generally, this can be done via `cargo-binstall`:
+
    ```bash
-   cargo install dioxus-cli
+   cargo binstall dioxus-cli --force
+   ```
+
+   If you don't have `cargo-binstall`, you can install it via:
+
+   ```bash
+   cargo install cargo-binstall
    ```
 
 3. Clone this repository and enter its root directory.
 
 4. Install npm dependencies:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 ## Web App
 
