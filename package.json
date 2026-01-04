@@ -23,7 +23,7 @@
     "tailwindcss": "^4.1.18"
   },
   "lint-staged": {
-    "*.{js,css,md,json,html}": "prettier --write",
+    "*.{js,css,md,json,html,yml,yaml}": "prettier --write",
     "*.rs": "cargo fmt --"
   }
 }
