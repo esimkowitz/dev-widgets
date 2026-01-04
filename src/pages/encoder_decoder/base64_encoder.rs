@@ -24,7 +24,7 @@ pub fn Base64Encoder() -> Element {
         })
     });
     rsx! {
-        div { class: "base64-encoder",
+        div { class: "widget",
             encoder_input { direction: Direction::Encode }
             encoder_input { direction: Direction::Decode }
         }

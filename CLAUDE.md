@@ -65,6 +65,48 @@ Reusable inputs in `src/components/inputs.rs`:
 - `SwitchInput` - toggle with label
 - `NumberInput` - numeric with +/- buttons
 
+## Widget Layout System
+
+Layout classes in `src/pages/widget.css`:
+
+- `.widget` - Flex column container; child `TextAreaForm` elements auto-expand to fill space
+- `.widget-grid` - Grid container for widgets without expanding textareas
+- `.widget-params` - Horizontal flex-wrap for form controls (inputs grow, buttons/switches don't)
+- `.widget-buttons` / `.widget-switches` - Fixed-width groups inside `.widget-params`
+
+**Generator pattern** (params + expanding textarea):
+
+```rust
+div { class: "widget",
+    div { class: "widget-params",
+        SelectForm::<Mode> { /* ... */ }
+        NumberInput::<usize> { /* ... */ }
+        div { class: "widget-buttons", button { /* ... */ } }
+        div { class: "widget-switches", SwitchInput { /* ... */ } }
+    }
+    TextAreaForm { /* expands to fill remaining space */ }
+}
+```
+
+**Encoder/Decoder pattern** (multiple textareas share space equally):
+
+```rust
+div { class: "widget",
+    TextAreaForm { /* input */ }
+    TextAreaForm { /* output */ }
+}
+```
+
+**Converter pattern** (stacked inputs, no expanding):
+
+```rust
+div { class: "widget-grid",
+    SwitchInput { /* ... */ }
+    TextInput { /* ... */ }
+    TextInput { /* ... */ }
+}
+```
+
 ## Development
 
 ```bash
@@ -99,6 +141,7 @@ Dark mode is handled by `public/js/darkmode.js`.
 
 1. Create file in appropriate category folder (e.g., `src/pages/converter/my_widget.rs`)
 2. Define `WIDGET_ENTRY`, `ICON`, and component function
-3. Add module declaration in category's `mod.rs`
-4. Add route variant to category's `Route` enum with `#[route("/my-widget")]`
-5. Implement match arm in `get_widget_entry()`
+3. Choose layout class: `widget` (expanding textareas) or `widget-grid` (stacked inputs)
+4. Add module declaration in category's `mod.rs`
+5. Add route variant to category's `Route` enum with `#[route("/my-widget")]`
+6. Implement match arm in `get_widget_entry()`

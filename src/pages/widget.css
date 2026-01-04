@@ -1,0 +1,42 @@
+/* Widget Layout System */
+@layer components {
+  /* Base container: flex column, full height, consistent gap */
+  .widget {
+    @apply flex flex-col gap-y-3 h-full;
+  }
+
+  /* Textareas flex-fill available space */
+  .widget .textarea-form {
+    flex: 1 1 auto;
+  }
+
+  /* Params section: horizontal flex-wrap */
+  .widget-params {
+    @apply flex flex-row gap-x-3 gap-y-3 flex-wrap;
+  }
+
+  /* Params children grow (except buttons/switches) */
+  .widget-params > div:not(.widget-switches):not(.widget-buttons) {
+    @apply flex grow;
+    min-width: 225px;
+  }
+
+  /* Button group */
+  .widget-buttons {
+    @apply flex flex-row gap-x-3 items-center;
+  }
+
+  /* Switch group */
+  .widget-switches {
+    @apply flex flex-row gap-x-3 items-center;
+  }
+
+  .widget-switches .switch-input {
+    @apply gap-x-1;
+  }
+
+  /* Grid variant for widgets without flex-fill textareas */
+  .widget-grid {
+    @apply grid gap-y-3;
+  }
+}

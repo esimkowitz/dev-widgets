@@ -36,7 +36,7 @@ pub fn QrCodeGenerator() -> Element {
     };
 
     rsx! {
-        div { class: "qr-code-generator",
+        div { class: "widget qr-code-generator",
             SelectForm::<Ecc> {
                 label: "Error Correction Level",
                 oninput: move |ecc: Ecc| {

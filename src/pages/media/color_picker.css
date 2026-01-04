@@ -67,7 +67,7 @@
   }
 
   .color-picker .color-view {
-    @apply mt-4 flex flex-row;
+    @apply mt-3 flex flex-row gap-x-3;
     height: 4rem;
   }
 
@@ -80,6 +80,6 @@
 
   .color-picker .color-view .text-input,
   .color-picker .color-view .select-form {
-    @apply m-auto grow ml-4;
+    @apply m-auto grow;
   }
 }

@@ -21,7 +21,7 @@ pub fn NumberBaseConverter() -> Element {
     let mut format_number_state = use_context_provider(|| Signal::new(FormatNumberState(false)));
 
     rsx! {
-        div { class: "number-base-converter",
+        div { class: "widget-grid",
             SwitchInput {
                 label: "Format Numbers",
                 checked: format_number_state.read().0,

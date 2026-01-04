@@ -26,24 +26,8 @@ pub fn UuidGenerator() -> Element {
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {
-        div { class: "uuid-generator",
-            div { class: "params",
-                div { class: "switches",
-                    SwitchInput {
-                        label: "Hyphens",
-                        checked: true,
-                        oninput: move |value| {
-                            hyphens_state.set(value);
-                        },
-                    }
-                    SwitchInput {
-                        label: "Uppercase",
-                        checked: true,
-                        oninput: move |value| {
-                            uppercase_state.set(value);
-                        },
-                    }
-                }
+        div { class: "widget",
+            div { class: "widget-params",
                 SelectForm::<UUIDVersion> {
                     label: "UUID Version",
                     value: *uuid_version_state.read(),
@@ -58,35 +42,50 @@ pub fn UuidGenerator() -> Element {
                         num_uuids_state.set(value);
                     },
                 }
-            }
-
-            div { class: "buttons",
-                button {
-                    class: "btn btn-info me-3",
-                    onclick: move |_| {
-                        let mut uuids = vec![];
-                        for _ in 0..*num_uuids_state.read() {
-                            let uuid = uuid::Uuid::new_v4();
-                            let mut uuid = if *hyphens_state.read() {
-                                uuid.hyphenated().to_string()
-                            } else {
-                                uuid.simple().to_string()
-                            };
-                            if *uppercase_state.read() {
-                                uuid = uuid.to_uppercase();
+                div { class: "widget-buttons",
+                    button {
+                        class: "btn btn-info",
+                        onclick: move |_| {
+                            let mut uuids = vec![];
+                            for _ in 0..*num_uuids_state.read() {
+                                let uuid = uuid::Uuid::new_v4();
+                                let mut uuid = if *hyphens_state.read() {
+                                    uuid.hyphenated().to_string()
+                                } else {
+                                    uuid.simple().to_string()
+                                };
+                                if *uppercase_state.read() {
+                                    uuid = uuid.to_uppercase();
+                                }
+                                uuids.push(uuid);
                             }
-                            uuids.push(uuid);
-                        }
-                        uuids_state.write().append(&mut uuids);
-                    },
-                    "Generate"
+                            uuids_state.write().append(&mut uuids);
+                        },
+                        "Generate"
+                    }
+                    button {
+                        class: "btn btn-error",
+                        onclick: move |_| {
+                            uuids_state.write().clear();
+                        },
+                        "Clear"
+                    }
                 }
-                button {
-                    class: "btn btn-error",
-                    onclick: move |_| {
-                        uuids_state.write().clear();
-                    },
-                    "Clear"
+                div { class: "widget-switches",
+                    SwitchInput {
+                        label: "Hyphens",
+                        checked: true,
+                        oninput: move |value| {
+                            hyphens_state.set(value);
+                        },
+                    }
+                    SwitchInput {
+                        label: "Uppercase",
+                        checked: true,
+                        oninput: move |value| {
+                            uppercase_state.set(value);
+                        },
+                    }
                 }
             }
             TextAreaForm { label: "UUIDs", value: "{uuids_str}", readonly: true }

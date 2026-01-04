@@ -10,9 +10,9 @@
     "build:web": "npm run tailwind:build && dx build --platform web --release",
     "build:desktop": "npm run tailwind:build && dx build --platform desktop --release",
     "format:prettier": "prettier --write \"**/*.{js,css,md,json,html}\"",
-    "format:rust": "cargo fmt",
+    "format:rust": "dx fmt",
     "format": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"npm:format:prettier\" \"npm:format:rust\"",
-    "format:check": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"prettier --check '**/*.{js,css,md,json,html}'\" \"cargo fmt --check\"",
+    "format:check": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"prettier --check '**/*.{js,css,md,json,html}'\" \"dx fmt --check\"",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -26,6 +26,6 @@
   },
   "lint-staged": {
     "*.{js,css,md,json,html,yml,yaml}": "prettier --write",
-    "*.rs": "cargo fmt --"
+    "*.rs": "sh -c 'for f in \"$@\"; do dx fmt -f \"$f\"; done' _"
   }
 }

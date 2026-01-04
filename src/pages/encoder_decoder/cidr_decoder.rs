@@ -68,7 +68,7 @@ pub fn CidrDecoder() -> Element {
 
     let mut show_error_state = use_signal(|| false);
     rsx! {
-        div { class: "cidr-decoder",
+        div { class: "widget",
             TextInput {
                 label: "CIDR",
                 value: "{cidr_input_ref.with(|cidr_str| cidr_str.to_string())}",

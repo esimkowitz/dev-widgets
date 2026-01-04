@@ -1,13 +1,6 @@
-/* QR Code Generator */
+/* QR Code Generator - uses .widget from widget.css */
 @layer components {
-  .qr-code-generator {
-    @apply grid gap-y-3;
-  }
-
-  .qr-code-generator .textarea-form {
-    height: 14em;
-  }
-
+  /* Widget-specific: QR code display size */
   .qr-code-generator .qr-code {
     width: 30em;
     height: 30em;

@@ -4,7 +4,7 @@ use dioxus_free_icons::icons::fa_solid_icons::FaKey;
 use rand::Rng;
 
 use crate::{
-    components::inputs::{NumberInput, SwitchInput, TextAreaForm},
+    components::inputs::{NumberInput, SwitchInput, TextAreaForm, TextInput},
     pages::{WidgetEntry, WidgetIcon},
 };
 
@@ -115,8 +115,8 @@ pub fn PasswordGenerator() -> Element {
     let passwords_str = passwords.with(|p| p.join("\n"));
 
     rsx! {
-        div { class: "password-generator",
-            div { class: "params",
+        div { class: "widget",
+            div { class: "widget-params",
                 NumberInput::<usize> {
                     label: "Password Length",
                     value: *length.read(),
@@ -131,7 +131,7 @@ pub fn PasswordGenerator() -> Element {
                         quantity.set(value.clamp(1, 100));
                     },
                 }
-                div { class: "buttons",
+                div { class: "widget-buttons",
                     button { class: "btn btn-info", onclick: generate_passwords, "Generate" }
                     button {
                         class: "btn btn-error",
@@ -139,7 +139,7 @@ pub fn PasswordGenerator() -> Element {
                         "Clear"
                     }
                 }
-                div { class: "switches",
+                div { class: "widget-switches",
                     SwitchInput {
                         label: "Uppercase (A-Z)",
                         checked: *use_uppercase.read(),
@@ -168,7 +168,11 @@ pub fn PasswordGenerator() -> Element {
                 }
             }
 
-            div { class: "entropy-display", "Entropy: {entropy:.0} bits ({entropy_label})" }
+            TextInput {
+                label: "Entropy",
+                value: "{entropy:.0} bits ({entropy_label})",
+                readonly: true,
+            }
 
             TextAreaForm {
                 label: "Generated Passwords",

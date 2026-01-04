@@ -36,10 +36,11 @@
   /* Text Input */
   .text-input {
     @apply relative;
+    height: 3.5rem;
   }
 
   .text-input input {
-    @apply input w-full pt-6 pb-2;
+    @apply input w-full h-full pt-6 pb-2;
   }
 
   .text-input label {
@@ -49,6 +50,7 @@
   /* Select Form */
   .select-form {
     @apply relative;
+    height: 3.5rem;
   }
 
   .select-form select {
@@ -62,6 +64,7 @@
   /* Number Input */
   .number-input {
     @apply join w-full;
+    height: 3.5rem;
   }
 
   .number-input .number-input-field {
