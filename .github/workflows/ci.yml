@@ -60,7 +60,6 @@ jobs:
           node-version: "24"
           cache: "npm"
       - run: npm ci
-      - run: npm run tailwind:build
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -71,4 +70,4 @@ jobs:
           tool: dioxus-cli
 
       - name: Build web
-        run: dx build --platform web --release
+        run: npm run build:web
