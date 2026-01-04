@@ -6,7 +6,7 @@ use std::{
 
 use cidr::{Family, IpCidr};
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsEthernet;
+use dioxus_free_icons::icons::fa_solid_icons::FaNetworkWired;
 
 use crate::{
     components::inputs::{TextAreaForm, TextInput},
@@ -21,7 +21,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsEthernet> = WidgetIcon { icon: BsEthernet };
+const ICON: WidgetIcon<FaNetworkWired> = WidgetIcon { icon: FaNetworkWired };
 
 pub fn CidrDecoder() -> Element {
     let mut cidr_ref =

@@ -7,7 +7,7 @@ use dioxus::{
     },
     prelude::*,
 };
-use dioxus_free_icons::icons::bs_icons::BsEyedropper;
+use dioxus_free_icons::icons::fa_solid_icons::FaPalette;
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -22,7 +22,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsEyedropper> = WidgetIcon { icon: BsEyedropper };
+const ICON: WidgetIcon<FaPalette> = WidgetIcon { icon: FaPalette };
 
 const SATURATION_BRIGHTNESS_BOX_ID: &str = "saturation-brightness-box";
 const COLORWHEEL_ID: &str = "colorwheel";

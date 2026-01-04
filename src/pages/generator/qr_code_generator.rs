@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsQrCode;
+use dioxus_free_icons::icons::fa_solid_icons::FaQrcode;
 
 use qrcode_generator::{self};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
@@ -18,7 +18,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsQrCode> = WidgetIcon { icon: BsQrCode };
+const ICON: WidgetIcon<FaQrcode> = WidgetIcon { icon: FaQrcode };
 
 pub fn QrCodeGenerator() -> Element {
     let mut qr_code_value = use_signal(|| "".to_string());

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsFileText;
+use dioxus_free_icons::icons::fa_solid_icons::FaFileLines;
 
 use crate::pages::{WidgetEntry, WidgetIcon};
 
@@ -11,7 +11,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsFileText> = WidgetIcon { icon: BsFileText };
+const ICON: WidgetIcon<FaFileLines> = WidgetIcon { icon: FaFileLines };
 
 pub fn JsonYamlConverter() -> Element {
     rsx! {

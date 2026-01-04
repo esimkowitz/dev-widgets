@@ -6,8 +6,8 @@
   "scripts": {
     "tailwind:build": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css",
     "tailwind:watch": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css --watch",
-    "serve:web": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform web)",
-    "serve:desktop": "npm run tailwind:build && (npm run tailwind:watch & dx serve --platform desktop)"
+    "serve:web": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform web\"",
+    "serve:desktop": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform desktop\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/esimkowitz/dev-widgets#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
+    "concurrently": "^9.2.1",
     "daisyui": "^5.5.14",
     "tailwindcss": "^4.1.18"
   }

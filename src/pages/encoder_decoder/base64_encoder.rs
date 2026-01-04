@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsHash;
+use dioxus_free_icons::icons::fa_solid_icons::FaHashtag;
 use std::fmt;
 
 use crate::components::inputs::TextAreaForm;
@@ -14,7 +14,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsHash> = WidgetIcon { icon: BsHash };
+const ICON: WidgetIcon<FaHashtag> = WidgetIcon { icon: FaHashtag };
 
 pub fn Base64Encoder() -> Element {
     use_context_provider(|| {

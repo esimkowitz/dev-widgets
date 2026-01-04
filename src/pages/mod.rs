@@ -88,6 +88,16 @@ impl Route {
             _ => vec![],
         }
     }
+
+    pub fn get_category_entry(&self) -> Option<&'static CategoryEntry> {
+        match self {
+            Self::EncoderDecoder { .. } => Some(EncoderDecoderRoute::get_category_entry()),
+            Self::Converter { .. } => Some(ConverterRoute::get_category_entry()),
+            Self::Media { .. } => Some(MediaRoute::get_category_entry()),
+            Self::Generator { .. } => Some(GeneratorRoute::get_category_entry()),
+            _ => None,
+        }
+    }
 }
 
 pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
@@ -114,6 +124,8 @@ pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
     fn get_widget_type_string() -> &'static str;
 
     fn get_widget_entry(&self) -> Option<&'static WidgetEntry>;
+
+    fn get_category_entry() -> &'static CategoryEntry;
 }
 
 #[allow(unpredictable_function_pointer_comparisons)]
@@ -121,6 +133,14 @@ pub trait WidgetRoute: Routable + IntoEnumIterator + PartialEq + Clone {
 pub struct WidgetEntry {
     pub title: &'static str,
     pub short_title: &'static str,
+    pub description: &'static str,
+    pub icon: fn() -> Element,
+}
+
+#[allow(unpredictable_function_pointer_comparisons)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub struct CategoryEntry {
+    pub title: &'static str,
     pub description: &'static str,
     pub icon: fn() -> Element,
 }

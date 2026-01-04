@@ -2,7 +2,7 @@
 use std::{fmt::Display, str::FromStr};
 
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::bs_icons::BsClock;
+use dioxus_free_icons::icons::fa_solid_icons::FaClock;
 use strum::IntoEnumIterator;
 use time::{Month, OffsetDateTime, UtcOffset};
 use time_tz::{system, timezones, OffsetDateTimeExt, TimeZone, Tz};
@@ -19,7 +19,7 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<BsClock> = WidgetIcon { icon: BsClock };
+const ICON: WidgetIcon<FaClock> = WidgetIcon { icon: FaClock };
 
 pub fn DateConverter() -> Element {
     let mut date_signal = use_signal(|| DateConverterState {
