@@ -73,7 +73,19 @@ npm run serve:desktop  # desktop with hot reload
 dx build --platform web --release  # production build
 ```
 
-Styling: Tailwind CSS v4 + DaisyUI v5. Dark mode handled by `public/js/darkmode.js`.
+## Styling
+
+**Tailwind CSS v4** with **DaisyUI v5**. No `tailwind.config.*` file — plugins are defined directly in `src/main.css` using the v4 CSS-based configuration:
+
+```css
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  /* options */
+}
+```
+
+Dark mode is handled by `public/js/darkmode.js`.
 
 ## Adding a Widget
 
