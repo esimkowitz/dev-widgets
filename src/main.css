@@ -15,13 +15,6 @@
 
 /* Pages */
 @import "./pages/home_page.css";
-@import "./pages/encoder_decoder/base64_encoder.css";
-@import "./pages/encoder_decoder/cidr_decoder.css";
 @import "./pages/converter/date_converter.css";
-@import "./pages/converter/json_yaml_converter.css";
-@import "./pages/converter/number_base_converter.css";
-@import "./pages/generator/hash_generator.css";
 @import "./pages/generator/qr_code_generator.css";
-@import "./pages/generator/uuid_generator.css";
-@import "./pages/generator/lorem_ipsum.css";
 @import "./pages/media/color_picker.css";
