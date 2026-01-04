@@ -4,6 +4,7 @@ use dioxus_free_icons::Icon;
 use strum_macros::EnumIter;
 
 pub mod hash_generator;
+pub mod password_generator;
 pub mod qr_code_generator;
 pub mod uuid_generator;
 
@@ -19,6 +20,7 @@ pub static CATEGORY_ENTRY: CategoryEntry = CategoryEntry {
     },
 };
 use hash_generator::HashGenerator;
+use password_generator::PasswordGenerator;
 use qr_code_generator::QrCodeGenerator;
 use uuid_generator::UuidGenerator;
 
@@ -28,6 +30,8 @@ pub enum GeneratorRoute {
     Index {},
     #[route("/hash")]
     HashGenerator {},
+    #[route("/password")]
+    PasswordGenerator {},
     #[route("/qr-code")]
     QrCodeGenerator {},
     #[route("/uuid")]
@@ -57,6 +61,7 @@ impl WidgetRoute for GeneratorRoute {
     fn get_widget_entry(&self) -> Option<&'static WidgetEntry> {
         match self {
             Self::HashGenerator { .. } => Some(&hash_generator::WIDGET_ENTRY),
+            Self::PasswordGenerator { .. } => Some(&password_generator::WIDGET_ENTRY),
             Self::QrCodeGenerator { .. } => Some(&qr_code_generator::WIDGET_ENTRY),
             Self::UuidGenerator { .. } => Some(&uuid_generator::WIDGET_ENTRY),
             _ => None,
