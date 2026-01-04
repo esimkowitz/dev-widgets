@@ -1,29 +1,31 @@
 /* Home Page */
 @layer components {
   .home-page {
-    @apply flex flex-row flex-wrap gap-2 pb-4;
+    @apply grid gap-2 pb-4;
+    grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+    justify-items: center;
   }
 
-  .home-page .card {
-    @apply p-0;
-    width: 10em;
-    height: 14em;
+  .home-page .card-widget {
+    @apply p-0 relative cursor-pointer;
+    width: 12.5em;
+    height: 15em;
   }
 
-  .home-page .card .card-img-top {
-    @apply text-center mt-4;
+  .home-page .card-widget .card-figure {
+    @apply text-center pt-4;
   }
 
-  .home-page .card .icon {
+  .home-page .card-widget .card-figure .icon {
     height: 3em;
     width: 3em;
   }
 
-  .home-page .card .card-title {
-    @apply text-start text-lg font-bold;
+  .home-page .card-widget .card-title {
+    @apply text-lg font-bold;
   }
 
-  .home-page .card .card-body {
-    @apply text-start text-sm;
+  .home-page .card-widget .card-body {
+    @apply text-sm;
   }
 }
