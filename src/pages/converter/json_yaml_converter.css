@@ -1,0 +1,10 @@
+/* JSON <> YAML Converter */
+@layer components {
+  .json-yaml-converter {
+    @apply flex flex-col gap-y-3 h-full;
+  }
+
+  .json-yaml-converter .textarea-form {
+    flex: 1 1 auto;
+  }
+}
