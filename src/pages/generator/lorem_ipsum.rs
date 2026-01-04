@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaAlignLeft;
+use rand::thread_rng;
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -17,7 +18,9 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 
 const ICON: WidgetIcon<FaAlignLeft> = WidgetIcon { icon: FaAlignLeft };
 
-#[derive(Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq)]
+#[derive(
+    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+)]
 enum LoremMode {
     #[default]
     Paragraphs,
@@ -38,31 +41,33 @@ pub fn LoremIpsum() -> Element {
     let mut mode = use_signal(|| LoremMode::Paragraphs);
     let mut count = use_signal(|| 3usize);
     let mut start_with_lorem = use_signal(|| true);
+    let mut generated_text = use_signal(String::new);
 
-    let generated_text = {
+    let generate = move |_| {
         let mode_val = *mode.read();
         let count_val = *count.read();
         let start_lorem = *start_with_lorem.read();
+        let mut rng = thread_rng();
 
-        match mode_val {
+        let text = match mode_val {
             LoremMode::Paragraphs => {
                 let paragraphs: Vec<String> = (0..count_val)
                     .map(|i| {
                         if i == 0 && start_lorem {
-                            lipsum::lipsum(50)
+                            lipsum::lipsum_with_rng(&mut rng, 50)
                         } else {
-                            lipsum::lipsum_words(50)
+                            lipsum::lipsum_words_with_rng(&mut rng, 50)
                         }
                     })
                     .collect();
                 paragraphs.join("\n\n")
             }
             LoremMode::Sentences => {
-                let word_count = count_val * 10;
+                let word_count = count_val * 12;
                 let text = if start_lorem {
-                    lipsum::lipsum(word_count)
+                    lipsum::lipsum_with_rng(&mut rng, word_count)
                 } else {
-                    lipsum::lipsum_words(word_count)
+                    lipsum::lipsum_words_with_rng(&mut rng, word_count)
                 };
                 // Split into sentences and take the requested count
                 let sentences: Vec<&str> = text.split(". ").take(count_val).collect();
@@ -74,12 +79,13 @@ pub fn LoremIpsum() -> Element {
             }
             LoremMode::Words => {
                 if start_lorem {
-                    lipsum::lipsum(count_val)
+                    lipsum::lipsum_with_rng(&mut rng, count_val)
                 } else {
-                    lipsum::lipsum_words(count_val)
+                    lipsum::lipsum_words_with_rng(&mut rng, count_val)
                 }
             }
-        }
+        };
+        generated_text.set(text);
     };
 
     rsx! {
@@ -94,6 +100,18 @@ pub fn LoremIpsum() -> Element {
                     label: "Count",
                     value: *count.read(),
                     onchange: move |value: usize| count.set(value.clamp(1, 50)),
+                }
+                div { class: "buttons",
+                    button {
+                        class: "btn btn-info",
+                        onclick: generate,
+                        "Generate"
+                    }
+                    button {
+                        class: "btn btn-error",
+                        onclick: move |_| generated_text.set(String::new()),
+                        "Clear"
+                    }
                 }
                 div { class: "switches",
                     SwitchInput {
