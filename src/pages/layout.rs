@@ -412,7 +412,6 @@ fn SidebarFooter() -> Element {
                 class: "link link-hover",
                 href: "https://github.com/esimkowitz/dev-widgets/blob/main/LICENSE",
                 target: "_blank",
-                "Copyright "
                 Icon::<FaCopyright> { icon: FaCopyright, class: "inline-block w-3 h-3" }
                 " {current_year} Evan Simkowitz"
             }
