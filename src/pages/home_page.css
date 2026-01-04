@@ -3,17 +3,20 @@
   .home-page {
     @apply grid gap-2 pb-4;
     grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+    grid-auto-rows: 6em auto auto; /* icon row, title row, description row */
     justify-items: center;
   }
 
   .home-page .card-widget {
     @apply p-0 relative cursor-pointer;
     width: 12.5em;
-    height: 15em;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3; /* Span icon, title, description rows */
   }
 
   .home-page .card-widget .card-figure {
-    @apply text-center pt-4;
+    @apply flex items-center justify-center pt-6;
   }
 
   .home-page .card-widget .card-figure .icon {
@@ -27,5 +30,8 @@
 
   .home-page .card-widget .card-body {
     @apply text-sm;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2; /* title + description */
   }
 }
