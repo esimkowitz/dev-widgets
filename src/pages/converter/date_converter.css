@@ -17,7 +17,7 @@
   }
 
   .date-converter .selectors-inner .number-input {
-    @apply flex flex-col flex-1;
+    @apply flex-1;
   }
 
   @media screen and (max-width: 835px) {

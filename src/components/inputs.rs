@@ -4,7 +4,7 @@ use std::str::FromStr;
 
 use dioxus::prelude::*;
 use dioxus_free_icons::{
-    icons::bs_icons::{BsDash, BsPlus},
+    icons::fa_solid_icons::{FaChevronDown, FaChevronUp},
     Icon,
 };
 use num_traits::PrimInt;
@@ -138,47 +138,37 @@ pub fn NumberInput<T: PrimInt + Display + Default + FromStr + 'static>(
 ) -> Element {
     rsx! {
         div { class: "number-input {class.unwrap_or_default()}",
-            div { class: "input-group",
-                div { class: "input-and-label",
-                    input {
-                        r#type: "number",
-                        value: "{value}",
-                        id: "{label}",
-                        onchange: move |event| {
-                            if let Ok(value) = event.parsed::<T>() {
-                                onchange.call(value);
-                            }
-                        },
-                    }
-                    label { r#for: "{label}", {label} }
+            div { class: "number-input-field",
+                input {
+                    r#type: "number",
+                    value: "{value}",
+                    id: "{label}",
+                    onchange: move |event| {
+                        if let Ok(value) = event.parsed::<T>() {
+                            onchange.call(value);
+                        }
+                    },
                 }
-                div { class: "inc-dec-buttons",
-                    button {
-                        onclick: move |_| {
-                            if let Some(value) = value.checked_add(&T::one()) {
-                                onchange.call(value);
-                            }
-                        },
-                        Icon {
-                            icon: BsPlus,
-                            class: "button-icon",
-                            height: 15,
-                            width: 15,
+                label { r#for: "{label}", {label} }
+            }
+            div { class: "number-input-buttons",
+                button {
+                    r#type: "button",
+                    onclick: move |_| {
+                        if let Some(new_value) = value.checked_add(&T::one()) {
+                            onchange.call(new_value);
                         }
-                    }
-                    button {
-                        onclick: move |_| {
-                            if let Some(value) = value.checked_sub(&T::one()) {
-                                onchange.call(value);
-                            }
-                        },
-                        Icon {
-                            icon: BsDash,
-                            class: "button-icon",
-                            height: 15,
-                            width: 15,
+                    },
+                    Icon { icon: FaChevronUp, width: 10, height: 10 }
+                }
+                button {
+                    r#type: "button",
+                    onclick: move |_| {
+                        if let Some(new_value) = value.checked_sub(&T::one()) {
+                            onchange.call(new_value);
                         }
-                    }
+                    },
+                    Icon { icon: FaChevronDown, width: 10, height: 10 }
                 }
             }
         }

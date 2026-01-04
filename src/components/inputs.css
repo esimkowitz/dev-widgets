@@ -61,37 +61,46 @@
 
   /* Number Input */
   .number-input {
-    @apply flex;
-  }
-
-  .number-input .input-group {
     @apply join w-full;
   }
 
-  .number-input .input-and-label {
+  .number-input .number-input-field {
     @apply relative flex-1;
   }
 
-  .number-input .input-and-label input {
-    @apply input h-full w-full join-item pt-6 pb-2;
+  .number-input .number-input-field input {
+    @apply input join-item h-full w-full pt-6 pb-2 border-r-0;
+    border-top-left-radius: var(--radius-field);
+    border-bottom-left-radius: var(--radius-field);
   }
 
-  .number-input .input-and-label label {
+  .number-input .number-input-field label {
     @apply absolute top-2 left-3 text-xs opacity-60 transition-all pointer-events-none z-10;
   }
 
-  .number-input .inc-dec-buttons {
-    @apply flex flex-col p-1 bg-base-200 join-item border border-base-300;
+  .number-input .number-input-buttons {
+    @apply flex flex-col;
   }
 
-  .number-input .inc-dec-buttons button {
-    @apply btn btn-ghost btn-xs p-0;
+  .number-input .number-input-buttons button {
+    @apply flex-1 px-3 bg-transparent flex items-center justify-center transition-colors border-r border-base-content/20;
   }
 
-  .number-input .inc-dec-buttons button:hover {
-    @apply btn-primary;
+  .number-input .number-input-buttons button:first-child {
+    @apply border-t;
+    border-top-right-radius: var(--radius-field);
   }
 
+  .number-input .number-input-buttons button:last-child {
+    @apply border-b;
+    border-bottom-right-radius: var(--radius-field);
+  }
+
+  .number-input .number-input-buttons button:hover {
+    @apply bg-info text-info-content;
+  }
+
+  /* Hide native spinner */
   .number-input input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
@@ -99,6 +108,7 @@
 
   .number-input input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
   }
 
   /* Switch Input */
