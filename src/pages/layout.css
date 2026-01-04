@@ -84,6 +84,22 @@
     transition: opacity 0.1s ease-in-out 0.1s;
   }
 
+  /* During resize: no opacity transitions, instant state changes */
+  .sidebar.resizing .sidebar-menu-collapsed,
+  .sidebar.resizing .sidebar-inner-expanded {
+    transition: none;
+  }
+
+  .sidebar.resizing.collapsed .sidebar-menu-collapsed {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar.resizing.collapsed .sidebar-inner-expanded {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* Inner container: fixed width prevents text reflow during expand animation */
   .sidebar-inner {
     @apply h-full overflow-hidden flex flex-col;

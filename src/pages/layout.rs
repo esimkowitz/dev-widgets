@@ -25,7 +25,9 @@ impl Default for SidebarState {
     }
 }
 
-const MIN_WIDTH_EXPANDED: f32 = 12.0;
+const MIN_WIDTH_EXPANDED: f32 = 9.0;
+const COLLAPSE_THRESHOLD: f32 = 8.0;
+const EXPAND_THRESHOLD: f32 = 5.0;
 const MAX_WIDTH: f32 = 25.0;
 const COLLAPSED_WIDTH: f32 = 4.0;
 
@@ -34,8 +36,8 @@ pub fn Container() -> Element {
 
     // Resizing state
     let mut is_resizing = use_signal(|| false);
-    let resize_start_x = use_signal(|| 0.0f64);
-    let resize_start_width = use_signal(|| 0.0f32);
+    let mut resize_start_x = use_signal(|| 0.0f64);
+    let mut resize_start_width = use_signal(|| 0.0f32);
     let mut drag_width = use_signal(|| 0.0f32); // Local signal for smooth drag updates
 
     let state = *sidebar_state.read();
@@ -47,17 +49,51 @@ pub fn Container() -> Element {
         state.width
     };
 
-    // Mouse move handler for resizing - updates local signal only (no localStorage writes)
-    let onmousemove = move |evt: MouseEvent| {
+    // Pointer move handler for resizing with collapse/expand thresholds
+    //
+    // Key insight: After toggling, we reset the drag origin to the current mouse position
+    // and set resize_start_width to the new state's width. This means:
+    // - After collapse: start_width = COLLAPSED_WIDTH (4em), so user must drag right to increase
+    // - After expand: start_width = MIN_WIDTH_EXPANDED (9em), so user must drag left to decrease
+    //
+    // The threshold gap (collapse at 8em, expand at 5em) plus the origin reset means:
+    // - To re-expand after collapse: must drag from 4em base past 5em = 1em+ rightward drag
+    // - To re-collapse after expand: must drag from 9em base below 8em = 1em+ leftward drag
+    let onpointermove = move |evt: PointerEvent| {
         if *is_resizing.read() {
             let delta = (evt.client_coordinates().x - *resize_start_x.read()) as f32;
             let new_width = *resize_start_width.read() + (delta / 16.0); // Convert px to em (approx)
-            drag_width.set(new_width.clamp(MIN_WIDTH_EXPANDED, MAX_WIDTH));
+            let is_collapsed = sidebar_state.read().is_collapsed;
+
+            if is_collapsed {
+                // Expand when dragging past expand threshold
+                if new_width > EXPAND_THRESHOLD {
+                    let clamped = new_width.clamp(MIN_WIDTH_EXPANDED, MAX_WIDTH);
+                    drag_width.set(clamped);
+                    sidebar_state.with_mut(|s| {
+                        s.is_collapsed = false;
+                        s.width = clamped;
+                    });
+                    // Reset origin: now at MIN_WIDTH_EXPANDED, must drag 1em+ left to collapse again
+                    resize_start_x.set(evt.client_coordinates().x);
+                    resize_start_width.set(clamped);
+                }
+            } else {
+                // Collapse when dragging below collapse threshold
+                if new_width < COLLAPSE_THRESHOLD {
+                    sidebar_state.with_mut(|s| s.is_collapsed = true);
+                    // Reset origin: now at COLLAPSED_WIDTH, must drag 1em+ right to expand again
+                    resize_start_x.set(evt.client_coordinates().x);
+                    resize_start_width.set(COLLAPSED_WIDTH);
+                } else {
+                    drag_width.set(new_width.clamp(MIN_WIDTH_EXPANDED, MAX_WIDTH));
+                }
+            }
         }
     };
 
-    // Mouse up handler - commits to persistent store only once
-    let onmouseup = move |_: MouseEvent| {
+    // Pointer up handler - commits to persistent store only once
+    let onpointerup = move |_: PointerEvent| {
         if *is_resizing.read() {
             sidebar_state.with_mut(|s| {
                 s.width = *drag_width.read();
@@ -67,7 +103,7 @@ pub fn Container() -> Element {
     };
 
     rsx! {
-        div { class: "app-layout", onmousemove, onmouseup,
+        div { class: "app-layout", onpointermove, onpointerup,
 
             // Persistent sidebar
             Sidebar {
@@ -118,7 +154,8 @@ fn Sidebar(
     let target_width = sidebar_state.width;
 
     let sidebar_class = match (is_collapsed, resizing) {
-        (true, _) => "sidebar collapsed",
+        (true, true) => "sidebar collapsed resizing",
+        (true, false) => "sidebar collapsed",
         (false, true) => "sidebar expanded resizing",
         (false, false) => "sidebar expanded",
     };
@@ -212,14 +249,12 @@ fn Sidebar(
             // Collapse toggle button on the edge
             CollapseToggleButton { state }
 
-            // Resize handle (only when expanded)
-            if !is_collapsed {
-                ResizeHandle {
-                    state,
-                    is_resizing,
-                    resize_start_x,
-                    resize_start_width,
-                }
+            // Resize handle (always visible for drag-to-expand from collapsed)
+            ResizeHandle {
+                state,
+                is_resizing,
+                resize_start_x,
+                resize_start_width,
             }
         }
     }
@@ -256,17 +291,23 @@ fn ResizeHandle(
     resize_start_x: Signal<f64>,
     resize_start_width: Signal<f32>,
 ) -> Element {
-    let onmousedown = move |evt: MouseEvent| {
+    let onpointerdown = move |evt: PointerEvent| {
         evt.prevent_default();
         is_resizing.set(true);
         resize_start_x.set(evt.client_coordinates().x);
-        resize_start_width.set(state.read().width);
+        // When starting from collapsed, use COLLAPSED_WIDTH as the base
+        let start_width = if state.read().is_collapsed {
+            COLLAPSED_WIDTH
+        } else {
+            state.read().width
+        };
+        resize_start_width.set(start_width);
     };
 
     rsx! {
         div {
             class: "resize-handle",
-            onmousedown,
+            onpointerdown,
             "aria-label": "Resize sidebar",
         }
     }
