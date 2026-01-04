@@ -51,7 +51,10 @@ pub fn PasswordGenerator() -> Element {
         }
 
         if *exclude_ambiguous.read() {
-            charset = charset.chars().filter(|c| !AMBIGUOUS.contains(*c)).collect();
+            charset = charset
+                .chars()
+                .filter(|c| !AMBIGUOUS.contains(*c))
+                .collect();
         }
 
         if charset.is_empty() {
@@ -59,12 +62,12 @@ pub fn PasswordGenerator() -> Element {
         }
 
         let charset_chars: Vec<char> = charset.chars().collect();
-        let mut rng = rand::rng();
+        let mut rng = rand::thread_rng();
         let mut new_passwords = Vec::new();
 
         for _ in 0..*quantity.read() {
             let password: String = (0..*length.read())
-                .map(|_| charset_chars[rng.random_range(0..charset_chars.len())])
+                .map(|_| charset_chars[rng.gen_range(0..charset_chars.len())])
                 .collect();
             new_passwords.push(password);
         }
@@ -75,10 +78,18 @@ pub fn PasswordGenerator() -> Element {
     // Calculate entropy
     let charset_size = {
         let mut size = 0usize;
-        if *use_uppercase.read() { size += 26; }
-        if *use_lowercase.read() { size += 26; }
-        if *use_numbers.read() { size += 10; }
-        if *use_symbols.read() { size += SYMBOLS.len(); }
+        if *use_uppercase.read() {
+            size += 26;
+        }
+        if *use_lowercase.read() {
+            size += 26;
+        }
+        if *use_numbers.read() {
+            size += 10;
+        }
+        if *use_symbols.read() {
+            size += SYMBOLS.len();
+        }
         if *exclude_ambiguous.read() && size > 0 {
             size = size.saturating_sub(5); // Approximate ambiguous chars removed
         }
@@ -149,16 +160,10 @@ pub fn PasswordGenerator() -> Element {
                 }
             }
 
-            div { class: "entropy-display",
-                "Entropy: {entropy:.0} bits ({entropy_label})"
-            }
+            div { class: "entropy-display", "Entropy: {entropy:.0} bits ({entropy_label})" }
 
             div { class: "buttons",
-                button {
-                    class: "btn btn-info me-3",
-                    onclick: generate_passwords,
-                    "Generate"
-                }
+                button { class: "btn btn-info me-3", onclick: generate_passwords, "Generate" }
                 button {
                     class: "btn btn-error",
                     onclick: move |_| passwords.write().clear(),

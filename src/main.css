@@ -21,4 +21,5 @@
 @import "./pages/generator/hash_generator.css";
 @import "./pages/generator/qr_code_generator.css";
 @import "./pages/generator/uuid_generator.css";
+@import "./pages/generator/lorem_ipsum.css";
 @import "./pages/media/color_picker.css";
