@@ -1,6 +1,6 @@
 [package]
 name = "dev-widgets"
-version = "0.3.1"
+version = "0.4.0"
 edition = "2021"
 description = "Dev Widgets"
 readme = "README.md"
@@ -57,9 +57,9 @@ strip = true  # Automatically strip symbols from the binary. Only available for 
 [package.metadata.bundle]
 name = "Dev Widgets"
 identifier = "com.esimkowitz.devwidgets"
-version = "0.3.1"
+version = "0.4.0"
 resources = ["public/**/*"]
-copyright = "Copyright (c) Evan Simkowitz 2025. All rights reserved."
+copyright = "Copyright (c) Evan Simkowitz 2026. All rights reserved."
 category = "Developer Tool"
 short_description = "A set of helpful widgets written in Rust."
 osx_url_schemes = ["com.esimkowitz.devwidgets"]
