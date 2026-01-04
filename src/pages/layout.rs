@@ -95,9 +95,11 @@ pub fn Container() -> Element {
     // Pointer up handler - commits to persistent store only once
     let onpointerup = move |_: PointerEvent| {
         if *is_resizing.read() {
-            sidebar_state.with_mut(|s| {
-                s.width = *drag_width.read();
-            });
+            let width = *drag_width.read();
+            // Only commit width if it's valid (user actually dragged)
+            if width >= MIN_WIDTH_EXPANDED {
+                sidebar_state.with_mut(|s| s.width = width);
+            }
         }
         is_resizing.set(false);
     };
