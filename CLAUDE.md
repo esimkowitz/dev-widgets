@@ -73,6 +73,14 @@ npm run serve:desktop  # desktop with hot reload
 dx build --platform web --release  # production build
 ```
 
+## Git Worktrees
+
+All git worktrees should be created in the `.worktrees` directory at the repository root:
+
+```bash
+git worktree add .worktrees/<branch-name> <branch-name>
+```
+
 ## Styling
 
 **Tailwind CSS v4** with **DaisyUI v5**. No `tailwind.config.*` file — plugins are defined directly in `src/main.css` using the v4 CSS-based configuration:
