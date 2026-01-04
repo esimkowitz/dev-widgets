@@ -21,7 +21,9 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     icon: move || ICON.icon(),
 };
 
-const ICON: WidgetIcon<FaNetworkWired> = WidgetIcon { icon: FaNetworkWired };
+const ICON: WidgetIcon<FaNetworkWired> = WidgetIcon {
+    icon: FaNetworkWired,
+};
 
 pub fn CidrDecoder() -> Element {
     let mut cidr_ref =

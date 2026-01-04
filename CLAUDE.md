@@ -80,7 +80,9 @@ dx build --platform web --release  # production build
 ```css
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@plugin "daisyui" { /* options */ }
+@plugin "daisyui" {
+  /* options */
+}
 ```
 
 Dark mode is handled by `public/js/darkmode.js`.

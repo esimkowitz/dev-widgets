@@ -1,16 +1,29 @@
 {
   "name": "dev-widgets",
   "private": true,
+  "type": "module",
   "scripts": {
     "tailwind:build": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css",
     "tailwind:watch": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css --watch",
     "serve:web": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform web\"",
-    "serve:desktop": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform desktop\""
+    "serve:desktop": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform desktop\"",
+    "format:prettier": "prettier --write \"**/*.{js,css,md,json,html}\"",
+    "format:rust": "cargo fmt",
+    "format": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"npm:format:prettier\" \"npm:format:rust\"",
+    "format:check": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"prettier --check '**/*.{js,css,md,json,html}'\" \"cargo fmt --check\"",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "concurrently": "^9.2.1",
     "daisyui": "^5.5.14",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4.1.18"
+  },
+  "lint-staged": {
+    "*.{js,css,md,json,html,yml,yaml}": "prettier --write",
+    "*.rs": "cargo fmt --"
   }
 }

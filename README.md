@@ -6,14 +6,14 @@ Collection of useful conversions and widgets built as a pure Rust app on the [Di
 
 The following widgets are now stable:
 
-* Number Base Converter
-* Base64 Encoder/Decoder
-* QR Code Generator
-* Date/Timestamp Converter
-* UUID Generator
-* Hash Generator
-* CIDR Decoder
-* Color Picker
+- Number Base Converter
+- Base64 Encoder/Decoder
+- QR Code Generator
+- Date/Timestamp Converter
+- UUID Generator
+- Hash Generator
+- CIDR Decoder
+- Color Picker
 
 ## Development Setup
 
