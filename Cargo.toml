@@ -16,7 +16,7 @@ dioxus-sdk = { version = "0.7", features = ["storage"] }
 getrandom_02 = { package = "getrandom", version = "0.2", optional = true }
 getrandom = "0.3"
 log = { version = "0.4", features = ["std"] }
-manganis = "0.7.2"
+manganis = "0.7.3"
 md-5 = "0.10"
 num-traits = "0.2"
 qrcode-generator = "5.0.0"
