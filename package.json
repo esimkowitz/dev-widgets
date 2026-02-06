@@ -18,7 +18,7 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "concurrently": "^9.2.1",
-    "daisyui": "^5.5.14",
+    "daisyui": "^5.5.18",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
