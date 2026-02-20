@@ -29,7 +29,7 @@ strum = "0.27"
 strum_macros = "0.27"
 time = "0.3"
 time-tz = { version = "2.0", features = ["db", "system"] }
-uuid = { version = "1.20", features = ["v4", "v7", "rng-getrandom"] }
+uuid = { version = "1.21", features = ["v4", "v7", "rng-getrandom"] }
 lipsum = "0.9"
 rand = { version = "0.8", features = ["getrandom"] }
 wasm-bindgen = { version = "0.2.100", features = ["enable-interning"], optional = true }
