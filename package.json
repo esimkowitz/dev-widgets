@@ -16,7 +16,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.2.2",
+    "@tailwindcss/cli": "^4.2.4",
     "concurrently": "^9.2.1",
     "daisyui": "^5.5.19",
     "husky": "^9.1.7",
