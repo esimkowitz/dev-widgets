@@ -1,22 +1,23 @@
 #![allow(non_snake_case)]
 use dev_widgets::*;
+use dioxus::logger::tracing::Level;
 
 #[cfg(not(target_family = "wasm"))]
 use std::env;
 
-mod logger;
-
 fn main() {
-    let mut log_level = log::Level::Warn;
-    if cfg!(debug_assertions) {
+    let log_level = if cfg!(debug_assertions) {
         #[cfg(not(target_family = "wasm"))]
         env::set_var("RUST_BACKTRACE", "1");
-        log_level = log::Level::Info;
-    }
+        Level::INFO
+    } else {
+        Level::WARN
+    };
 
-    logger::init(log_level);
+    dioxus::logger::init(log_level).expect("logger failed to init");
+    tracing_log::LogTracer::init().expect("log-to-tracing bridge failed to init");
 
-    log::info!("Starting app");
+    tracing::info!("Starting app");
 
     environment::init(App);
 }
