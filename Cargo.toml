@@ -11,7 +11,12 @@ cidr = "0.3.2"
 color_processing = "0.6"
 digest = "0.11"
 dioxus = { version = "0.7.6", features = ["router", "logger"] }
-dioxus-free-icons = { version = "0.10.0", features = ["bootstrap", "font-awesome-solid", "font-awesome-brands", "font-awesome-regular"] }
+dioxus-free-icons = { version = "0.10.0", features = [
+  "bootstrap",
+  "font-awesome-solid",
+  "font-awesome-brands",
+  "font-awesome-regular",
+] }
 dioxus-sdk = { version = "0.7", features = ["storage"] }
 getrandom_02 = { package = "getrandom", version = "0.2", optional = true }
 getrandom = "0.3"
@@ -37,7 +42,17 @@ wasm-bindgen = { version = "0.2.100", features = ["enable-interning"], optional 
 
 [features]
 desktop = ["dioxus/desktop"]
-web = ["dioxus/web", "getrandom/wasm_js", "getrandom_02/js", "dep:getrandom_02", "getrandom_04/wasm_js", "dep:getrandom_04", "time/wasm-bindgen", "uuid/js", "dep:wasm-bindgen"]
+web = [
+  "dioxus/web",
+  "getrandom/wasm_js",
+  "getrandom_02/js",
+  "dep:getrandom_02",
+  "getrandom_04/wasm_js",
+  "dep:getrandom_04",
+  "time/wasm-bindgen",
+  "uuid/js",
+  "dep:wasm-bindgen",
+]
 
 default = ["desktop"]
 
@@ -57,7 +72,7 @@ inherits = "dev"
 inherits = "dev"
 
 [target.'cfg(not(any(target_os = "windows", target_os = "none")))'.profile.release]
-strip = true  # Automatically strip symbols from the binary. Only available for *nix targets.
+strip = true # Automatically strip symbols from the binary. Only available for *nix targets.
 
 [package.metadata.bundle]
 name = "Dev Widgets"

@@ -110,8 +110,8 @@ div { class: "widget-grid",
 ## Development
 
 ```bash
-npm run serve:web      # web with hot reload
-npm run serve:desktop  # desktop with hot reload
+pnpm serve:web         # web with hot reload
+pnpm serve:desktop     # desktop with hot reload
 dx build --platform web --release  # production build
 ```
 

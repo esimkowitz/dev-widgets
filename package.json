@@ -3,16 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "tailwind:build": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css",
-    "tailwind:watch": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/tailwind.css --watch",
-    "serve:web": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform web\"",
-    "serve:desktop": "npm run tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"npm:tailwind:watch\" \"dx serve --platform desktop\"",
-    "build:web": "npm run tailwind:build && dx build --platform web --release",
-    "build:desktop": "npm run tailwind:build && dx build --platform desktop --release",
-    "format:prettier": "prettier --write \"**/*.{js,css,md,json,html}\"",
+    "tailwind:build": "pnpm exec tailwindcss -i ./src/main.css -o ./assets/tailwind.css",
+    "tailwind:watch": "pnpm exec tailwindcss -i ./src/main.css -o ./assets/tailwind.css --watch",
+    "serve:web": "pnpm tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"pnpm:tailwind:watch\" \"dx serve --platform web\"",
+    "serve:desktop": "pnpm tailwind:build && concurrently -n \"tailwind,dioxus\" -c \"cyan,magenta\" --hide tailwind \"pnpm:tailwind:watch\" \"dx serve --platform desktop\"",
+    "build:web": "pnpm tailwind:build && dx build --platform web --release",
+    "build:desktop": "pnpm tailwind:build && dx build --platform desktop --release",
+    "format:oxfmt": "oxfmt --write",
     "format:rust": "dx fmt",
-    "format": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"npm:format:prettier\" \"npm:format:rust\"",
-    "format:check": "concurrently -n \"prettier,rust\" -c \"yellow,red\" \"prettier --check '**/*.{js,css,md,json,html}'\" \"dx fmt --check\"",
+    "format": "concurrently -n \"oxfmt,rust\" -c \"yellow,red\" \"pnpm:format:oxfmt\" \"pnpm:format:rust\"",
+    "format:check": "concurrently -n \"oxfmt,rust\" -c \"yellow,red\" \"oxfmt --check\" \"dx fmt --check\"",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -21,11 +21,17 @@
     "daisyui": "^5.5.19",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "prettier": "^3.8.3",
+    "oxfmt": "^0.47.0",
     "tailwindcss": "^4.1.18"
   },
   "lint-staged": {
-    "*.{js,css,md,json,html,yml,yaml}": "prettier --write",
+    "*.{js,css,md,json,html,yml,yaml}": "oxfmt --write",
     "*.rs": "sh -c 'for f in \"$@\"; do dx fmt -f \"$f\"; done' _"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher"
+    ]
   }
 }

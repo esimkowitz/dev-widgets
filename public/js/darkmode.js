@@ -1,13 +1,11 @@
 // Set theme to the user's preferred color scheme
 function updateTheme() {
-    const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ?
-        "dark" :
-        "light";
-    document.querySelector("html").setAttribute("data-theme", colorMode);
+  const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.querySelector("html").setAttribute("data-theme", colorMode);
 }
 
 // Set theme on load
-updateTheme()
+updateTheme();
 
 // Update theme when the preferred scheme changes
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateTheme);

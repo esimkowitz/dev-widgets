@@ -9,5 +9,5 @@ target/
 # Dependencies
 node_modules/
 
-# Rust files (handled by rustfmt)
+# Rust files (handled by dx fmt)
 *.rs
