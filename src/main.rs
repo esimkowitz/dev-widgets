@@ -15,7 +15,6 @@ fn main() {
     };
 
     dioxus::logger::init(log_level).expect("logger failed to init");
-    tracing_log::LogTracer::init().expect("log-to-tracing bridge failed to init");
 
     tracing::info!("Starting app");
 

@@ -76,7 +76,7 @@ pub fn CidrDecoder() -> Element {
                     let cidr = event.value();
                     let cidr_clone = cidr.clone();
                     let cidr_trim = cidr.trim();
-                    log::info!("CIDR: {}", cidr);
+                    tracing::info!("CIDR: {}", cidr);
                     cidr_input_ref
                         .with_mut(|cidr_input| {
                             *cidr_input = cidr_clone;

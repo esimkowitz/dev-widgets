@@ -16,9 +16,7 @@ dioxus-sdk = { version = "0.7", features = ["storage"] }
 getrandom_02 = { package = "getrandom", version = "0.2", optional = true }
 getrandom = "0.3"
 getrandom_04 = { package = "getrandom", version = "0.4", optional = true }
-log = { version = "0.4", features = ["std"] }
 tracing = "0.1"
-tracing-log = "0.2"
 manganis = "0.7.3"
 md-5 = "0.11"
 num-traits = "0.2"

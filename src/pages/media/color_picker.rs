@@ -66,7 +66,7 @@ pub fn ColorPicker() -> Element {
 
     let modify_capture_pointer = use_signal(|| {
         move |pointer_id: i32, is_capturing: bool| {
-            log::trace!("modifying capture pointer ColorPicker");
+            tracing::trace!("modifying capture pointer ColorPicker");
             let eval = document::eval(match is_capturing {
                 true => {
                     r#"
@@ -115,11 +115,11 @@ pub fn ColorPicker() -> Element {
                         .with(|modify_capture_pointer| modify_capture_pointer(pointerId, false));
                 },
                 ongotpointercapture: move |_| {
-                    log::trace!("gotpointercapture");
+                    tracing::trace!("gotpointercapture");
                     tracking.set(true);
                 },
                 onlostpointercapture: move |_| {
-                    log::trace!("lostpointercapture");
+                    tracing::trace!("lostpointercapture");
                     tracking.set(false);
                     target.set(None);
                 },
@@ -346,7 +346,7 @@ fn cursor_position_to_hue(
     cursor_coordinates: Point2D<f64, PageSpace>,
     center_coordinates: Point2D<f64, PageSpace>,
 ) -> f64 {
-    log::trace!(
+    tracing::trace!(
         "cursor_coordinates: {:?}, center_coordinates: {:?}",
         cursor_coordinates,
         center_coordinates
@@ -354,7 +354,7 @@ fn cursor_position_to_hue(
     let vector = cursor_coordinates - center_coordinates;
     let angle = vector.yx().angle_from_x_axis().positive().to_degrees() - 90f64;
     let angle = angle % 360f64;
-    log::trace!("vector: {:?}, angle: {:?}", vector, angle);
+    tracing::trace!("vector: {:?}, angle: {:?}", vector, angle);
     angle
 }
 
