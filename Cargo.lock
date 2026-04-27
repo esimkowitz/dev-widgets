@@ -941,7 +941,6 @@ dependencies = [
  "getrandom 0.3.4",
  "getrandom 0.4.2",
  "lipsum",
- "log",
  "manganis",
  "md-5",
  "num-traits",
@@ -956,9 +955,9 @@ dependencies = [
  "strum_macros",
  "time",
  "time-tz",
+ "tracing",
  "uuid",
  "wasm-bindgen",
- "wasm-logger",
 ]
 
 [[package]]
@@ -984,9 +983,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus"
-version = "0.7.5"
+version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a44c550c06b6785e16258ad620d5b559f5bbcbcc50e3c18c08aa6af2604a4c32"
+checksum = "14b5fd24c3d394e5a8cfc15b8319da5f853c9d27471a9f46ace0653761499740"
 dependencies = [
  "dioxus-asset-resolver",
  "dioxus-cli-config",
@@ -6001,17 +6000,6 @@ checksum = "990065f2fe63003fe337b932cfb5e3b80e0b4d0f5ff650e6985b1048f62c8319"
 dependencies = [
  "leb128fmt",
  "wasmparser",
-]
-
-[[package]]
-name = "wasm-logger"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "074649a66bb306c8f2068c9016395fa65d8e08d2affcbf95acf3c24c3ab19718"
-dependencies = [
- "log",
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]

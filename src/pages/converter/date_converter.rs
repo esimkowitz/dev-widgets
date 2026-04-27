@@ -184,7 +184,7 @@ impl Default for DcTimeZone {
         Self::Base(match system::get_timezone() {
             Ok(tz) => tz,
             Err(err) => {
-                log::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
+                tracing::warn!("Failed to get system timezone, defaulting to UTC {:?}", err);
                 timezones::get_by_name("UTC").unwrap()
             }
         })
@@ -202,7 +202,7 @@ impl FromStr for DcTimeZone {
         match timezones::get_by_name(s) {
             Some(tz) => Ok(Self::Base(tz)),
             None => {
-                log::error!("Failed to parse timezone: {}", s);
+                tracing::error!("Failed to parse timezone: {}", s);
                 Err(TzParseError)
             }
         }
