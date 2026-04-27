@@ -58,10 +58,13 @@ git clone https://github.com/esimkowitz/dev-widgets.git
 cd dev-widgets
 ```
 
-### 4. Install npm dependencies
+### 4. Install pnpm dependencies
+
+[pnpm](https://pnpm.io/) is the package manager. The repo pins its version via the `packageManager` field in `package.json` and [Corepack](https://nodejs.org/api/corepack.html), so enable Corepack once and `pnpm` will pick up the right version automatically:
 
 ```bash
-npm install
+corepack enable
+pnpm install
 ```
 
 ## Web App
@@ -73,7 +76,7 @@ Dev Widgets is hosted at <https://widgets.fyi>, automatically deployed from the 
 ### Run locally
 
 ```bash
-npm run serve:web
+pnpm serve:web
 ```
 
 This compiles TailwindCSS with a file watcher and then starts the Dioxus dev server and runs the web app with hot-reloading enabled.
@@ -83,7 +86,7 @@ This compiles TailwindCSS with a file watcher and then starts the Dioxus dev ser
 This compiles the TailwindCSS and builds the web app as a single-page app for release to static hosting like GitHub Pages.
 
 ```bash
-npm run build:web
+pnpm build:web
 ```
 
 ## Desktop App
@@ -93,7 +96,7 @@ Dev Widgets also runs as a native desktop app via Tauri. Validated on macOS and 
 ### Run desktop app locally
 
 ```bash
-npm run serve:desktop
+pnpm serve:desktop
 ```
 
 This compiles TailwindCSS with a file watcher and then starts the Dioxus dev server and runs the desktop app with hot-reloading enabled.
@@ -103,7 +106,7 @@ This compiles TailwindCSS with a file watcher and then starts the Dioxus dev ser
 This compiles the TailwindCSS and builds the desktop app for release.
 
 ```bash
-npm run build:desktop
+pnpm build:desktop
 ```
 
 ## Roadmap

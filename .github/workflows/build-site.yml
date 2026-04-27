@@ -18,13 +18,15 @@ jobs:
         uses: actions/checkout@v6
 
       # Install Node.js and build Tailwind CSS
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: "24"
-          cache: "npm"
-      - name: Install npm dependencies
-        run: npm ci
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # Install toolchain
       - name: Install Rust Toolchain
@@ -41,7 +43,7 @@ jobs:
 
       # Build app
       - name: Build static site
-        run: npm run build:web
+        run: pnpm build:web
 
       # Upload artifact
       - name: Fix permissions for artifact upload
