@@ -1033,9 +1033,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus-cli-config"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4ad73f0ff638cd27466d389cd57f0975f909b66130dc1c25d5212d4041e5352"
+checksum = "5ef4c22f0a239158f77966d7e7d39b637a10cb374cbd85f881704a336fd3f5c8"
 dependencies = [
  "wasm-bindgen",
 ]
@@ -1093,9 +1093,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus-core-types"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cbfea5c8946e0745b254b5c33c515d81b3ba638f33c2a532ed06730392394d4d"
+checksum = "a1a47a4908cc9680a27b314aa8c3832a517274f896a31b0cce7d7adee57eacbb"
 
 [[package]]
 name = "dioxus-desktop"
@@ -3146,9 +3146,9 @@ dependencies = [
 
 [[package]]
 name = "manganis"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e06225f29a781d86afdfafa562de09621f2ace377136ae2ae9ca9e72a29b920"
+checksum = "652dba76564ebccd550649b3db9ed608bb5cabfccbe90113c56783649f324eab"
 dependencies = [
  "const-serialize 0.7.2",
  "const-serialize 0.8.0-alpha.0",
@@ -3162,9 +3162,9 @@ dependencies = [
 
 [[package]]
 name = "manganis-core"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "774ddc382b4fb30f3fdcf2418131cbac5e6111f00e6c7ddf9e598ef3b2b4cd91"
+checksum = "d7d13cbb4dc790c31565bf49a418e6f441e66130d66aefe9239636e02ab3ebd4"
 dependencies = [
  "const-serialize 0.7.2",
  "const-serialize 0.8.0-alpha.0",
@@ -3176,9 +3176,9 @@ dependencies = [
 
 [[package]]
 name = "manganis-macro"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "731c83c89d831f341fb46eba0aefdfb3433f77a3f78a8b08d9d88746613a8f8b"
+checksum = "b234972a38639be3b753809ba1d8060ef08b548d07d07cc0c3030aab0c30c132"
 dependencies = [
  "dunce",
  "macro-string",
@@ -5618,9 +5618,9 @@ checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 
 [[package]]
 name = "tracing"
-version = "0.1.41"
+version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "784e0ac535deb450455cbfa28a6f0df145ea1bb7ae51b821cf5e7927fdcfbdd0"
+checksum = "63e71662fa4b2a2c3a26f570f037eb95bb1f85397f3cd8076caed2f026a6d100"
 dependencies = [
  "pin-project-lite",
  "tracing-attributes",
@@ -5629,9 +5629,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-attributes"
-version = "0.1.28"
+version = "0.1.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "395ae124c09f9e6918a2310af6038fba074bcf474ac352496d5910dd59a2226d"
+checksum = "7490cfa5ec963746568740651ac6781f701c9c5ea257c58e057f3ba8cf69e8da"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5640,9 +5640,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-core"
-version = "0.1.33"
+version = "0.1.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e672c95779cf947c5311f83787af4fa8fffd12fb27e4993211a84bdfd9610f9c"
+checksum = "db97caf9d906fbde555dd62fa95ddba9eecfd14cb388e4f491a66d74cd5fb79a"
 dependencies = [
  "once_cell",
 ]
