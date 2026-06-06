@@ -17,10 +17,10 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.0",
-    "concurrently": "^10.0.0",
+    "concurrently": "^10.0.3",
     "daisyui": "^5.5.20",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.5",
+    "lint-staged": "^17.0.7",
     "oxfmt": "^0.53.0",
     "tailwindcss": "^4.3.0"
   },
