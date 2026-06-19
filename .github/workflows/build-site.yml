@@ -15,7 +15,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Install Node.js and build Tailwind CSS
       - name: Setup pnpm
