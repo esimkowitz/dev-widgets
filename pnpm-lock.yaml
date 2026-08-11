@@ -15,8 +15,8 @@ importers:
         specifier: ^10.0.4
         version: 10.0.4
       daisyui:
-        specifier: ^5.7.4
-        version: 5.7.4
+        specifier: ^5.7.15
+        version: 5.7.15
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -376,8 +376,8 @@ packages:
     engines: {node: '>=22'}
     hasBin: true
 
-  daisyui@5.7.4:
-    resolution: {integrity: sha512-zKzFIwvEvn2QvE1TbUUtDnYFOqWoxeZh+j4QXfhkZKYAT++pO2ijyT9rkFm0GIPDWR1/oo9hHZzd96AsTK0iZg==}
+  daisyui@5.7.15:
+    resolution: {integrity: sha512-62W6wiH6AhFKJ2ZcpJVcuPGQXbIgwq8BZZx78iJ3/T8lqrdY+UpQlYWb4IQQQXZ81NMwyX+CKS2+8HaTOE3ctA==}
 
   detect-libc@1.0.3:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
@@ -860,7 +860,7 @@ snapshots:
       tree-kill: 1.2.2
       yargs: 18.0.0
 
-  daisyui@5.7.4: {}
+  daisyui@5.7.15: {}
 
   detect-libc@1.0.3: {}
 
