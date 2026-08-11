@@ -37,7 +37,7 @@ jobs:
       - name: Configure Cargo cache
         uses: Swatinem/rust-cache@v2
       - name: Install dioxus-cli
-        uses: taiki-e/install-action@v2.85.3
+        uses: taiki-e/install-action@v2.85.8
         with:
           tool: dioxus-cli
 
