@@ -2,7 +2,7 @@
 @layer components {
   .color-picker {
     --color-view-background: white;
-    --colorwheel-diameter: 30em;
+    --colorwheel-diameter: min(30em, calc(100vw - 2rem));
     width: var(--colorwheel-diameter);
   }
 
@@ -16,7 +16,7 @@
   }
 
   .color-picker .colorwheel {
-    @apply h-full w-full relative select-none block;
+    @apply h-full w-full relative select-none block touch-none;
   }
 
   .color-picker .colorwheel-svg {
@@ -52,7 +52,7 @@
   }
 
   .color-picker .saturation-brightness-box {
-    @apply relative z-10 h-full w-full;
+    @apply relative z-10 h-full w-full touch-none;
   }
 
   .color-picker .saturation-brightness-gradient {
@@ -67,8 +67,8 @@
   }
 
   .color-picker .color-view {
-    @apply mt-3 flex flex-row gap-x-3;
-    height: 4rem;
+    @apply mt-3 flex flex-row flex-wrap gap-3;
+    min-height: 4rem;
   }
 
   .color-picker .color-view-display {
@@ -81,5 +81,10 @@
   .color-picker .color-view .text-input,
   .color-picker .color-view .select-form {
     @apply m-auto grow;
+  }
+
+  /* Keep the floating label on one line; the row wraps instead on narrow screens */
+  .color-picker .color-view .select-form {
+    @apply min-w-36;
   }
 }

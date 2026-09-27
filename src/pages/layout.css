@@ -1,13 +1,15 @@
 /* Layout Components */
 @layer components {
-  /* App Layout - persistent sidebar with main content */
+  /* App Layout - DaisyUI drawer: persistent sidebar at md+, slide-in overlay below */
   .app-layout {
-    @apply flex flex-row w-screen h-screen overflow-hidden;
+    @apply h-dvh overflow-hidden;
   }
 
-  /* Sidebar */
+  /* Sidebar - width comes from --sidebar-width (set inline) at md+ */
   .sidebar {
-    @apply flex flex-col h-full bg-base-200 relative flex-shrink-0;
+    @apply flex flex-col h-full bg-base-200 relative flex-shrink-0 select-none;
+    @apply w-72 md:w-(--sidebar-width);
+    @apply pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)];
     /* Allow tooltip overflow to show outside sidebar bounds */
     overflow: visible;
   }
@@ -34,7 +36,7 @@
 
   /* Resize Handle */
   .resize-handle {
-    @apply absolute top-0 -right-1 h-full w-2 cursor-col-resize z-40;
+    @apply absolute top-0 -right-1 h-full w-2 cursor-col-resize z-40 max-md:hidden;
     @apply hover:bg-primary/20;
     transition: background-color 0.15s ease;
   }
@@ -62,11 +64,15 @@
     transition: opacity 0.1s ease-in-out 0s;
   }
 
+  /* Collapsed state only applies at md+; the mobile drawer always shows the full menu */
+
   /* When sidebar is collapsed, show collapsed menu after delay */
   .sidebar.collapsed .sidebar-menu-collapsed {
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 0.1s ease-in-out 0.1s;
+    @variant md {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.1s ease-in-out 0.1s;
+    }
   }
 
   /* Expanded inner: normal flexbox positioning when stable */
@@ -78,10 +84,12 @@
 
   /* When sidebar is collapsed, hide expanded content after delay */
   .sidebar.collapsed .sidebar-inner-expanded {
-    @apply absolute inset-0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.1s ease-in-out 0.1s;
+    @variant md {
+      @apply absolute inset-0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s ease-in-out 0.1s;
+    }
   }
 
   /* During resize: no opacity transitions, instant state changes */
@@ -91,18 +99,22 @@
   }
 
   .sidebar.resizing.collapsed .sidebar-menu-collapsed {
-    opacity: 1;
-    pointer-events: auto;
+    @variant md {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   .sidebar.resizing.collapsed .sidebar-inner-expanded {
-    opacity: 0;
-    pointer-events: none;
+    @variant md {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
-  /* Inner container: fixed width prevents text reflow during expand animation */
+  /* Inner container: fixed width (--sidebar-inner-width, md+) prevents text reflow during expand animation */
   .sidebar-inner {
-    @apply h-full overflow-hidden flex flex-col;
+    @apply h-full overflow-hidden flex flex-col w-full md:w-(--sidebar-inner-width);
   }
 
   /* Menu Items - ensure full width */
@@ -168,7 +180,7 @@
 
   /* Main Content Area */
   .main-content {
-    @apply flex flex-col flex-grow h-full overflow-hidden;
+    @apply flex flex-col h-full overflow-hidden;
     /* Higher z-index so content covers sidebar during expand/collapse transition */
     @apply relative z-10 bg-base-100;
   }
@@ -176,7 +188,8 @@
   /* Content Header */
   .content-header {
     @apply flex-shrink-0 px-4 py-2 bg-base-100 border-b border-base-300;
-    @apply relative z-10;
+    @apply relative z-10 flex items-center gap-2 select-none max-md:pl-2;
+    @apply pt-[max(--spacing(2),env(safe-area-inset-top))];
   }
 
   .content-title {
@@ -185,7 +198,8 @@
 
   /* Content Body */
   .content-body {
-    @apply flex-grow overflow-y-auto overflow-x-hidden p-4 bg-base-100;
+    @apply flex-grow overflow-y-auto overflow-x-hidden p-4 bg-base-100 overscroll-contain;
+    @apply pb-[max(--spacing(4),env(safe-area-inset-bottom))];
   }
 
   .content-body::-webkit-scrollbar {

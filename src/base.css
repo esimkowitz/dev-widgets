@@ -1,6 +1,10 @@
 @layer base {
   html {
     overscroll-behavior: none;
+    /* iOS zooms into form fields under 16px; raise DaisyUI's input/select/textarea minimum on mobile */
+    @variant max-md {
+      --font-size-min: 1rem;
+    }
   }
 
   html::-webkit-scrollbar {
@@ -8,6 +12,6 @@
   }
 
   body {
-    @apply m-0 p-0 font-sans select-none overflow-y-scroll;
+    @apply m-0 p-0 font-sans overflow-hidden;
   }
 }

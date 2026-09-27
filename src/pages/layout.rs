@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_brands_icons::FaGithub;
 use dioxus_free_icons::icons::fa_regular_icons::FaCopyright;
-use dioxus_free_icons::icons::fa_solid_icons::{FaChevronLeft, FaChevronRight};
+use dioxus_free_icons::icons::fa_solid_icons::{FaBars, FaChevronLeft, FaChevronRight};
 use dioxus_free_icons::Icon;
 use dioxus_sdk::storage::use_persistent;
 use serde::{Deserialize, Serialize};
@@ -107,26 +107,53 @@ pub fn Container() -> Element {
         is_resizing.set(false);
     };
 
-    rsx! {
-        div { class: "app-layout", onpointermove, onpointerup,
+    // Mobile nav drawer (DaisyUI `drawer`); always open at `md` and up
+    let mut drawer_open = use_signal(|| false);
+    let route = use_route::<Route>();
+    use_effect(use_reactive!(|route| {
+        let _ = route;
+        drawer_open.set(false);
+    }));
 
-            // Persistent sidebar
-            Sidebar {
-                state: sidebar_state,
-                is_resizing,
-                resize_start_x,
-                resize_start_width,
-                current_width,
+    rsx! {
+        div {
+            class: "app-layout drawer md:drawer-open",
+            onpointermove,
+            onpointerup,
+            input {
+                id: NAV_DRAWER_ID,
+                r#type: "checkbox",
+                class: "drawer-toggle",
+                checked: drawer_open(),
+                onchange: move |evt| drawer_open.set(evt.checked()),
             }
 
             // Main content area with header
-            div { class: "main-content",
+            div { class: "main-content drawer-content",
                 ContentHeader {}
                 div { class: "content-body", Outlet::<Route> {} }
+            }
+
+            // Sidebar: persistent at `md` and up, slide-in overlay below
+            div { class: "drawer-side md:relative md:z-auto md:overflow-visible",
+                label {
+                    r#for: NAV_DRAWER_ID,
+                    class: "drawer-overlay",
+                    "aria-label": "Close menu",
+                }
+                Sidebar {
+                    state: sidebar_state,
+                    is_resizing,
+                    resize_start_x,
+                    resize_start_width,
+                    current_width,
+                }
             }
         }
     }
 }
+
+const NAV_DRAWER_ID: &str = "nav-drawer";
 
 /// Header showing current widget or category name
 #[component]
@@ -140,6 +167,12 @@ fn ContentHeader() -> Element {
 
     rsx! {
         header { class: "content-header",
+            label {
+                r#for: NAV_DRAWER_ID,
+                class: "btn btn-ghost btn-square md:hidden",
+                "aria-label": "Open menu",
+                Icon::<FaBars> { icon: FaBars, class: "w-5 h-5" }
+            }
             h1 { class: "content-title", "{title}" }
         }
     }
@@ -165,21 +198,27 @@ fn Sidebar(
         (false, false) => "sidebar expanded",
     };
 
+    // Widths are passed as CSS variables and only applied at `md` and up (see layout.css),
+    // so the mobile drawer keeps its own fixed width.
     // Outer width animates, inner content uses appropriate width
-    let outer_width_style = format!("width: {}em;", current_width);
+    let outer_width_style = format!("--sidebar-width: {}em;", current_width);
     // When resizing: inner follows current_width for immediate feedback
     // When collapsed: no width needed
     // When expanded (not resizing): use target_width to prevent text reflow during collapse animation
     let inner_width_style = if is_collapsed {
         String::new()
     } else if resizing {
-        format!("width: {}em;", current_width)
+        format!("--sidebar-inner-width: {}em;", current_width)
     } else {
-        format!("width: {}em;", target_width)
+        format!("--sidebar-inner-width: {}em;", target_width)
     };
 
     rsx! {
-        aside { class: "{sidebar_class}", style: "{outer_width_style}",
+        // At md+, drop the drawer's slide transform so the aside isn't a stacking context
+        // (the edge toggle/resize handle must layer above the main content)
+        aside {
+            class: "{sidebar_class} md:translate-none md:will-change-auto",
+            style: "{outer_width_style}",
 
             // Always render both collapsed and expanded views
             // CSS handles visibility with delayed opacity transitions
@@ -279,7 +318,7 @@ fn CollapseToggleButton(state: Signal<SidebarState>) -> Element {
 
     rsx! {
         button {
-            class: "collapse-toggle-btn",
+            class: "collapse-toggle-btn max-md:hidden",
             onclick: toggle,
             "aria-label": if is_collapsed { "Expand sidebar" } else { "Collapse sidebar" },
             if is_collapsed {
