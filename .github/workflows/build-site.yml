@@ -5,6 +5,11 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+# Allow only one Pages deployment at a time; queue the latest push and skip superseded ones
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 env:
   TARGET_DIR: ./target/dx/dev-widgets/release/web/public
 
