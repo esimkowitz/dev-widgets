@@ -3,7 +3,10 @@ use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaQrcode;
 
-use qrcode_generator::{self};
+use qrcode_generator::{
+    qr::{Encoder, ErrorCorrection},
+    Renderer,
+};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
@@ -24,16 +27,12 @@ pub fn QrCodeGenerator() -> Element {
     let mut qr_code_value = use_signal(|| "".to_string());
     let mut qr_code_error_correction = use_signal(Ecc::default);
 
-    let qr_code_result = qrcode_generator::to_svg_to_string(
-        (*qr_code_value.read()).clone(),
-        (*qr_code_error_correction.read()).into(),
-        1024,
-        None::<&str>,
-    );
-    let qr_code_result = match qr_code_result {
-        Ok(result) => Base64::encode_string(result.as_bytes()),
-        Err(_) => "".to_string(),
-    };
+    let qr_code_result = Encoder::new((*qr_code_error_correction.read()).into())
+        .encode_text(&*qr_code_value.read())
+        .ok()
+        .and_then(|symbol| Renderer::new(&symbol, 1024).to_svg_string(None::<&str>).ok())
+        .map(|svg| Base64::encode_string(svg.as_bytes()))
+        .unwrap_or_default();
 
     rsx! {
         div { class: "widget qr-code-generator",
@@ -85,13 +84,13 @@ impl From<Ecc> for String {
     }
 }
 
-impl From<Ecc> for qrcode_generator::QrCodeEcc {
+impl From<Ecc> for ErrorCorrection {
     fn from(ecc: Ecc) -> Self {
         match ecc {
-            Ecc::Low => qrcode_generator::QrCodeEcc::Low,
-            Ecc::Medium => qrcode_generator::QrCodeEcc::Medium,
-            Ecc::Quartile => qrcode_generator::QrCodeEcc::Quartile,
-            Ecc::High => qrcode_generator::QrCodeEcc::High,
+            Ecc::Low => ErrorCorrection::Low,
+            Ecc::Medium => ErrorCorrection::Medium,
+            Ecc::Quartile => ErrorCorrection::Quartile,
+            Ecc::High => ErrorCorrection::High,
         }
     }
 }

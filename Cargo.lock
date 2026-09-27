@@ -2994,9 +2994,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.175"
+version = "0.2.189"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a82ae493e598baaea5209805c49bbf2ea7de956d50d7da0da1164f9c6d28543"
+checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libfuzzer-sys"
@@ -4139,20 +4139,12 @@ dependencies = [
 
 [[package]]
 name = "qrcode-generator"
-version = "5.0.0"
+version = "6.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faf0051849b5465059b75f59d388c7318aad6554701b74ecf02afc2573b0306c"
+checksum = "7348cb224eb9e57c100ce042204c0eb999444909d0bcc27490ff14423a9ecf76"
 dependencies = [
  "html-escape",
- "image",
- "qrcodegen",
 ]
-
-[[package]]
-name = "qrcodegen"
-version = "1.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4339fc7a1021c9c1621d87f5e3505f2805c8c105420ba2f2a4df86814590c142"
 
 [[package]]
 name = "quick-error"
