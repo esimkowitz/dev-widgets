@@ -2,11 +2,11 @@
 @layer components {
   /* Widget-specific: date/time selectors layout */
   .date-converter .selectors-wrapper {
-    @apply flex flex-row gap-y-3 gap-x-3 flex-nowrap;
+    @apply flex flex-row gap-y-3 gap-x-3 flex-nowrap max-md:flex-wrap;
   }
 
   .date-converter .selectors {
-    @apply flex flex-col flex-1;
+    @apply flex flex-col flex-1 max-md:w-full;
   }
 
   .date-converter .selectors-inner {
@@ -16,15 +16,5 @@
   .date-converter .selectors-inner .number-input {
     @apply flex-1;
     min-width: 100px;
-  }
-
-  @media screen and (max-width: 835px) {
-    .date-converter .selectors-wrapper {
-      @apply flex-wrap;
-    }
-
-    .date-converter .selectors {
-      @apply w-full;
-    }
   }
 }

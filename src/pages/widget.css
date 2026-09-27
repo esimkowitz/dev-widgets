@@ -5,8 +5,9 @@
     @apply flex flex-col gap-y-3 h-full;
   }
 
-  /* Textareas flex-fill available space */
+  /* Textareas flex-fill available space; keep a usable height on mobile when the keyboard is open */
   .widget .textarea-form {
+    @apply max-md:min-h-32;
     flex: 1 1 auto;
   }
 
@@ -23,12 +24,12 @@
 
   /* Button group */
   .widget-buttons {
-    @apply flex flex-row gap-x-3 items-center;
+    @apply flex flex-row flex-wrap gap-3 items-center;
   }
 
   /* Switch group */
   .widget-switches {
-    @apply flex flex-row gap-x-3 items-center;
+    @apply flex flex-row flex-wrap gap-3 items-center;
   }
 
   .widget-switches .switch-input {

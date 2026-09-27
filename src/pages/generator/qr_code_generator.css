@@ -2,7 +2,6 @@
 @layer components {
   /* Widget-specific: QR code display size */
   .qr-code-generator .qr-code {
-    width: 30em;
-    height: 30em;
+    @apply w-full max-w-[30em] aspect-square;
   }
 }
