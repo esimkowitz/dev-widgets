@@ -10,6 +10,7 @@ use time_tz::{system, timezones, OffsetDateTimeExt, TimeZone, Tz};
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, TextInput},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -22,8 +23,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaClock> = WidgetIcon { icon: FaClock };
 
 pub fn DateConverter() -> Element {
+    // Persist the time zone by name; the date itself always starts at "now"
+    let mut time_zone_name =
+        use_local_persistent("date.time-zone", || String::from(DcTimeZone::default()));
     let mut date_signal = use_signal(|| DateConverterState {
-        time_zone: DcTimeZone::default(),
+        time_zone: DcTimeZone::from_str(&time_zone_name.read()).unwrap_or_default(),
         time_utc: OffsetDateTime::now_utc(),
     });
 
@@ -35,6 +39,7 @@ pub fn DateConverter() -> Element {
             SelectForm::<DcTimeZone> {
                 label: "Time Zone",
                 oninput: move |tz: DcTimeZone| {
+                    time_zone_name.set(tz.into());
                     date_signal
                         .with_mut(|date_state| {
                             date_state.time_zone = tz;

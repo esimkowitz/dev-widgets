@@ -10,11 +10,13 @@ use dioxus::{
     prelude::*,
 };
 use dioxus_free_icons::icons::fa_solid_icons::FaPalette;
+use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
     components::inputs::{SelectForm, SelectFormEnum, TextInput},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -32,12 +34,10 @@ const COLORWHEEL_ID: &str = "colorwheel";
 pub fn ColorPicker() -> Element {
     // Which element the active drag started on; `None` when not dragging
     let mut target = use_signal(|| None::<&'static str>);
+    let hsva_state = use_local_persistent("color.hsva", Hsva::default);
+    let mut hsva = use_context_provider(|| hsva_state);
     let mut color_state = use_context_provider(|| {
         Signal::new(ColorPickerState {
-            hue: 0.0,
-            saturation: 1.0,
-            brightness: 1.0,
-            alpha: 1.0,
             colorwheel: None,
             saturation_brightness_box: None,
             colorwheel_rect: Rect::zero(),
@@ -46,17 +46,18 @@ pub fn ColorPicker() -> Element {
     });
 
     let mut process_pointer_event = move |point: default::Point2D<f64>| {
-        color_state.with_mut(|color_state| match *target.read() {
+        let color_state = color_state.read();
+        hsva.with_mut(|hsva| match *target.read() {
             Some(SATURATION_BRIGHTNESS_BOX_ID) => {
                 let rect = color_state.saturation_brightness_rect.to_untyped();
                 let x = ((point.x - rect.min_x()) / rect.width() * 100.0).clamp(0.0, 100.0);
                 let y = ((point.y - rect.min_y()) / rect.height() * 100.0).clamp(0.0, 100.0);
-                color_state.saturation = x_axis_to_saturation(x);
-                color_state.brightness = y_axis_to_brightness(y);
+                hsva.saturation = x_axis_to_saturation(x);
+                hsva.brightness = y_axis_to_brightness(y);
             }
             Some(COLORWHEEL_ID) => {
                 let center = color_state.colorwheel_rect.to_untyped().center();
-                color_state.hue = cursor_position_to_hue(point, center);
+                hsva.hue = cursor_position_to_hue(point, center);
             }
             _ => {}
         })
@@ -145,6 +146,7 @@ fn hit_test(point: default::Point2D<f64>, state: &ColorPickerState) -> Option<&'
 
 fn ColorWheel() -> Element {
     let mut color_state = use_context::<Signal<ColorPickerState>>();
+    let hsva = use_context::<Signal<Hsva>>();
 
     rsx! {
         div { class: "colorwheel-wrapper",
@@ -160,7 +162,7 @@ fn ColorWheel() -> Element {
                     }
                 },
                 ColorWheelSvg {}
-                ColorWheelCursorSvg { hue: color_state.read().hue }
+                ColorWheelCursorSvg { hue: hsva.read().hue }
             }
         }
     }
@@ -208,6 +210,7 @@ fn ColorWheelCursorSvg(hue: f64) -> Element {
 
 fn SaturationBrightnessBox() -> Element {
     let mut color_state = use_context::<Signal<ColorPickerState>>();
+    let hsva = use_context::<Signal<Hsva>>();
 
     rsx! {
         div { class: "saturation-brightness-wrapper",
@@ -224,13 +227,13 @@ fn SaturationBrightnessBox() -> Element {
                 },
                 div {
                     class: "saturation-brightness-gradient",
-                    style: "background-color: hsl({color_state.read().hue}deg, 100%, 50%);",
+                    style: "background-color: hsl({hsva.read().hue}deg, 100%, 50%);",
                 }
                 CursorPrimitiveSvg {
                     class: "saturation-brightness-cursor",
-                    fill: "{color_state.read().get_rgb_string()}",
-                    x: saturation_to_x_axis(color_state.read().saturation),
-                    y: brightness_to_y_axis(color_state.read().brightness),
+                    fill: "{hsva.read().get_rgb_string()}",
+                    x: saturation_to_x_axis(hsva.read().saturation),
+                    y: brightness_to_y_axis(hsva.read().brightness),
                     scale_factor: 2,
                 }
             }
@@ -282,9 +285,9 @@ fn CursorPrimitiveSvg(
 }
 
 fn ColorView() -> Element {
-    let mut color_format = use_signal(ColorFormat::default);
-    let color_state = use_context::<Signal<ColorPickerState>>();
-    let color = color_state.read().get_color();
+    let mut color_format = use_local_persistent("color.format", ColorFormat::default);
+    let hsva = use_context::<Signal<Hsva>>();
+    let color = hsva.read().get_color();
     let rgb_string = color.to_rgb_string();
     let color_text = match *color_format.read() {
         ColorFormat::RGB => rgb_string.clone(),
@@ -310,19 +313,47 @@ fn ColorView() -> Element {
     }
 }
 
+/// DOM handles and layout measurements of the picker's controls
 struct ColorPickerState {
-    hue: f64,
-    saturation: f64,
-    brightness: f64,
-    alpha: f64,
     colorwheel: Option<Rc<MountedData>>,
     saturation_brightness_box: Option<Rc<MountedData>>,
     colorwheel_rect: PixelsRect,
     saturation_brightness_rect: PixelsRect,
 }
 
+/// The selected color; persisted separately from layout state
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
+struct Hsva {
+    hue: f64,
+    saturation: f64,
+    brightness: f64,
+    alpha: f64,
+}
+
+impl Default for Hsva {
+    fn default() -> Self {
+        Self {
+            hue: 0.0,
+            saturation: 1.0,
+            brightness: 1.0,
+            alpha: 1.0,
+        }
+    }
+}
+
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+    Copy,
+    Clone,
+    Default,
+    Debug,
+    Display,
+    EnumIter,
+    EnumString,
+    Hash,
+    IntoStaticStr,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 #[allow(clippy::upper_case_acronyms)]
 enum ColorFormat {
@@ -343,7 +374,7 @@ impl From<ColorFormat> for String {
     }
 }
 
-impl ColorPickerState {
+impl Hsva {
     fn get_color(&self) -> Color {
         Color::new_hsva(self.hue, self.saturation, self.brightness, self.alpha)
     }

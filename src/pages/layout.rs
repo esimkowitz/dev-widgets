@@ -3,7 +3,6 @@ use dioxus_free_icons::icons::fa_brands_icons::FaGithub;
 use dioxus_free_icons::icons::fa_regular_icons::FaCopyright;
 use dioxus_free_icons::icons::fa_solid_icons::{FaBars, FaChevronLeft, FaChevronRight};
 use dioxus_free_icons::Icon;
-use dioxus_sdk::storage::use_persistent;
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
 use time::OffsetDateTime;
@@ -11,8 +10,9 @@ use time::OffsetDateTime;
 use crate::components;
 use crate::pages::home_page::HOME_PAGE_CATEGORY_ENTRY;
 use crate::pages::Route;
+use crate::storage::use_local_persistent;
 
-/// Sidebar state that persists to localStorage
+/// Sidebar state that persists across sessions
 #[derive(Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct SidebarState {
     pub is_collapsed: bool,
@@ -35,7 +35,7 @@ const MAX_WIDTH: f32 = 25.0;
 const COLLAPSED_WIDTH: f32 = 4.0;
 
 pub fn Container() -> Element {
-    let mut sidebar_state = use_persistent("dev-widgets-sidebar", SidebarState::default);
+    let mut sidebar_state = use_local_persistent("sidebar", SidebarState::default);
 
     // Resizing state
     let mut is_resizing = use_signal(|| false);

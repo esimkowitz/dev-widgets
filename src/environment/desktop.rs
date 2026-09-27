@@ -5,6 +5,9 @@ use dioxus::{
 };
 
 pub fn init_app(root: fn() -> Element) {
+    // Directory for dioxus-sdk LocalStorage files
+    dioxus_sdk::storage::set_dir!();
+
     // Configure dioxus-desktop Tauri window
     let config_builder = Config::default().with_custom_index(
         r#"

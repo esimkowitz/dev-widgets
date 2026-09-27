@@ -2,10 +2,12 @@
 use base64ct::{Base64, Encoding};
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaHashtag;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::components::inputs::TextAreaForm;
 use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::storage::use_local_persistent;
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Base64 Encoder / Decoder",
@@ -17,12 +19,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaHashtag> = WidgetIcon { icon: FaHashtag };
 
 pub fn Base64Encoder() -> Element {
-    use_context_provider(|| {
-        Signal::new(EncoderValue {
-            encoded_value: String::new(),
-            decoded_value: String::new(),
-        })
+    let value_state = use_local_persistent("base64", || EncoderValue {
+        encoded_value: String::new(),
+        decoded_value: String::new(),
     });
+    use_context_provider(|| value_state);
     rsx! {
         div { class: "widget",
             encoder_input { direction: Direction::Encode }
@@ -76,7 +77,7 @@ fn encoder_input(direction: Direction) -> Element {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 struct EncoderValue {
     encoded_value: String,
     decoded_value: String,

@@ -1,10 +1,12 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::bs_icons::Bs123;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::components::inputs::{SwitchInput, TextInput};
 use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::storage::use_local_persistent;
 use crate::utils::{add_number_delimiters, sanitize_string};
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -17,8 +19,10 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<Bs123> = WidgetIcon { icon: Bs123 };
 
 pub fn NumberBaseConverter() -> Element {
-    use_context_provider(|| Signal::new(ConverterValue(0)));
-    let mut format_number_state = use_context_provider(|| Signal::new(FormatNumberState(false)));
+    let value_state = use_local_persistent("number-base.value", || ConverterValue(0));
+    use_context_provider(|| value_state);
+    let format_state = use_local_persistent("number-base.format", || FormatNumberState(false));
+    let mut format_number_state = use_context_provider(|| format_state);
 
     rsx! {
         div { class: "widget-grid",
@@ -93,10 +97,10 @@ fn format_number(number: i64, base: NumberBase, format_number: bool) -> String {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 struct ConverterValue(i64);
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 struct FormatNumberState(bool);
 
 #[derive(PartialEq, Debug, Clone, Copy)]

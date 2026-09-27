@@ -1,10 +1,12 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaFileLines;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::components::inputs::TextAreaForm;
 use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::storage::use_local_persistent;
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "JSON <> YAML Converter",
@@ -16,12 +18,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaFileLines> = WidgetIcon { icon: FaFileLines };
 
 pub fn JsonYamlConverter() -> Element {
-    use_context_provider(|| {
-        Signal::new(ConverterValue {
-            json_value: String::new(),
-            yaml_value: String::new(),
-        })
+    let value_state = use_local_persistent("json-yaml", || ConverterValue {
+        json_value: String::new(),
+        yaml_value: String::new(),
     });
+    use_context_provider(|| value_state);
     rsx! {
         div { class: "widget",
             converter_input { direction: Direction::Json }
@@ -97,7 +98,7 @@ fn convert_yaml_to_json(yaml_str: &str) -> String {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 struct ConverterValue {
     json_value: String,
     yaml_value: String,

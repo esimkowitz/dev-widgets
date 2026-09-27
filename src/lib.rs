@@ -3,6 +3,7 @@ pub mod assets;
 pub mod components;
 pub mod environment;
 pub mod pages;
+pub mod storage;
 pub mod utils;
 
 use dioxus::prelude::*;

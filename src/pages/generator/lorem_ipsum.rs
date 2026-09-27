@@ -2,11 +2,13 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaAlignLeft;
 use rand::thread_rng;
+use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, SwitchInput, TextAreaForm},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -19,7 +21,18 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaAlignLeft> = WidgetIcon { icon: FaAlignLeft };
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+    Copy,
+    Clone,
+    Default,
+    Debug,
+    Display,
+    EnumIter,
+    EnumString,
+    Hash,
+    IntoStaticStr,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 enum LoremMode {
     #[default]
@@ -38,9 +51,9 @@ impl From<LoremMode> for String {
 
 #[component]
 pub fn LoremIpsum() -> Element {
-    let mut mode = use_signal(|| LoremMode::Paragraphs);
-    let mut count = use_signal(|| 3usize);
-    let mut start_with_lorem = use_signal(|| true);
+    let mut mode = use_local_persistent("lorem.mode", || LoremMode::Paragraphs);
+    let mut count = use_local_persistent("lorem.count", || 3usize);
+    let mut start_with_lorem = use_local_persistent("lorem.start-with-lorem", || true);
     let mut generated_text = use_signal(String::new);
 
     let generate = move |_| {

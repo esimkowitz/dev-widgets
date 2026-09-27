@@ -37,7 +37,7 @@ Categories (converter, generator, encoder_decoder, media) implement `WidgetRoute
 
 - `use_signal()` - local component state
 - `use_context()` - shared state within widget tree
-- `use_persistent()` - localStorage-backed (dioxus-sdk)
+- `use_local_persistent(key, init)` (`src/storage.rs`) - persisted across navigation, reloads and restarts (localStorage on web, app data dir on desktop). Use for widget settings and user-typed input; don't persist generated secrets. Avoid dioxus-sdk's `use_persistent`, which is session-only.
 
 **Reading/writing signals:**
 
