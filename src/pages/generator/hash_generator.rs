@@ -2,10 +2,12 @@
 use digest::DynDigest;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaFingerprint;
+use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 
 use crate::components::inputs::{SwitchInput, TextAreaForm, TextInput};
 use crate::pages::{WidgetEntry, WidgetIcon};
+use crate::storage::use_local_persistent;
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
     title: "Hash Generator",
@@ -19,12 +21,11 @@ const ICON: WidgetIcon<FaFingerprint> = WidgetIcon {
 };
 
 pub fn HashGenerator() -> Element {
-    let mut hash_generator_state = use_context_provider(|| {
-        Signal::new(HashGeneratorState {
-            value: "".to_string(),
-            uppercase: false,
-        })
+    let hash_state = use_local_persistent("hash", || HashGeneratorState {
+        value: "".to_string(),
+        uppercase: false,
     });
+    let mut hash_generator_state = use_context_provider(|| hash_state);
 
     rsx! {
         div { class: "widget",
@@ -90,7 +91,7 @@ fn generate_hash(value: String, hasher: &mut dyn DynDigest, uppercase: bool) -> 
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 struct HashGeneratorState {
     value: String,
     uppercase: bool,

@@ -1,11 +1,13 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_solid_icons::FaGlobe;
+use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
     components::inputs::{NumberInput, SelectForm, SelectFormEnum, SwitchInput, TextAreaForm},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -18,11 +20,11 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaGlobe> = WidgetIcon { icon: FaGlobe };
 
 pub fn UuidGenerator() -> Element {
-    let mut hyphens_state = use_signal(|| true);
-    let mut uppercase_state = use_signal(|| true);
-    let mut num_uuids_state = use_signal(|| 1);
+    let mut hyphens_state = use_local_persistent("uuid.hyphens", || true);
+    let mut uppercase_state = use_local_persistent("uuid.uppercase", || true);
+    let mut num_uuids_state = use_local_persistent("uuid.count", || 1usize);
     let mut uuids_state = use_signal(Vec::<String>::new);
-    let mut uuid_version_state = use_signal(|| UUIDVersion::V4);
+    let mut uuid_version_state = use_local_persistent("uuid.version", || UUIDVersion::V4);
 
     let uuids_str = uuids_state.with(|uuids_vec| uuids_vec.join("\n"));
     rsx! {
@@ -74,14 +76,14 @@ pub fn UuidGenerator() -> Element {
                 div { class: "widget-switches",
                     SwitchInput {
                         label: "Hyphens",
-                        checked: true,
+                        checked: *hyphens_state.read(),
                         oninput: move |value| {
                             hyphens_state.set(value);
                         },
                     }
                     SwitchInput {
                         label: "Uppercase",
-                        checked: true,
+                        checked: *uppercase_state.read(),
                         oninput: move |value| {
                             uppercase_state.set(value);
                         },
@@ -94,7 +96,18 @@ pub fn UuidGenerator() -> Element {
 }
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+    Copy,
+    Clone,
+    Default,
+    Debug,
+    Display,
+    EnumIter,
+    EnumString,
+    Hash,
+    IntoStaticStr,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 #[allow(clippy::upper_case_acronyms)]
 enum UUIDVersion {

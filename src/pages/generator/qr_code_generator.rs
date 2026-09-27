@@ -7,11 +7,13 @@ use qrcode_generator::{
     qr::{Encoder, ErrorCorrection},
     Renderer,
 };
+use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 
 use crate::{
     components::inputs::{SelectForm, SelectFormEnum, TextAreaForm},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -24,8 +26,8 @@ pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
 const ICON: WidgetIcon<FaQrcode> = WidgetIcon { icon: FaQrcode };
 
 pub fn QrCodeGenerator() -> Element {
-    let mut qr_code_value = use_signal(|| "".to_string());
-    let mut qr_code_error_correction = use_signal(Ecc::default);
+    let mut qr_code_value = use_local_persistent("qr.value", || "".to_string());
+    let mut qr_code_error_correction = use_local_persistent("qr.ecc", Ecc::default);
 
     let qr_code_result = Encoder::new((*qr_code_error_correction.read()).into())
         .encode_text(&*qr_code_value.read())
@@ -66,7 +68,18 @@ pub fn QrCodeGenerator() -> Element {
 }
 
 #[derive(
-    Copy, Clone, Default, Debug, Display, EnumIter, EnumString, Hash, IntoStaticStr, PartialEq,
+    Copy,
+    Clone,
+    Default,
+    Debug,
+    Display,
+    EnumIter,
+    EnumString,
+    Hash,
+    IntoStaticStr,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 enum Ecc {
     #[default]

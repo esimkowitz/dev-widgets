@@ -11,6 +11,7 @@ use dioxus_free_icons::icons::fa_solid_icons::FaNetworkWired;
 use crate::{
     components::inputs::{TextAreaForm, TextInput},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
     utils::add_number_delimiters,
 };
 
@@ -26,10 +27,11 @@ const ICON: WidgetIcon<FaNetworkWired> = WidgetIcon {
 };
 
 pub fn CidrDecoder() -> Element {
-    let mut cidr_ref =
-        use_signal(|| IpCidr::new(std::net::IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap());
+    let default_cidr = || IpCidr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0).unwrap();
+    let mut cidr_input_ref = use_local_persistent("cidr.input", || default_cidr().to_string());
+    let parsed_input = || IpCidr::from_str(cidr_input_ref.read().trim());
 
-    let mut cidr_input_ref = use_signal(|| cidr_ref.with(|cidr| cidr.to_string()));
+    let mut cidr_ref = use_signal(|| parsed_input().unwrap_or_else(|_| default_cidr()));
 
     let cidr_description = cidr_ref.with(|cidr| {
         let mut description = String::new();
@@ -66,7 +68,7 @@ pub fn CidrDecoder() -> Element {
         description
     });
 
-    let mut show_error_state = use_signal(|| false);
+    let mut show_error_state = use_signal(|| parsed_input().is_err());
     rsx! {
         div { class: "widget",
             TextInput {

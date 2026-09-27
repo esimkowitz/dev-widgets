@@ -6,6 +6,7 @@ use rand::Rng;
 use crate::{
     components::inputs::{NumberInput, SwitchInput, TextAreaForm, TextInput},
     pages::{WidgetEntry, WidgetIcon},
+    storage::use_local_persistent,
 };
 
 pub const WIDGET_ENTRY: WidgetEntry = WidgetEntry {
@@ -25,13 +26,14 @@ const AMBIGUOUS: &str = "0O1lI";
 
 #[component]
 pub fn PasswordGenerator() -> Element {
-    let mut length = use_signal(|| 16usize);
-    let mut use_uppercase = use_signal(|| true);
-    let mut use_lowercase = use_signal(|| true);
-    let mut use_numbers = use_signal(|| true);
-    let mut use_symbols = use_signal(|| true);
-    let mut exclude_ambiguous = use_signal(|| false);
-    let mut quantity = use_signal(|| 1usize);
+    let mut length = use_local_persistent("password.length", || 16usize);
+    let mut use_uppercase = use_local_persistent("password.uppercase", || true);
+    let mut use_lowercase = use_local_persistent("password.lowercase", || true);
+    let mut use_numbers = use_local_persistent("password.numbers", || true);
+    let mut use_symbols = use_local_persistent("password.symbols", || true);
+    let mut exclude_ambiguous = use_local_persistent("password.exclude-ambiguous", || false);
+    let mut quantity = use_local_persistent("password.quantity", || 1usize);
+    // Generated passwords are intentionally not persisted
     let mut passwords = use_signal(Vec::<String>::new);
 
     let generate_passwords = move |_| {
