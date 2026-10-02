@@ -20,8 +20,8 @@
     "concurrently": "^10.0.5",
     "daisyui": "^5.7.43",
     "husky": "^9.1.7",
-    "lint-staged": "^17.5.1",
-    "oxfmt": "^0.70.0",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.71.0",
     "tailwindcss": "^4.3.3"
   },
   "lint-staged": {
