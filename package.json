@@ -16,13 +16,13 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/cli": "^4.3.4",
     "concurrently": "^10.0.6",
     "daisyui": "^5.7.50",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "oxfmt": "^0.75.0",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.4"
   },
   "lint-staged": {
     "*.{js,css,md,json,html,yml,yaml}": "oxfmt --write",
