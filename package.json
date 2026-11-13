@@ -21,7 +21,7 @@
     "daisyui": "^5.7.50",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "oxfmt": "^0.77.0",
+    "oxfmt": "^0.78.0",
     "tailwindcss": "^4.3.5"
   },
   "lint-staged": {
